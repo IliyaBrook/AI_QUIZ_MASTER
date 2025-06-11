@@ -1,17 +1,10 @@
 import type { ICreatePromptHistoryResponse } from '@/types/createPromptHistory.types';
-import type { IQuizAiResponse, IQuizWithWrapper, IAnswerOption, IQuestion, TLang, TLanguageMap } from '@/types/quizAiResponse.types';
+import type { IQuizAiResponse, IQuizWithWrapper, IAnswerOption, IQuestion, TLang } from '@/types/quizAiResponse.types';
+import { LANGUAGE_NAMES } from '@/constants/models.constants';
 import { geminiApiKey } from '@/utils/constants';
 import { GoogleGenAI } from '@google/genai';
 
 export type { TLang, IAnswerOption as AnswerOption, IQuestion as Question, IQuizAiResponse as Quiz, IQuizWithWrapper as QuizData };
-
-export const languageNames: TLanguageMap = {
-    'ru': 'Russian',
-    'en': 'English',
-    'es': 'Spanish',
-    'fr': 'French',
-    'de': 'German'
-};
 
 const modelName = 'gemini-2.5-flash-preview-04-17';
 
@@ -31,7 +24,7 @@ const genAIConfig = {
 };
 
 function createPromptHistory(userPrompt: string, languageKey: TLang): ICreatePromptHistoryResponse {
-  const languageName = languageNames[languageKey];
+  const languageName = LANGUAGE_NAMES[languageKey];
   return [
     {
       "role": "user",

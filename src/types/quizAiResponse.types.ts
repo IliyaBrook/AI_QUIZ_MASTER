@@ -24,4 +24,10 @@ export type TLang = 'ru' | 'en' | 'es' | 'fr' | 'de';
 export type TLanguageMap = {
   [K in TLang]: string;
 };
+
+export type TModelType = 'local' | 'gemini';
+
+export type TModelMap = {
+  [K in TModelType]: string;
+};
   

@@ -1,22 +1,17 @@
-import type { RouteObject } from "react-router";
-import Home from "@/pages/home/Home";
-import Page1 from "@/pages/page1/Page1";
+import Home from '@/pages/home/Home';
+import Page1 from '@/pages/page1/Page1';
+import type { IAppPage } from '@/types/routes.types';
 
-type IAppPage =  {
-  label: string;
-  path: string;
-} & RouteObject
-
-export const appPages:IAppPage[] = [
-    {
-      index: true,
-      element: <Home />,
-      label: 'Home',
-      path: '/',
-    },
-    {
-      element: <Page1 />, 
-      label: 'Page 1',
-      path: '/page1',
-    }
-  ]
+export const appPages: IAppPage[] = [
+  {
+    index: true,
+    element: <Home />,
+    label: 'Home',
+    path: '/',
+  },
+  {
+    element: <Page1 />,
+    label: 'Page 1',
+    path: '/page1',
+  },
+];

@@ -1,6 +1,8 @@
 import React, { useState, useCallback, Suspense } from 'react';
-import { generateQuizViaGemini, languageNames } from '../../services/geminiAI.service';
-import type { TLang, QuizData, AnswerOption } from '../../services/geminiAI.service';
+import { generateQuiz, languageNames, modelNames } from '../../services/quizGenerator.service';
+import type { TLang, TModelType } from '../../services/quizGenerator.service';
+import type { IQuizWithWrapper, IAnswerOption } from '../../types/quizAiResponse.types';
+import { DEFAULT_LANGUAGE, DEFAULT_MODEL } from '../../constants/models.constants';
 import './InteractiveQuiz.scss';
 
 const LoadingSpinner: React.FC = () => (
@@ -12,14 +14,15 @@ const LoadingSpinner: React.FC = () => (
 
 const InteractiveQuiz: React.FC = () => {
   const [topic, setTopic] = useState<string>('');
-  const [language, setLanguage] = useState<TLang>('ru');
-  const [quizData, setQuizData] = useState<QuizData | null>(null);
+  const [language, setLanguage] = useState<TLang>(DEFAULT_LANGUAGE);
+  const [modelType, setModelType] = useState<TModelType>(DEFAULT_MODEL);
+  const [quizData, setQuizData] = useState<IQuizWithWrapper | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<AnswerOption | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<IAnswerOption | null>(null);
   const [showRationale, setShowRationale] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
@@ -40,7 +43,7 @@ const InteractiveQuiz: React.FC = () => {
     resetQuizState();
 
     try {
-      const { quizData: newQuizData } = await generateQuizViaGemini(topic, language);
+      const { quizData: newQuizData } = await generateQuiz(topic, language, modelType);
       setQuizData(newQuizData);
     } catch (e) {
       console.error('Error generating quiz:', e);
@@ -49,7 +52,7 @@ const InteractiveQuiz: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [topic, language, isLoading]);
+  }, [topic, language, modelType, isLoading]);
 
   const resetQuizState = () => {
     setCurrentQuestionIndex(0);
@@ -65,7 +68,7 @@ const InteractiveQuiz: React.FC = () => {
     setQuizStarted(true);
   };
 
-  const handleAnswerSelect = (option: AnswerOption) => {
+  const handleAnswerSelect = (option: IAnswerOption) => {
     if (!showRationale) {
       setSelectedAnswer(option);
     }
@@ -141,6 +144,20 @@ const InteractiveQuiz: React.FC = () => {
                     disabled={isLoading}
                   >
                     {Object.entries(languageNames).map(([key, name]) => (
+                      <option key={key} value={key}>{name}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="modelSelect">Model:</label>
+                  <select
+                    id="modelSelect"
+                    value={modelType}
+                    onChange={(e) => setModelType(e.target.value as TModelType)}
+                    disabled={isLoading}
+                  >
+                    {Object.entries(modelNames).map(([key, name]) => (
                       <option key={key} value={key}>{name}</option>
                     ))}
                   </select>
