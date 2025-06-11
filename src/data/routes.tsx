@@ -1,6 +1,5 @@
-import Home from '@/pages/home/Home';
-import Page1 from '@/pages/page1/Page1';
-import type { IAppPage } from '@/types/routes.types';
+import { Home, Page1 } from '@/pages';
+import type { IAppPage } from '@/types';
 
 export const appPages: IAppPage[] = [
   {

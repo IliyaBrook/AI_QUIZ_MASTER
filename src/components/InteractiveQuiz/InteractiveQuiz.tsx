@@ -1,16 +1,10 @@
 import React, { useState, useCallback, Suspense } from 'react';
-import { generateQuiz, languageNames, modelNames } from '../../services/quizGenerator.service';
-import type { TLang, TModelType } from '../../services/quizGenerator.service';
-import type { IQuizWithWrapper, IAnswerOption } from '../../types/quizAiResponse.types';
-import { DEFAULT_LANGUAGE, DEFAULT_MODEL } from '../../constants/models.constants';
+import { generateQuiz, languageNames, modelNames } from '@/services';
+import type { TLang, TModelType } from '@/services';
+import type { IQuizWithWrapper, IAnswerOption } from '@/types';
+import { DEFAULT_LANGUAGE, DEFAULT_MODEL } from '@/constants';
+import { LoadingSpinner } from '@/components';
 import './InteractiveQuiz.scss';
-
-const LoadingSpinner: React.FC = () => (
-  <div className="loading-spinner">
-    <div className="spinner"></div>
-    <p>Generating quiz...</p>
-  </div>
-);
 
 const InteractiveQuiz: React.FC = () => {
   const [topic, setTopic] = useState<string>('');
@@ -18,6 +12,7 @@ const InteractiveQuiz: React.FC = () => {
   const [modelType, setModelType] = useState<TModelType>(DEFAULT_MODEL);
   const [quizData, setQuizData] = useState<IQuizWithWrapper | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loadingProgress, setLoadingProgress] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -38,12 +33,15 @@ const InteractiveQuiz: React.FC = () => {
     }
 
     setIsLoading(true);
+    setLoadingProgress(0);
     setError(null);
     setQuizData(null);
     resetQuizState();
 
     try {
-      const { quizData: newQuizData } = await generateQuiz(topic, language, modelType);
+      const { quizData: newQuizData } = await generateQuiz(topic, language, modelType, (progress) => {
+        setLoadingProgress(progress);
+      });
       setQuizData(newQuizData);
     } catch (e) {
       console.error('Error generating quiz:', e);
@@ -51,6 +49,7 @@ const InteractiveQuiz: React.FC = () => {
       setError(`Quiz generation error: ${errorMessage}`);
     } finally {
       setIsLoading(false);
+      setLoadingProgress(0);
     }
   }, [topic, language, modelType, isLoading]);
 
@@ -115,7 +114,7 @@ const InteractiveQuiz: React.FC = () => {
         {!quizData ? (
           <div className="quiz-generation">
             {isLoading ? (
-              <LoadingSpinner />
+              <LoadingSpinner progress={loadingProgress} message="Generating quiz..." />
             ) : (
               <>
                 <div className="form-group">

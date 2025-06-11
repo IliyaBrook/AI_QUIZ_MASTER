@@ -1,4 +1,4 @@
-import InteractiveQuiz from '@/components/InteractiveQuiz/InteractiveQuiz';
+import { InteractiveQuiz } from '@/components';
 import styles from './Home.module.scss';
 
 export default function Home() {

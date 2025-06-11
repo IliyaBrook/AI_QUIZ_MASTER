@@ -1,7 +1,7 @@
-import type { ICreatePromptHistoryResponse } from '@/types/createPromptHistory.types';
-import type { IQuizAiResponse, IQuizWithWrapper, IAnswerOption, IQuestion, TLang } from '@/types/quizAiResponse.types';
-import { LANGUAGE_NAMES } from '@/constants/models.constants';
-import { geminiApiKey } from '@/utils/constants';
+import type { ICreatePromptHistoryResponse } from '@/types';
+import type { IQuizAiResponse, IQuizWithWrapper, IAnswerOption, IQuestion, TLang } from '@/types';
+import { LANGUAGE_NAMES } from '@/constants';
+import { geminiApiKey } from '@/utils';
 import { GoogleGenAI } from '@google/genai';
 
 export type { TLang, IAnswerOption as AnswerOption, IQuestion as Question, IQuizAiResponse as Quiz, IQuizWithWrapper as QuizData };
@@ -65,7 +65,7 @@ export async function generateQuizViaGemini(topic: string, language: TLang): Pro
     }
 
     const contents = createPromptHistory(topic, language);
-    
+
     try {
         const stream = await ai.models.generateContentStream({
             model: modelName,

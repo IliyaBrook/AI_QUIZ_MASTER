@@ -1,5 +1,5 @@
-import type { IQuizAiResponse, IQuizWithWrapper, TLang } from '@/types/quizAiResponse.types';
-import { LANGUAGE_NAMES } from '@/constants/models.constants';
+import type { IQuizAiResponse, IQuizWithWrapper, TLang } from '@/types';
+import { LANGUAGE_NAMES } from '@/constants';
 
 export type { TLang };
 
@@ -9,12 +9,19 @@ const MODEL_NAME = 'llama3.1:8b';
 function createLocalPrompt(userPrompt: string, languageKey: TLang): any[] {
   const languageName = LANGUAGE_NAMES[languageKey];
   
-  const systemPrompt = `You are an advanced interactive quiz generator. Your task is to create quizzes strictly in the specified JSON format. The response must be a JSON object only, without any extra text, explanations, or markdown formatting. Pay close attention to the 'language' key and ensure all textual content (quiz title, questions, answer options, rationales) is provided in the specified language.
+  const systemPrompt = `You are an advanced interactive quiz generator. Your task is to create quizzes strictly in the specified JSON format. The response must be a JSON object only, without any extra text, explanations, or markdown formatting.
+
+CRITICAL: ALL TEXT CONTENT must be in ${languageName} language. This includes:
+- Quiz title
+- All questions
+- All answer options
+- All rationales
+Set the "language" field to "${languageKey}".
 
 Use this exact JSON format:
 {
   "title": "",
-  "language": "",
+  "language": "${languageKey}",
   "questions": [
     {
       "question": "",
@@ -25,7 +32,7 @@ Use this exact JSON format:
   ]
 }`;
 
-  const userMessage = `Generate a quiz based on the topic: "${userPrompt}". Create 5 questions. The desired language for the quiz is ${languageName} (${languageKey}). Use the exact JSON format provided above.`;
+  const userMessage = `Generate a quiz about "${userPrompt}". Create 5 questions with 4 answer options each. IMPORTANT: Write everything in ${languageName} language only. Do not use English. Respond with valid JSON only.`;
 
   return [
     {
@@ -39,9 +46,17 @@ Use this exact JSON format:
   ];
 }
 
-export async function generateQuizViaLocalAI(topic: string, language: TLang): Promise<{ quizData: IQuizWithWrapper, rawResponseText: string }> {
+export async function generateQuizViaLocalAI(
+    topic: string, 
+    language: TLang,
+    onProgress?: (progress: number) => void
+): Promise<{ quizData: IQuizWithWrapper, rawResponseText: string }> {
     try {
         const messages = createLocalPrompt(topic, language);
+        
+        if (onProgress) {
+            onProgress(10);
+        }
         
         const response = await fetch(`${OLLAMA_URL}/v1/chat/completions`, {
             method: 'POST',
@@ -62,7 +77,16 @@ export async function generateQuizViaLocalAI(topic: string, language: TLang): Pr
             throw new Error(`Local AI API error: ${response.status} ${response.statusText}`);
         }
 
+        if (onProgress) {
+            onProgress(50);
+        }
+
         const data = await response.json();
+        
+        if (onProgress) {
+            onProgress(80);
+        }
+        
         const fullResponseText = data.choices?.[0]?.message?.content || '';
 
         if (!fullResponseText) {
@@ -80,6 +104,9 @@ export async function generateQuizViaLocalAI(topic: string, language: TLang): Pr
         const parsedData: IQuizAiResponse = JSON.parse(jsonStr);
         
         if (parsedData && parsedData.title && parsedData.questions) {
+            if (onProgress) {
+                onProgress(100);
+            }
             const quizData: IQuizWithWrapper = { quiz: parsedData };
             return { quizData, rawResponseText: fullResponseText };
         } else {
