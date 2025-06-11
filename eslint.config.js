@@ -47,9 +47,8 @@ export default tseslint.config(
       ],
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@typescript-eslint/no-explicit-any': 'warn',
-      
-      'no-console': 'warn',
+      '@typescript-eslint/no-explicit-any': 'off',
+      'no-console': 'off',
       'prefer-const': 'error',
       'no-var': 'error',
       'no-unused-expressions': 'error',

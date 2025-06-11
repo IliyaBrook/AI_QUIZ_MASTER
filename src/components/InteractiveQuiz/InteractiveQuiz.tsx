@@ -1,32 +1,69 @@
-import React, { useState, useEffect } from 'react';
-import type { ImmersiveQuizFormat, Question, AnswerOption } from '../../types/quiz.types'; // Убедитесь, что путь правильный
+import React, { useState, useCallback, Suspense } from 'react';
+import { generateQuizViaGemini, languageNames } from '../../services/geminiAI.service';
+import type { TLang, QuizData, AnswerOption } from '../../services/geminiAI.service';
+import './InteractiveQuiz.scss';
 
-interface InteractiveQuizProps {
-  quizJson: ImmersiveQuizFormat; // Ваш JSON-объект викторины
-}
+const LoadingSpinner: React.FC = () => (
+  <div className="loading-spinner">
+    <div className="spinner"></div>
+    <p>Generating quiz...</p>
+  </div>
+);
 
-const InteractiveQuiz: React.FC<InteractiveQuizProps> = ({ quizJson }) => {
+const InteractiveQuiz: React.FC = () => {
+  const [topic, setTopic] = useState<string>('');
+  const [language, setLanguage] = useState<TLang>('en');
+  const [quizData, setQuizData] = useState<QuizData | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<AnswerOption | null>(null);
   const [showRationale, setShowRationale] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
+  const [quizStarted, setQuizStarted] = useState(false);
 
-  useEffect(() => {
+  const handleGenerateQuiz = useCallback(async () => {
+    if (!topic.trim()) {
+      setError('Please enter a quiz topic.');
+      return;
+    }
+
+    if (isLoading) {
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+    setQuizData(null);
+    resetQuizState();
+
+    try {
+      const { quizData: newQuizData } = await generateQuizViaGemini(topic, language);
+      setQuizData(newQuizData);
+    } catch (e) {
+      console.error('Error generating quiz:', e);
+      const errorMessage = e instanceof Error ? e.message : String(e);
+      setError(`Quiz generation error: ${errorMessage}`);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [topic, language, isLoading]);
+
+  const resetQuizState = () => {
     setCurrentQuestionIndex(0);
     setScore(0);
     setSelectedAnswer(null);
     setShowRationale(false);
     setQuizCompleted(false);
-  }, [quizJson]);
+    setQuizStarted(false);
+  };
 
-  if (!quizJson || !quizJson.quiz || !quizJson.quiz.questions || quizJson.quiz.questions.length === 0) {
-    return <div className="quiz-container">Ошибка: Данные викторины недействительны или пусты.</div>;
-  }
-
-  const quiz = quizJson.quiz;
-  const currentQuestion: Question | undefined = quiz.questions[currentQuestionIndex];
-  const totalQuestions = quiz.questions.length;
+  const handleStartQuiz = () => {
+    resetQuizState();
+    setQuizStarted(true);
+  };
 
   const handleAnswerSelect = (option: AnswerOption) => {
     if (!showRationale) {
@@ -36,9 +73,10 @@ const InteractiveQuiz: React.FC<InteractiveQuizProps> = ({ quizJson }) => {
 
   const handleSubmitAnswer = () => {
     if (selectedAnswer === null) {
-      alert('Пожалуйста, выберите вариант ответа!');
+      setError('Please select an answer option!');
       return;
     }
+    setError(null);
     setShowRationale(true);
     if (selectedAnswer.is_correct) {
       setScore(prevScore => prevScore + 1);
@@ -48,7 +86,7 @@ const InteractiveQuiz: React.FC<InteractiveQuizProps> = ({ quizJson }) => {
   const handleNextQuestion = () => {
     setShowRationale(false);
     setSelectedAnswer(null);
-    if (currentQuestionIndex < totalQuestions - 1) {
+    if (currentQuestionIndex < (quizData?.quiz.questions.length || 0) - 1) {
       setCurrentQuestionIndex(prevIndex => prevIndex + 1);
     } else {
       setQuizCompleted(true);
@@ -56,65 +94,199 @@ const InteractiveQuiz: React.FC<InteractiveQuizProps> = ({ quizJson }) => {
   };
 
   const handleRestartQuiz = () => {
-    setCurrentQuestionIndex(0);
-    setScore(0);
-    setSelectedAnswer(null);
-    setShowRationale(false);
-    setQuizCompleted(false);
+    resetQuizState();
   };
 
+  const handleBackToGeneration = () => {
+    setQuizData(null);
+    setQuizStarted(false);
+    resetQuizState();
+    setError(null);
+  };
+
+  if (!quizData || !quizStarted) {
+    return (
+      <div className="quiz-container">
+        <h1>AI Quiz Master</h1>
+        
+        {!quizData ? (
+          <div className="quiz-generation">
+            {isLoading ? (
+              <LoadingSpinner />
+            ) : (
+              <>
+                <div className="form-group">
+                  <label htmlFor="topicInput">Quiz Topic:</label>
+                  <input
+                    type="text"
+                    id="topicInput"
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && topic.trim() && !isLoading) {
+                        handleGenerateQuiz();
+                      }
+                    }}
+                    placeholder="e.g., Ancient Egypt History"
+                    disabled={isLoading}
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="languageSelect">Language:</label>
+                  <select
+                    id="languageSelect"
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value as TLang)}
+                    disabled={isLoading}
+                  >
+                    {Object.entries(languageNames).map(([key, name]) => (
+                      <option key={key} value={key}>{name}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <button 
+                  onClick={handleGenerateQuiz} 
+                  disabled={isLoading || !topic.trim()}
+                  className="generate-button"
+                >
+                  Generate Quiz
+                </button>
+                
+                {error && (
+                  <div className="error-message">
+                    {error}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        ) : (
+          <div className="quiz-preview">
+            <h2>{quizData.quiz.title}</h2>
+            <p>Language: {languageNames[quizData.quiz.language]}</p>
+            <p>Number of questions: {quizData.quiz.questions.length}</p>
+            
+            <div className="quiz-actions">
+              <button onClick={handleStartQuiz} className="start-button">
+                Start Quiz
+              </button>
+              <button onClick={handleBackToGeneration} className="back-button">
+                Create New Quiz
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  const currentQuestion = quizData.quiz.questions[currentQuestionIndex];
+  const totalQuestions = quizData.quiz.questions.length;
+
   if (!currentQuestion) {
-    return <div className="quiz-container">Ошибка: Текущий вопрос не найден.</div>;
+    return (
+      <div className="quiz-container">
+        <div className="error-message">Error: Question not found.</div>
+        <button onClick={handleBackToGeneration}>Back to Quiz Creation</button>
+      </div>
+    );
   }
 
   return (
     <div className="quiz-container">
-      <h1 id="quiz-title">{quiz.title}</h1>
+      <div className="quiz-header">
+        <h1>{quizData.quiz.title}</h1>
+        <div className="quiz-progress">
+          Question {currentQuestionIndex + 1} of {totalQuestions}
+        </div>
+        <button onClick={handleBackToGeneration} className="back-to-generation">
+          ← New Quiz
+        </button>
+      </div>
 
       {quizCompleted ? (
-        <div id="quiz-results">
-          <h2>Ваши результаты</h2>
-          <p>Вы набрали <span id="score">{score}</span> из <span id="total-questions">{totalQuestions}</span>.</p>
-          <button onClick={handleRestartQuiz}>Начать заново</button>
+        <div className="quiz-results">
+          <h2>Quiz Results</h2>
+          <div className="score-display">
+            <span className="score">{score}</span>
+            <span className="separator">/</span>
+            <span className="total">{totalQuestions}</span>
+          </div>
+          <p className="score-percentage">
+            {Math.round((score / totalQuestions) * 100)}% correct answers
+          </p>
+          
+          <div className="results-actions">
+            <button onClick={handleRestartQuiz} className="restart-button">
+              Retry Quiz
+            </button>
+            <button onClick={handleBackToGeneration} className="new-quiz-button">
+              Create New Quiz
+            </button>
+          </div>
         </div>
       ) : (
-        <div id="question-container">
-          <h2 id="question-text">{currentQuestion.question}</h2>
-          <div id="answer-options">
-            {currentQuestion.answer_options?.map((option, index) => (
-              <div
+        <div className="question-container">
+          <h2 className="question-text">{currentQuestion.question}</h2>
+          
+          <div className="answer-options">
+            {currentQuestion.answer_options.map((option, index) => (
+              <button
                 key={index}
-                className={`answer-option ${selectedAnswer === option ? 'selected' : ''} ${showRationale && option.is_correct ? 'correct' : ''} ${showRationale && selectedAnswer === option && !option.is_correct ? 'incorrect' : ''}`}
+                className={`answer-option ${
+                  selectedAnswer === option ? 'selected' : ''
+                } ${
+                  showRationale && option.is_correct ? 'correct' : ''
+                } ${
+                  showRationale && selectedAnswer === option && !option.is_correct ? 'incorrect' : ''
+                }`}
                 onClick={() => handleAnswerSelect(option)}
-                style={{ pointerEvents: showRationale ? 'none' : 'auto' }} // Отключаем клики после проверки
+                disabled={showRationale}
               >
                 {option.text}
-              </div>
+              </button>
             ))}
           </div>
 
           {showRationale && selectedAnswer && (
-            <p id="rationale-text" className={selectedAnswer.is_correct ? 'correct-rationale' : 'incorrect-rationale'}>
-              {selectedAnswer.rationale}
-            </p>
+            <div className={`rationale ${selectedAnswer.is_correct ? 'correct-rationale' : 'incorrect-rationale'}`}>
+              <p>{selectedAnswer.rationale}</p>
+            </div>
           )}
 
-          {!showRationale ? (
-            <button
-              onClick={handleSubmitAnswer}
-              disabled={selectedAnswer === null}
-            >
-              Ответить
-            </button>
-          ) : (
-            <button onClick={handleNextQuestion}>
-              {currentQuestionIndex < totalQuestions - 1 ? 'Следующий вопрос' : 'Завершить викторину'}
-            </button>
+          {error && (
+            <div className="error-message">
+              {error}
+            </div>
           )}
+
+          <div className="question-actions">
+            {!showRationale ? (
+              <button
+                onClick={handleSubmitAnswer}
+                disabled={selectedAnswer === null}
+                className="submit-button"
+              >
+                Submit Answer
+              </button>
+            ) : (
+              <button onClick={handleNextQuestion} className="next-button">
+                {currentQuestionIndex < totalQuestions - 1 ? 'Next Question' : 'Finish Quiz'}
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>
   );
 };
 
-export default InteractiveQuiz;
+const InteractiveQuizWithSuspense: React.FC = () => (
+  <Suspense fallback={<LoadingSpinner />}>
+    <InteractiveQuiz />
+  </Suspense>
+);
+
+export default InteractiveQuizWithSuspense;

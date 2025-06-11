@@ -1,17 +1,63 @@
 import { geminiApiKey } from '@/utils/constants';
 import { GoogleGenAI } from '@google/genai';
 
-function createPromptConfig(userPrompt: string, language: string) {
-  const languageNames: { [key: string]: string } = {
+// Type definitions
+export type TLang = 'ru' | 'en' | 'es' | 'fr' | 'de';
+
+export type LanguageMap = {
+    [K in TLang]: string;
+};
+
+export const languageNames: LanguageMap = {
     'ru': 'Russian',
     'en': 'English',
     'es': 'Spanish',
     'fr': 'French',
     'de': 'German'
-  };
-  
-  const languageName = languageNames[language] || 'Russian';
-  
+};
+
+export interface AnswerOption {
+    text: string;
+    rationale: string;
+    is_correct: boolean;
+}
+
+export interface Question {
+    question: string;
+    answer_options: AnswerOption[];
+}
+
+export interface Quiz {
+    title: string;
+    language: TLang;
+    questions: Question[];
+}
+
+export interface QuizData {
+    quiz: Quiz;
+}
+
+// API Configuration
+const modelName = 'gemini-2.5-flash-preview-04-17';
+
+let ai: GoogleGenAI | null = null;
+if (geminiApiKey) {
+  ai = new GoogleGenAI({ apiKey: geminiApiKey });
+} else {
+  console.error("API_KEY is not set in environment variables. Gemini API client could not be initialized.");
+}
+
+const genAIConfig = {
+  responseMimeType: 'application/json',
+  temperature: 0.7,
+  topP: 0.95,
+  topK: 64,
+  maxOutputTokens: 8192,
+};
+
+// Prompt creation logic
+function createPromptHistory(userPrompt: string, languageKey: TLang) {
+  const languageName = languageNames[languageKey];
   return [
     {
       "role": "user",
@@ -22,70 +68,68 @@ function createPromptConfig(userPrompt: string, language: string) {
     {
       "role": "model",
       "parts": [
-        {
-          "text": "Understood. I will generate quizzes in the strict JSON format, without additional text, and ensure all content is in the requested language. Please provide the quiz topic, number of questions, and the desired language for the quiz."
-        }
+        { "text": "Understood. I will generate quizzes in the strict JSON format, without additional text, and ensure all content is in the requested language. Please provide the quiz topic, number of questions, and the desired language for the quiz." }
       ]
     },
     {
       "role": "user",
       "parts": [
-        {
-          "text": "Generate a quiz on the history of Ancient Egypt, 3 questions. The desired language for the quiz is English. Use the following JSON format for the response: \n\n```json\n{\n  \"quiz\": {\n    \"title\": \"\",\n    \"language\": \"\",\n    \"questions\": [\n      {\n        \"question\": \"\",\n        \"answer_options\": [\n          { \"text\": \"\", \"rationale\": \"\", \"is_correct\": false }\n        ]\n      }\n    ]\n  }\n}\n```"
-        }
+        { "text": "Generate a quiz on the history of Ancient Egypt, 3 questions. The desired language for the quiz is English. Use the following JSON format for the response: \n\n```json\n{\n  \"quiz\": {\n    \"title\": \"\",\n    \"language\": \"\",\n    \"questions\": [\n      {\n        \"question\": \"\",\n        \"answer_options\": [\n          { \"text\": \"\", \"rationale\": \"\", \"is_correct\": false }\n        ]\n      }\n    ]\n  }\n}\n```" }
       ]
     },
     {
       "role": "model",
       "parts": [
-        {
-          "text": "```json\n{\n  \"quiz\": {\n    \"title\": \"Quiz: History of Ancient Egypt\",\n    \"language\": \"en\",\n    \"questions\": [\n      {\n        \"question\": \"Which pharaoh is famous for their golden burial mask found in their tomb?\",\n        \"answer_options\": [\n          { \"text\": \"Ramses II\", \"rationale\": \"Ramses II was a powerful pharaoh, but not primarily known for a golden burial mask.\", \"is_correct\": false },\n          { \"text\": \"Akhenaten\", \"rationale\": \"Akhenaten was known for his religious reforms, not a golden burial mask.\", \"is_correct\": false },\n          { \"text\": \"Tutankhamun\", \"rationale\": \"Tutankhamun's nearly intact tomb, discovered by Howard Carter, contained his famous golden burial mask.\", \"is_correct\": true },\n          { \"text\": \"Hatshepsut\", \"rationale\": \"Hatshepsut was a powerful female pharaoh, but her legacy isn't centered on a golden mask.\", \"is_correct\": false }\n        ]\n      },\n      {\n        \"question\": \"What river was crucial to the civilization of Ancient Egypt?\",\n        \"answer_options\": [\n          { \"text\": \"Tigris River\", \"rationale\": \"The Tigris River is associated with Mesopotamia.\", \"is_correct\": false },\n          { \"text\": \"Euphrates River\", \"rationale\": \"The Euphrates River is associated with Mesopotamia.\", \"is_correct\": false },\n          { \"text\": \"Nile River\", \"rationale\": \"The Nile River provided fertile land, transportation, and resources essential for Ancient Egyptian civilization.\", \"is_correct\": true },\n          { \"text\": \"Indus River\", \"rationale\": \"The Indus River is associated with ancient Indian civilizations.\", \"is_correct\": false }\n        ]\n      },\n      {\n        \"question\": \"What large structures were built as tombs for pharaohs?\",\n        \"answer_options\": [\n          { \"text\": \"Ziggurats\", \"rationale\": \"Ziggurats were massive structures built in ancient Mesopotamia.\", \"is_correct\": false },\n          { \"text\": \"Pyramids\", \"rationale\": \"Pyramids were monumental structures built primarily as tombs for pharaohs and their consorts during the Old and Middle Kingdom periods.\", \"is_correct\": true },\n          { \"text\": \"Temples\", \"rationale\": \"Temples were built for worship, not primarily as tombs.\", \"is_correct\": false },\n          { \"text\": \"Obelisks\", \"rationale\": \"Obelisks were tall, four-sided, narrow tapering monuments, but not tombs.\", \"is_correct\": false }\n        ]\n      }\n    ]\n  }\n}\n```"
-        }
+        { "text": "```json\n{\n  \"quiz\": {\n    \"title\": \"Quiz: History of Ancient Egypt\",\n    \"language\": \"en\",\n    \"questions\": [\n      {\n        \"question\": \"Which pharaoh is famous for their golden burial mask found in their tomb?\",\n        \"answer_options\": [\n          { \"text\": \"Ramses II\", \"rationale\": \"Ramses II was a powerful pharaoh, but not primarily known for a golden burial mask.\", \"is_correct\": false },\n          { \"text\": \"Akhenaten\", \"rationale\": \"Akhenaten was known for his religious reforms, not a golden burial mask.\", \"is_correct\": false },\n          { \"text\": \"Tutankhamun\", \"rationale\": \"Tutankhamun's nearly intact tomb, discovered by Howard Carter, contained his famous golden burial mask.\", \"is_correct\": true },\n          { \"text\": \"Hatshepsut\", \"rationale\": \"Hatshepsut was a powerful female pharaoh, but her legacy isn't centered on a golden mask.\", \"is_correct\": false }\n        ]\n      },\n      {\n        \"question\": \"What river was crucial to the civilization of Ancient Egypt?\",\n        \"answer_options\": [\n          { \"text\": \"Tigris River\", \"rationale\": \"The Tigris River is associated with Mesopotamia.\", \"is_correct\": false },\n          { \"text\": \"Euphrates River\", \"rationale\": \"The Euphrates River is associated with Mesopotamia.\", \"is_correct\": false },\n          { \"text\": \"Nile River\", \"rationale\": \"The Nile River provided fertile land, transportation, and resources essential for Ancient Egyptian civilization.\", \"is_correct\": true },\n          { \"text\": \"Indus River\", \"rationale\": \"The Indus River is associated with ancient Indian civilizations.\", \"is_correct\": false }\n        ]\n      },\n      {\n        \"question\": \"What large structures were built as tombs for pharaohs?\",\n        \"answer_options\": [\n          { \"text\": \"Ziggurats\", \"rationale\": \"Ziggurats were massive structures built in ancient Mesopotamia.\", \"is_correct\": false },\n          { \"text\": \"Pyramids\", \"rationale\": \"Pyramids were monumental structures built primarily as tombs for pharaohs and their consorts during the Old and Middle Kingdom periods.\", \"is_correct\": true },\n          { \"text\": \"Temples\", \"rationale\": \"Temples were built for worship, not primarily as tombs.\", \"is_correct\": false },\n          { \"text\": \"Obelisks\", \"rationale\": \"Obelisks were tall, four-sided, narrow tapering monuments, but not tombs.\", \"is_correct\": false }\n        ]\n      }\n    ]\n  }\n}\n```" }
       ]
     },
     {
       "role": "user",
       "parts": [
-        {
-          "text": `Generate a quiz based on the topic: "${userPrompt}". Create 5 questions. The desired language for the quiz is ${languageName} (${language}). Use the exact JSON format provided above.`
-        }
+        { "text": `Generate a quiz based on the topic: "${userPrompt}". Create 5 questions. The desired language for the quiz is ${languageName} (${languageKey}). Use the exact JSON format provided above.` }
       ]
     }
   ];
 }
 
-const modelName = 'gemini-2.5-flash-preview-04-17'
+// Service function to generate quiz
+export async function generateQuizViaGemini(topic: string, language: TLang): Promise<{ quizData: QuizData, rawResponseText: string }> {
+    if (!ai) {
+        throw new Error("Gemini API client is not initialized. API Key may be missing or invalid.");
+    }
 
-const ai = new GoogleGenAI({
-  apiKey: geminiApiKey,
-});
+    const contents = createPromptHistory(topic, language);
+    
+    try {
+        const stream = await ai.models.generateContentStream({
+            model: modelName,
+            config: genAIConfig,
+            contents: contents,
+        });
 
-const config = {
-  responseMimeType: 'application/json',
-  temperature: 1,
-  topP: 0.95,
-  topK: 64,
-  maxOutputTokens: 8192,
-};
+        let fullResponseText = '';
+        for await (const chunk of stream) {
+            fullResponseText += chunk.text || '';
+        }
 
-export async function getAIChatSession(userPrompt: string, language: string = 'ru') {
-  const promptConfig = createPromptConfig(userPrompt, language);
-  const lastMessage = promptConfig[promptConfig.length - 1];
-  
-  if (!lastMessage?.parts?.[0]?.text) {
-    throw new Error('Invalid prompt configuration');
-  }
-
-  const response = await ai.models.generateContentStream({
-    model: modelName,
-    config,
-    contents: promptConfig,
-  });
-
-  let fullResponse = '';
-  for await (const chunk of response) {
-    fullResponse += chunk.text || '';
-  }
-  
-  return fullResponse;
+        let jsonStr = fullResponseText.trim();
+        const fenceRegex = /^```(?:json)?\s*\n?(.*?)\n?\s*```$/s;
+        const match = jsonStr.match(fenceRegex);
+        if (match && match[1]) {
+            jsonStr = match[1].trim();
+        }
+        
+        const parsedData: QuizData = JSON.parse(jsonStr);
+        if (parsedData && parsedData.quiz) {
+            return { quizData: parsedData, rawResponseText: fullResponseText };
+        } else {
+            throw new Error("Generated quiz data is not in the expected format.");
+        }
+    } catch (e) {
+        console.error("Error in Gemini service:", e);
+        if (e instanceof Error) {
+            throw new Error(`Gemini service error: ${e.message}`);
+        }
+        throw new Error("An unknown error occurred in the Gemini service.");
+    }
 }
