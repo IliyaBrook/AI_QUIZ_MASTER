@@ -12,7 +12,7 @@ const LoadingSpinner: React.FC = () => (
 
 const InteractiveQuiz: React.FC = () => {
   const [topic, setTopic] = useState<string>('');
-  const [language, setLanguage] = useState<TLang>('en');
+  const [language, setLanguage] = useState<TLang>('ru');
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -165,7 +165,7 @@ const InteractiveQuiz: React.FC = () => {
         ) : (
           <div className="quiz-preview">
             <h2>{quizData.quiz.title}</h2>
-            <p>Language: {languageNames[quizData.quiz.language]}</p>
+            <p>Language: {languageNames[quizData.quiz.language as TLang]}</p>
             <p>Number of questions: {quizData.quiz.questions.length}</p>
             
             <div className="quiz-actions">

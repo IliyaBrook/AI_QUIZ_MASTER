@@ -11,7 +11,7 @@ export default function Navbar() {
         
         <div className={styles.navLinks}>
           <Link to="/" className={styles.navLink}>
-            Главная
+            Quiz Generator
           </Link>
           <Link to="/page1" className={styles.navLink}>
             Страница 1
