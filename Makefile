@@ -1,9 +1,9 @@
-.PHONY: up down build rebuild logs clean ollama-only dev
+.PHONY: up down build rebuild logs clean ai dev
 
 up:
 	docker-compose up -d
 
-ollama-only:
+ai:
 	docker-compose up -d ollama
 
 dev:
@@ -43,7 +43,7 @@ help:
 	@echo "  make rebuild    - Stop, rebuild from scratch, and start"
 	@echo "  make start      - Same as rebuild"
 	@echo "  make logs       - Show container logs"
-	@echo "  make ollama-only - Start only Ollama service"
+	@echo "  make ai - Start only Ollama service"
 	@echo "  make dev        - Start Ollama and run development server via pnpm"
 	@echo "  make pull-model - Download Llama 3.1 8B model (after ollama is running)"
 	@echo "  make clean      - Stop containers and clean Docker system"

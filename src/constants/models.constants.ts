@@ -1,4 +1,4 @@
-import type { TLanguageMap, TModelMap } from '@/types/quizAiResponse.types';
+import type { TLang, TLanguageMap, TModelMap } from '@/types/quizAiResponse.types';
 
 export const LANGUAGE_NAMES: TLanguageMap = {
     'ru': 'Russian',
@@ -13,5 +13,5 @@ export const MODEL_NAMES: TModelMap = {
     'gemini': 'Google Gemini'
 };
 
-export const DEFAULT_LANGUAGE = 'en';
+export const DEFAULT_LANGUAGE: TLang = 'ru';
 export const DEFAULT_MODEL = 'local'; 

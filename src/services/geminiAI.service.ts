@@ -1,7 +1,6 @@
 import type { ICreatePromptHistoryResponse } from '@/types';
 import type { IQuizAiResponse, IQuizWithWrapper, IAnswerOption, IQuestion, TLang } from '@/types';
-import { LANGUAGE_NAMES } from '@/constants';
-import { geminiApiKey } from '@/utils';
+import { LANGUAGE_NAMES, geminiApiKey } from '@/constants';
 import { GoogleGenAI } from '@google/genai';
 
 export type { TLang, IAnswerOption as AnswerOption, IQuestion as Question, IQuizAiResponse as Quiz, IQuizWithWrapper as QuizData };
