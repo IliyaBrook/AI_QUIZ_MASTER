@@ -1,0 +1,142 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+### Project Overview and Rules for Cursor AI
+
+This document provides essential context and rules for Cursor AI to effectively assist in the development of an **Interactive Quiz Application**. The core functionality of this application involves dynamically generating and displaying quizzes based on a specific JSON format, which is often sourced from the Gemini API.
+
+------
+
+### 1. Core Project Goal
+
+The primary goal of this project is to build a **web application that allows users to generate and take interactive quizzes on various topics and in multiple languages**.
+
+- Users will input a topic and desired language.
+- Use pnpm only.
+- The application will call the Gemini API to get quiz data in a predefined JSON format.
+- This JSON data will then be rendered into an interactive quiz UI.
+
+------
+
+### 2. Key Technologies
+
+- **Frontend:** React (with TypeScript)
+- **Styling:** CSS (modular or global, as per project setup)
+- **Backend/API:** Google Gemini API (for quiz generation)
+- **Data Format:** Custom JSON structure for quizzes (defined below)
+
+------
+
+### 3. Critical Data Structure (Quiz JSON Format)
+
+This is the **most crucial part** for Cursor AI. All quiz data received from the Gemini API and used within the application **must strictly adhere to the following TypeScript interfaces**, which reflect the JSON structure.
+
+**Always prioritize and assume this exact structure when generating, parsing, or manipulating quiz data.**
+
+TypeScript
+
+```
+// src/types/geminiQuizResponse.ts
+
+/**
+ * Represents a single answer option for a quiz question.
+ */
+export interface AnswerOption {
+  /** The text content of the answer option. */
+  text: string;
+  /** An explanation or rationale for why this option is correct or incorrect. */
+  is_correct: boolean;
+  /** Indicates whether this answer option is the correct one. */
+  rationale: string; // The order here is for clarity, but the JSON structure is strict.
+}
+
+/**
+ * Represents a single quiz question.
+ */
+export interface Question {
+  /** The text of the question itself. */
+  question: string;
+  /** An array of possible answer options for this question. */
+  answer_options: AnswerOption[];
+}
+
+/**
+ * Represents the main quiz data structure.
+ */
+export interface QuizData {
+  /** The title of the quiz. */
+  title: string;
+  /** The language of the quiz content (e.g., "en", "ru", "es"). */
+  language: string;
+  /** An array of questions included in the quiz. */
+  questions: Question[];
+}
+
+/**
+ * The top-level interface for the interactive quiz format expected from Gemini API.
+ * This structure assumes the quiz data is nested under a 'quiz' key.
+ */
+export interface GeminiQuizResponse {
+  /** The main quiz data object. */
+  quiz: QuizData;
+}
+```
+
+**Rule:** When proposing code that generates, processes, or consumes quiz data, always refer to and utilize these TypeScript interfaces. If the output JSON from Gemini deviates, prompt the user to refine their Gemini API prompt, rather than changing the application's parsing logic.
+
+------
+
+### 4. Key Components and Files
+
+- **`src/types/geminiQuizResponse.ts`**: Contains the core TypeScript interfaces for the quiz data structure. **Do not modify these interfaces unless explicitly instructed by the user.**
+
+- `src/components/InteractiveQuiz.tsx`
+
+  : This is the primary React component responsible for 
+
+  rendering the interactive quiz
+
+  . It takes a 
+
+  ```
+  GeminiQuizResponse
+  ```
+
+   object as a prop (
+
+  ```
+  quizJson
+  ```
+
+  ).
+
+  - It manages the quiz state (current question, score, selected answer).
+  - It handles user interactions (answer selection, submission, navigation).
+
+- **`src/components/InteractiveQuiz.css`**: Styles for the `InteractiveQuiz` component.
+
+- **`src/App.tsx`**: The main application component, responsible for integrating `InteractiveQuiz` and potentially handling the Gemini API call and data fetching.
+
+------
+
+### 5. Interaction with Gemini API
+
+- **API Prompt:** The application will construct a specific prompt for the Gemini API to ensure the returned JSON matches the `GeminiQuizResponse` structure. The language for the quiz content will be dynamically specified in this prompt.
+- **Strictness:** Emphasize to the user that the Gemini API prompt **must be precise** (including the example JSON structure) to consistently receive the correct format.
+
+------
+
+### 6. Development Guidelines for Cursor AI
+
+- **No Comments:** When writing or modifying code, **do not include any comments**.
+- **Typing:** Always use **TypeScript types** when working with data, especially `GeminiQuizResponse`, `QuizData`, `Question`, and `AnswerOption`.
+- **Immutability:** When updating state in React, prefer **immutable updates**.
+- **Clarity & Readability:** Write clean and readable code.
+- **Error Handling:** Suggest robust error handling for API calls and JSON parsing, as Gemini might occasionally return malformed JSON.
+- **User Experience:** When suggesting UI/UX improvements, consider how they integrate with the current interactive quiz flow.
+- **Focus:** Stay focused on the current task and project context. Avoid introducing unrelated features or complexities unless explicitly requested.
+
+
+------
