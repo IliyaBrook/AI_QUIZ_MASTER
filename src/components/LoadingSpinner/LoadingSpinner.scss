@@ -1,58 +1,93 @@
 .loading-spinner {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 3rem 2rem;
   
-  .spinner {
-    width: 60px;
-    height: 60px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #667eea;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 1rem;
-  }
-
-  p {
-    color: #333;
-    font-size: 1.1rem;
-    font-weight: 500;
-    margin: 0 0 1.5rem 0;
-  }
-
-  .progress-container {
-    margin-top: 1.5rem;
-    width: 250px;
-    margin-left: auto;
-    margin-right: auto;
+  .spinner-container {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      background-color: #e0e0e0;
-      border-radius: 4px;
-      overflow: hidden;
-
-      .progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, #4CAF50, #667eea);
-        border-radius: 4px;
-        transition: width 0.3s ease;
-      }
+    gap: 12px;
+    
+    .ollama-spinner {
+      font-family: monospace;
+      font-size: 1.5rem;
+      color: #667eea;
+      font-weight: bold;
+      // Ensure consistent width for smooth animation
+      display: inline-block;
+      width: 1.5rem;
+      text-align: center;
     }
-
-    .progress-text {
-      font-size: 0.9rem;
-      color: #666;
-      font-weight: 600;
+    
+    .spinner-message {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      
+      .message {
+        color: #333;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 0;
+        line-height: 1.2;
+      }
+      
+      .elapsed-time {
+        font-size: 0.85rem;
+        color: #666;
+        font-weight: 400;
+        font-family: monospace;
+        opacity: 0.8;
+      }
     }
   }
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+// Dark theme support
+@media (prefers-color-scheme: dark) {
+  .loading-spinner {
+    .spinner-container {
+      .ollama-spinner {
+        color: #60a5fa;
+      }
+      
+      .spinner-message {
+        .message {
+          color: #e5e7eb;
+        }
+        
+        .elapsed-time {
+          color: #9ca3af;
+        }
+      }
+    }
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+  .loading-spinner {
+    padding: 2rem 1rem;
+    
+    .spinner-container {
+      gap: 10px;
+      
+      .ollama-spinner {
+        font-size: 1.3rem;
+        width: 1.3rem;
+      }
+      
+      .spinner-message {
+        .message {
+          font-size: 1rem;
+        }
+        
+        .elapsed-time {
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
 } 
