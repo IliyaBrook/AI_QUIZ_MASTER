@@ -1,0 +1,15 @@
+.code-editor-container {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #1e1e1e;
+  
+  .monaco-editor {
+    border-radius: 8px;
+  }
+}
+
+.code-editor-container.light {
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+} 

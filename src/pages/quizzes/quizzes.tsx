@@ -4,7 +4,7 @@ import type { TLang } from '@/services';
 import type { IQuizWithWrapper, IAnswerOption } from '@/types';
 import { DEFAULT_LANGUAGE } from '@/constants';
 import { LoadingSpinner } from '@/components';
-import './quizzes.scss';
+import styles from './quizzes.module.scss';
 
 const Quizzes: React.FC = () => {
   const [topic, setTopic] = useState<string>('');
@@ -105,16 +105,16 @@ const Quizzes: React.FC = () => {
 
   if (!quizData || !quizStarted) {
     return (
-      <div className='quiz-container'>
+      <div className={styles.quizContainer}>
         <h1>AI Quiz Master</h1>
 
         {!quizData ? (
-          <div className='quiz-generation'>
+          <div className={styles.quizGeneration}>
             {isLoading ? (
               <LoadingSpinner message='Generating quiz...' />
             ) : (
               <>
-                <div className='form-group'>
+                <div className={styles.formGroup}>
                   <label htmlFor='topicInput'>Quiz Topic:</label>
                   <input
                     type='text'
@@ -131,7 +131,7 @@ const Quizzes: React.FC = () => {
                   />
                 </div>
 
-                <div className='form-group'>
+                <div className={styles.formGroup}>
                   <label htmlFor='languageSelect'>Language:</label>
                   <select
                     id='languageSelect'
@@ -150,26 +150,26 @@ const Quizzes: React.FC = () => {
                 <button
                   onClick={handleGenerateQuiz}
                   disabled={isLoading || !topic.trim()}
-                  className='generate-button'
+                  className={styles.generateButton}
                 >
                   Generate Quiz
                 </button>
 
-                {error && <div className='error-message'>{error}</div>}
+                {error && <div className={styles.errorMessage}>{error}</div>}
               </>
             )}
           </div>
         ) : (
-          <div className='quiz-preview'>
+          <div className={styles.quizPreview}>
             <h2>{quizData.quiz.title}</h2>
             <p>Language: {languageNames[quizData.quiz.language as TLang]}</p>
             <p>Number of questions: {quizData.quiz.questions.length}</p>
 
-            <div className='quiz-actions'>
-              <button onClick={handleStartQuiz} className='start-button'>
+            <div className={styles.quizActions}>
+              <button onClick={handleStartQuiz} className={styles.startButton}>
                 Start Quiz
               </button>
-              <button onClick={handleBackToGeneration} className='back-button'>
+              <button onClick={handleBackToGeneration} className={styles.backButton}>
                 Create New Quiz
               </button>
             </div>
@@ -184,64 +184,64 @@ const Quizzes: React.FC = () => {
 
   if (!currentQuestion) {
     return (
-      <div className='quiz-container'>
-        <div className='error-message'>Error: Question not found.</div>
+      <div className={styles.quizContainer}>
+        <div className={styles.errorMessage}>Error: Question not found.</div>
         <button onClick={handleBackToGeneration}>Back to Quiz Creation</button>
       </div>
     );
   }
 
   return (
-    <div className='quiz-container'>
-      <div className='quiz-header'>
+    <div className={styles.quizContainer}>
+      <div className={styles.quizHeader}>
         <h1>{quizData.quiz.title}</h1>
-        <div className='quiz-progress'>
+        <div className={styles.quizProgress}>
           Question {currentQuestionIndex + 1} of {totalQuestions}
         </div>
-        <button onClick={handleBackToGeneration} className='back-to-generation'>
+        <button onClick={handleBackToGeneration} className={styles.backToGeneration}>
           ← New Quiz
         </button>
       </div>
 
       {quizCompleted ? (
-        <div className='quiz-results'>
+        <div className={styles.quizResults}>
           <h2>Quiz Results</h2>
-          <div className='score-display'>
-            <span className='score'>{score}</span>
-            <span className='separator'>/</span>
-            <span className='total'>{totalQuestions}</span>
+          <div className={styles.scoreDisplay}>
+            <span className={styles.score}>{score}</span>
+            <span className={styles.separator}>/</span>
+            <span className={styles.total}>{totalQuestions}</span>
           </div>
-          <p className='score-percentage'>
+          <p className={styles.scorePercentage}>
             {Math.round((score / totalQuestions) * 100)}% correct answers
           </p>
 
-          <div className='results-actions'>
-            <button onClick={handleRestartQuiz} className='restart-button'>
+          <div className={styles.resultsActions}>
+            <button onClick={handleRestartQuiz} className={styles.restartButton}>
               Retry Quiz
             </button>
             <button
               onClick={handleBackToGeneration}
-              className='new-quiz-button'
+              className={styles.newQuizButton}
             >
               Create New Quiz
             </button>
           </div>
         </div>
       ) : (
-        <div className='question-container'>
-          <h2 className='question-text'>{currentQuestion.question}</h2>
+        <div className={styles.questionContainer}>
+          <h2 className={styles.questionText}>{currentQuestion.question}</h2>
 
-          <div className='answer-options'>
+          <div className={styles.answerOptions}>
             {currentQuestion.answer_options.map((option, index) => (
               <button
                 key={index}
-                className={`answer-option ${
-                  selectedAnswer === option ? 'selected' : ''
-                } ${showRationale && option.is_correct ? 'correct' : ''} ${
+                className={`${styles.answerOption} ${
+                  selectedAnswer === option ? styles.selected : ''
+                } ${showRationale && option.is_correct ? styles.correct : ''} ${
                   showRationale &&
                   selectedAnswer === option &&
                   !option.is_correct
-                    ? 'incorrect'
+                    ? styles.incorrect
                     : ''
                 }`}
                 onClick={() => handleAnswerSelect(option)}
@@ -254,25 +254,25 @@ const Quizzes: React.FC = () => {
 
           {showRationale && selectedAnswer && (
             <div
-              className={`rationale ${selectedAnswer.is_correct ? 'correct-rationale' : 'incorrect-rationale'}`}
+              className={`${styles.rationale} ${selectedAnswer.is_correct ? styles.correctRationale : styles.incorrectRationale}`}
             >
               <p>{selectedAnswer.rationale}</p>
             </div>
           )}
 
-          {error && <div className='error-message'>{error}</div>}
+          {error && <div className={styles.errorMessage}>{error}</div>}
 
-          <div className='question-actions'>
+          <div className={styles.questionActions}>
             {!showRationale ? (
               <button
                 onClick={handleSubmitAnswer}
                 disabled={selectedAnswer === null}
-                className='submit-button'
+                className={styles.submitButton}
               >
                 Submit Answer
               </button>
             ) : (
-              <button onClick={handleNextQuestion} className='next-button'>
+              <button onClick={handleNextQuestion} className={styles.nextButton}>
                 {currentQuestionIndex < totalQuestions - 1
                   ? 'Next Question'
                   : 'Finish Quiz'}
