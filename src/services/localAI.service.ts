@@ -4,35 +4,26 @@ import { LANGUAGE_NAMES } from '@/constants';
 export type { TLang };
 
 const OLLAMA_URL = import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434';
-const MODEL_NAME = 'llama3.1:8b';
+const MODEL_NAME = 'qwen2.5:3b';  // options: llama3.2:3b, qwen2.5:3b, phi3:mini
 
 function createLocalPrompt(userPrompt: string, languageKey: TLang): any[] {
   const languageName = LANGUAGE_NAMES[languageKey];
   
-  const systemPrompt = `You are an advanced interactive quiz generator. Your task is to create quizzes strictly in the specified JSON format. The response must be a JSON object only, without any extra text, explanations, or markdown formatting.
-
-CRITICAL: ALL TEXT CONTENT must be in ${languageName} language. This includes:
-- Quiz title
-- All questions
-- All answer options
-- All rationales
-Set the "language" field to "${languageKey}".
-
-Use this exact JSON format:
+  const systemPrompt = `Generate quiz JSON. Language: ${languageName}. Format:
 {
-  "title": "",
+  "title": "Title",
   "language": "${languageKey}",
   "questions": [
     {
-      "question": "",
+      "question": "Question?",
       "answer_options": [
-        { "text": "", "rationale": "", "is_correct": false }
+        {"text": "Option", "rationale": "Why", "is_correct": true}
       ]
     }
   ]
 }`;
 
-  const userMessage = `Generate a quiz about "${userPrompt}". Create 5 questions with 4 answer options each. IMPORTANT: Write everything in ${languageName} language only. Do not use English. Respond with valid JSON only.`;
+  const userMessage = `Topic: "${userPrompt}". 5 questions, 4 options each. ${languageName} language. JSON only.`;
 
   return [
     {
@@ -55,7 +46,7 @@ export async function generateQuizViaLocalAI(
         const messages = createLocalPrompt(topic, language);
         
         if (onProgress) {
-            onProgress(10);
+            onProgress(15);
         }
         
         const response = await fetch(`${OLLAMA_URL}/v1/chat/completions`, {
@@ -68,8 +59,15 @@ export async function generateQuizViaLocalAI(
                 messages: messages,
                 format: 'json',
                 stream: false,
-                temperature: 0.7,
-                max_tokens: 4096
+                temperature: 0.2,
+                max_tokens: 1500,
+                top_p: 0.95,
+                frequency_penalty: 0.2,
+                presence_penalty: 0.1,
+                num_predict: 1500,
+                num_ctx: 2048,
+                repeat_penalty: 1.15,
+                top_k: 30
             })
         });
 
@@ -78,13 +76,13 @@ export async function generateQuizViaLocalAI(
         }
 
         if (onProgress) {
-            onProgress(50);
+            onProgress(70);
         }
 
         const data = await response.json();
         
         if (onProgress) {
-            onProgress(80);
+            onProgress(90);
         }
         
         const fullResponseText = data.choices?.[0]?.message?.content || '';
