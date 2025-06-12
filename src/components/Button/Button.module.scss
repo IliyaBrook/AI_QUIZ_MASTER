@@ -1,0 +1,94 @@
+.button {
+  color: white;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    background: #cccccc !important;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  &:hover:not(:disabled) {
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  }
+}
+
+.secondary {
+  background: #6c757d;
+
+  &:hover:not(:disabled) {
+    background: #5a6268;
+  }
+}
+
+.success {
+  background: #28a745;
+
+  &:hover:not(:disabled) {
+    background: #218838;
+  }
+}
+
+.warning {
+  background: #ffc107;
+  color: #212529;
+
+  &:hover:not(:disabled) {
+    background: #e0a800;
+  }
+}
+
+.info {
+  background: #17a2b8;
+
+  &:hover:not(:disabled) {
+    background: #138496;
+  }
+}
+
+.danger {
+  background: #dc3545;
+
+  &:hover:not(:disabled) {
+    background: #c82333;
+  }
+}
+
+.small {
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+}
+
+.medium {
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+.large {
+  padding: 16px 32px;
+  font-size: 18px;
+  border-radius: 10px;
+}
+
+.rounded {
+  border-radius: 50px !important;
+} 

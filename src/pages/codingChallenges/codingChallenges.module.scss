@@ -62,72 +62,7 @@
     }
   }
 
-  .generateButton,
-  .startButton,
-  .backButton,
-  .hintButton,
-  .solutionButton,
-  .runButton {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin: 0 0.5rem;
 
-    &:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
-
-    &:disabled {
-      background: #cccccc;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-  }
-
-  .backButton {
-    background: #6c757d;
-
-    &:hover:not(:disabled) {
-      background: #5a6268;
-    }
-  }
-
-  .hintButton {
-    background: #28a745;
-
-    &:hover:not(:disabled) {
-      background: #218838;
-    }
-  }
-
-  .solutionButton {
-    background: #ffc107;
-    color: #212529;
-
-    &:hover:not(:disabled) {
-      background: #e0a800;
-    }
-  }
-
-  .runButton {
-    background: #17a2b8;
-
-    &:hover:not(:disabled) {
-      background: #138496;
-    }
-  }
 
   .challengeHeader {
     background: white;
@@ -188,15 +123,7 @@
       }
     }
 
-    .backToGeneration {
-      background: #6c757d;
-      padding: 8px 16px;
-      font-size: 14px;
 
-      &:hover {
-        background: #5a6268;
-      }
-    }
   }
 
   .challengePreview {
@@ -252,18 +179,13 @@
       }
     }
 
-    .challengeActions {
-      margin-top: 2rem;
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-
-      button {
-        min-width: 150px;
-        margin: 0;
+          .challengeActions {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
       }
-    }
   }
 
   .challengeContent {

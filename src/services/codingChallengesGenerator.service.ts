@@ -66,19 +66,39 @@ export async function generateCodingChallenge(
 ): Promise<{ challengeData: ICodingChallengeWithWrapper, rawResponseText: string }> {
   const messages = createCodingChallengePrompt(topic, language, programmingLanguage);
   
-  const response = await generateResponse<ICodingChallenge>(
-    messages,
-    {},
-    onProgress
-  );
+  const maxRetries = 2;
+  let lastError: Error | null = null;
 
-  if (response.data && response.data.title && response.data.description) {
-    const challengeData: ICodingChallengeWithWrapper = { challenge: response.data };
-    return { 
-      challengeData, 
-      rawResponseText: response.rawResponseText 
-    };
-  } else {
-    throw new Error('Generated coding challenge data is not in the expected format.');
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      if (onProgress && attempt > 0) {
+        onProgress(10 * attempt);
+      }
+
+      const response = await generateResponse<ICodingChallenge>(
+        messages,
+        {},
+        onProgress
+      );
+
+      if (response.data && response.data.title && response.data.description) {
+        const challengeData: ICodingChallengeWithWrapper = { challenge: response.data };
+        return { 
+          challengeData, 
+          rawResponseText: response.rawResponseText 
+        };
+      } else {
+        throw new Error('Generated coding challenge data is not in the expected format.');
+      }
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      
+      if (attempt < maxRetries) {
+        console.warn(`Attempt ${attempt + 1} failed, retrying:`, lastError.message);
+        await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+      }
+    }
   }
+
+  throw new Error(`Failed to generate coding challenge after ${maxRetries + 1} attempts. Last error: ${lastError?.message}`);
 } 

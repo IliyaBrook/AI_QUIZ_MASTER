@@ -2,7 +2,7 @@ import React, { useState, useCallback, Suspense } from 'react';
 import { generateCodingChallenge, languageNames } from '@/services';
 import type { TLang, TProgrammingLanguage, ICodingChallengeWithWrapper } from '@/types';
 import { DEFAULT_LANGUAGE, PROGRAMMING_LANGUAGE_NAMES, DEFAULT_PROGRAMMING_LANGUAGE } from '@/constants';
-import { LoadingSpinner, CodeEditor } from '@/components';
+import { LoadingSpinner, CodeEditor, Button } from '@/components';
 import { executeCode, formatExecutionResult, type CodeExecutionResult } from '@/services';
 import styles from './codingChallenges.module.scss';
 
@@ -174,13 +174,13 @@ const CodingChallenges: React.FC = () => {
                   </select>
                 </div>
 
-                <button
+                <Button
                   onClick={handleGenerateChallenge}
                   disabled={isLoading || !topic.trim()}
-                  className={styles.generateButton}
+                  variant="primary"
                 >
                   Generate Challenge
-                </button>
+                </Button>
 
                 {error && <div className={styles.errorMessage}>{error}</div>}
               </>
@@ -199,12 +199,12 @@ const CodingChallenges: React.FC = () => {
             </div>
 
             <div className={styles.challengeActions}>
-              <button onClick={handleStartChallenge} className={styles.startButton}>
+              <Button onClick={handleStartChallenge} variant="primary">
                 Start Challenge
-              </button>
-              <button onClick={handleBackToGeneration} className={styles.backButton}>
+              </Button>
+              <Button onClick={handleBackToGeneration} variant="secondary">
                 Create New Challenge
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -222,9 +222,9 @@ const CodingChallenges: React.FC = () => {
           <span className={`${styles.difficulty} ${styles[challenge.difficulty]}`}>{challenge.difficulty}</span>
           <span className={styles.programmingLanguage}>{PROGRAMMING_LANGUAGE_NAMES[challenge.programmingLanguage]}</span>
         </div>
-        <button onClick={handleBackToGeneration} className={styles.backToGeneration}>
+        <Button onClick={handleBackToGeneration} variant="secondary" size="small">
           ← New Challenge
-        </button>
+        </Button>
       </div>
 
       <div className={styles.challengeContent}>
@@ -239,21 +239,21 @@ const CodingChallenges: React.FC = () => {
           <div className={styles.codeHeader}>
             <h3>Your Solution</h3>
                          <div className={styles.codeActions}>
-               <button 
+               <Button 
                  onClick={handleRunCode} 
                  disabled={isRunning}
-                 className={styles.runButton}
+                 variant="info"
                >
                  {isRunning ? 'Running...' : 'Run Code'}
-               </button>
+               </Button>
                {challenge.hints && challenge.hints.length > 0 && (
-                 <button onClick={handleToggleHints} className={styles.hintButton}>
+                 <Button onClick={handleToggleHints} variant="success">
                    {showHints ? 'Hide Hints' : 'Show Hints'}
-                 </button>
+                 </Button>
                )}
-               <button onClick={handleToggleSolution} className={styles.solutionButton}>
+               <Button onClick={handleToggleSolution} variant="warning">
                  {showSolution ? 'Hide Solution' : 'Show Solution'}
-               </button>
+               </Button>
              </div>
           </div>
 
