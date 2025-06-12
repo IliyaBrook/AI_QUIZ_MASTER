@@ -7,16 +7,18 @@ import { LoadingSpinner } from '@/components';
 import './quizzes.scss';
 
 const Quizzes: React.FC = () => {
-    const [topic, setTopic] = useState<string>('');
+  const [topic, setTopic] = useState<string>('');
   const [language, setLanguage] = useState<TLang>(DEFAULT_LANGUAGE);
   const [quizData, setQuizData] = useState<IQuizWithWrapper | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [error, setError] = useState<string | null>(null);
-  
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<IAnswerOption | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<IAnswerOption | null>(
+    null
+  );
   const [showRationale, setShowRationale] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
@@ -103,73 +105,71 @@ const Quizzes: React.FC = () => {
 
   if (!quizData || !quizStarted) {
     return (
-      <div className="quiz-container">
+      <div className='quiz-container'>
         <h1>AI Quiz Master</h1>
-        
+
         {!quizData ? (
-          <div className="quiz-generation">
+          <div className='quiz-generation'>
             {isLoading ? (
-              <LoadingSpinner message="Generating quiz..." />
+              <LoadingSpinner message='Generating quiz...' />
             ) : (
               <>
-                <div className="form-group">
-                  <label htmlFor="topicInput">Quiz Topic:</label>
+                <div className='form-group'>
+                  <label htmlFor='topicInput'>Quiz Topic:</label>
                   <input
-                    type="text"
-                    id="topicInput"
+                    type='text'
+                    id='topicInput'
                     value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
-                    onKeyDown={(e) => {
+                    onChange={e => setTopic(e.target.value)}
+                    onKeyDown={e => {
                       if (e.key === 'Enter' && topic.trim() && !isLoading) {
                         handleGenerateQuiz();
                       }
                     }}
-                    placeholder="e.g., Ancient Egypt History"
+                    placeholder='e.g., Ancient Egypt History'
                     disabled={isLoading}
                   />
                 </div>
-                
-                <div className="form-group">
-                  <label htmlFor="languageSelect">Language:</label>
+
+                <div className='form-group'>
+                  <label htmlFor='languageSelect'>Language:</label>
                   <select
-                    id="languageSelect"
+                    id='languageSelect'
                     value={language}
-                    onChange={(e) => setLanguage(e.target.value as TLang)}
+                    onChange={e => setLanguage(e.target.value as TLang)}
                     disabled={isLoading}
                   >
                     {Object.entries(languageNames).map(([key, name]) => (
-                      <option key={key} value={key}>{name}</option>
+                      <option key={key} value={key}>
+                        {name}
+                      </option>
                     ))}
                   </select>
                 </div>
-                
-                <button 
-                  onClick={handleGenerateQuiz} 
+
+                <button
+                  onClick={handleGenerateQuiz}
                   disabled={isLoading || !topic.trim()}
-                  className="generate-button"
+                  className='generate-button'
                 >
                   Generate Quiz
                 </button>
-                
-                {error && (
-                  <div className="error-message">
-                    {error}
-                  </div>
-                )}
+
+                {error && <div className='error-message'>{error}</div>}
               </>
             )}
           </div>
         ) : (
-          <div className="quiz-preview">
+          <div className='quiz-preview'>
             <h2>{quizData.quiz.title}</h2>
             <p>Language: {languageNames[quizData.quiz.language as TLang]}</p>
             <p>Number of questions: {quizData.quiz.questions.length}</p>
-            
-            <div className="quiz-actions">
-              <button onClick={handleStartQuiz} className="start-button">
+
+            <div className='quiz-actions'>
+              <button onClick={handleStartQuiz} className='start-button'>
                 Start Quiz
               </button>
-              <button onClick={handleBackToGeneration} className="back-button">
+              <button onClick={handleBackToGeneration} className='back-button'>
                 Create New Quiz
               </button>
             </div>
@@ -184,60 +184,65 @@ const Quizzes: React.FC = () => {
 
   if (!currentQuestion) {
     return (
-      <div className="quiz-container">
-        <div className="error-message">Error: Question not found.</div>
+      <div className='quiz-container'>
+        <div className='error-message'>Error: Question not found.</div>
         <button onClick={handleBackToGeneration}>Back to Quiz Creation</button>
       </div>
     );
   }
 
   return (
-    <div className="quiz-container">
-      <div className="quiz-header">
+    <div className='quiz-container'>
+      <div className='quiz-header'>
         <h1>{quizData.quiz.title}</h1>
-        <div className="quiz-progress">
+        <div className='quiz-progress'>
           Question {currentQuestionIndex + 1} of {totalQuestions}
         </div>
-        <button onClick={handleBackToGeneration} className="back-to-generation">
+        <button onClick={handleBackToGeneration} className='back-to-generation'>
           ← New Quiz
         </button>
       </div>
 
       {quizCompleted ? (
-        <div className="quiz-results">
+        <div className='quiz-results'>
           <h2>Quiz Results</h2>
-          <div className="score-display">
-            <span className="score">{score}</span>
-            <span className="separator">/</span>
-            <span className="total">{totalQuestions}</span>
+          <div className='score-display'>
+            <span className='score'>{score}</span>
+            <span className='separator'>/</span>
+            <span className='total'>{totalQuestions}</span>
           </div>
-          <p className="score-percentage">
+          <p className='score-percentage'>
             {Math.round((score / totalQuestions) * 100)}% correct answers
           </p>
-          
-          <div className="results-actions">
-            <button onClick={handleRestartQuiz} className="restart-button">
+
+          <div className='results-actions'>
+            <button onClick={handleRestartQuiz} className='restart-button'>
               Retry Quiz
             </button>
-            <button onClick={handleBackToGeneration} className="new-quiz-button">
+            <button
+              onClick={handleBackToGeneration}
+              className='new-quiz-button'
+            >
               Create New Quiz
             </button>
           </div>
         </div>
       ) : (
-        <div className="question-container">
-          <h2 className="question-text">{currentQuestion.question}</h2>
-          
-          <div className="answer-options">
+        <div className='question-container'>
+          <h2 className='question-text'>{currentQuestion.question}</h2>
+
+          <div className='answer-options'>
             {currentQuestion.answer_options.map((option, index) => (
               <button
                 key={index}
                 className={`answer-option ${
                   selectedAnswer === option ? 'selected' : ''
-                } ${
-                  showRationale && option.is_correct ? 'correct' : ''
-                } ${
-                  showRationale && selectedAnswer === option && !option.is_correct ? 'incorrect' : ''
+                } ${showRationale && option.is_correct ? 'correct' : ''} ${
+                  showRationale &&
+                  selectedAnswer === option &&
+                  !option.is_correct
+                    ? 'incorrect'
+                    : ''
                 }`}
                 onClick={() => handleAnswerSelect(option)}
                 disabled={showRationale}
@@ -248,29 +253,29 @@ const Quizzes: React.FC = () => {
           </div>
 
           {showRationale && selectedAnswer && (
-            <div className={`rationale ${selectedAnswer.is_correct ? 'correct-rationale' : 'incorrect-rationale'}`}>
+            <div
+              className={`rationale ${selectedAnswer.is_correct ? 'correct-rationale' : 'incorrect-rationale'}`}
+            >
               <p>{selectedAnswer.rationale}</p>
             </div>
           )}
 
-          {error && (
-            <div className="error-message">
-              {error}
-            </div>
-          )}
+          {error && <div className='error-message'>{error}</div>}
 
-          <div className="question-actions">
+          <div className='question-actions'>
             {!showRationale ? (
               <button
                 onClick={handleSubmitAnswer}
                 disabled={selectedAnswer === null}
-                className="submit-button"
+                className='submit-button'
               >
                 Submit Answer
               </button>
             ) : (
-              <button onClick={handleNextQuestion} className="next-button">
-                {currentQuestionIndex < totalQuestions - 1 ? 'Next Question' : 'Finish Quiz'}
+              <button onClick={handleNextQuestion} className='next-button'>
+                {currentQuestionIndex < totalQuestions - 1
+                  ? 'Next Question'
+                  : 'Finish Quiz'}
               </button>
             )}
           </div>
@@ -278,12 +283,12 @@ const Quizzes: React.FC = () => {
       )}
     </div>
   );
-}
+};
 
 const QuizzesWithSuspense: React.FC = () => (
-    <Suspense fallback={<LoadingSpinner />}>
-        <Quizzes />
-    </Suspense>
+  <Suspense fallback={<LoadingSpinner />}>
+    <Quizzes />
+  </Suspense>
 );
 
-export default QuizzesWithSuspense; 
+export default QuizzesWithSuspense;
