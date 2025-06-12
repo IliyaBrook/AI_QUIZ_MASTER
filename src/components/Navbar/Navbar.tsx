@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import styles from './Navbar.module.scss';
-import { appPages } from '@/data';
+import { appPages } from '@/settings';
 
 export default function Navbar() {
   return (

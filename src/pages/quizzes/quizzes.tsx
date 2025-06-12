@@ -4,10 +4,10 @@ import type { TLang } from '@/services';
 import type { IQuizWithWrapper, IAnswerOption } from '@/types';
 import { DEFAULT_LANGUAGE } from '@/constants';
 import { LoadingSpinner } from '@/components';
-import './InteractiveQuiz.scss';
+import './quizzes.scss';
 
-const InteractiveQuiz: React.FC = () => {
-  const [topic, setTopic] = useState<string>('');
+const Quizzes: React.FC = () => {
+    const [topic, setTopic] = useState<string>('');
   const [language, setLanguage] = useState<TLang>(DEFAULT_LANGUAGE);
   const [quizData, setQuizData] = useState<IQuizWithWrapper | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -278,12 +278,12 @@ const InteractiveQuiz: React.FC = () => {
       )}
     </div>
   );
-};
+}
 
-const InteractiveQuizWithSuspense: React.FC = () => (
-  <Suspense fallback={<LoadingSpinner />}>
-    <InteractiveQuiz />
-  </Suspense>
+const QuizzesWithSuspense: React.FC = () => (
+    <Suspense fallback={<LoadingSpinner />}>
+        <Quizzes />
+    </Suspense>
 );
 
-export default InteractiveQuizWithSuspense;
+export default QuizzesWithSuspense; 
