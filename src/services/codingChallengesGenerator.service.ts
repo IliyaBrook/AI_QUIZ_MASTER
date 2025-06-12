@@ -25,15 +25,26 @@ function createCodingChallengePrompt(
   "language": "${languageKey}",
   "programmingLanguage": "${programmingLanguage}",
   "difficulty": "easy|medium|hard",
-  "initialCode": "starter code template",
-  "solution": "complete solution code",
+  "initialCode": "function with test cases as console.log calls",
+  "solution": "complete solution code with working implementation",
   "testCases": [
     {"input": "test input", "expectedOutput": "expected result", "description": "test description"}
   ],
   "hints": ["helpful hint 1", "helpful hint 2"]
-}`;
+}
 
-  const userMessage = `Topic: "${topic}". Create ${programmingLanguage} coding challenge. ${languageName} language. Provide initial code template and solution. Include 3-5 test cases. JSON only.`;
+IMPORTANT: In initialCode, include the function template and test cases as console.log calls showing expected output in comments. Example:
+function functionName(param) {
+    // your code here
+}
+
+console.log("Test case 1:", functionName([1, 2, 3]));
+// Expected output: [result1, result2, result3]
+
+console.log("Test case 2:", functionName([4, 5]));
+// Expected output: [result4, result5]`;
+
+  const userMessage = `Topic: "${topic}". Create ${programmingLanguage} coding challenge. ${languageName} language. Include function template with test cases as console.log calls in initialCode. Provide working solution. Include 3-4 test cases. JSON only.`;
 
   return [
     {

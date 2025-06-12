@@ -3,6 +3,7 @@ import { generateCodingChallenge, languageNames } from '@/services';
 import type { TLang, TProgrammingLanguage, ICodingChallengeWithWrapper } from '@/types';
 import { DEFAULT_LANGUAGE, PROGRAMMING_LANGUAGE_NAMES, DEFAULT_PROGRAMMING_LANGUAGE } from '@/constants';
 import { LoadingSpinner, CodeEditor } from '@/components';
+import { executeCode, formatExecutionResult, type CodeExecutionResult } from '@/services';
 import styles from './codingChallenges.module.scss';
 
 const CodingChallenges: React.FC = () => {
@@ -17,6 +18,8 @@ const CodingChallenges: React.FC = () => {
   const [showSolution, setShowSolution] = useState<boolean>(false);
   const [showHints, setShowHints] = useState<boolean>(false);
   const [challengeStarted, setChallengeStarted] = useState<boolean>(false);
+  const [executionResult, setExecutionResult] = useState<CodeExecutionResult | null>(null);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
 
   const handleGenerateChallenge = useCallback(async () => {
     if (!topic.trim()) {
@@ -50,6 +53,8 @@ const CodingChallenges: React.FC = () => {
     setShowSolution(false);
     setShowHints(false);
     setChallengeStarted(false);
+    setExecutionResult(null);
+    setIsRunning(false);
   };
 
   const handleStartChallenge = () => {
@@ -59,6 +64,7 @@ const CodingChallenges: React.FC = () => {
     setChallengeStarted(true);
     setShowSolution(false);
     setShowHints(false);
+    setExecutionResult(null);
   };
 
   const handleBackToGeneration = () => {
@@ -78,6 +84,34 @@ const CodingChallenges: React.FC = () => {
 
   const handleToggleHints = () => {
     setShowHints(!showHints);
+  };
+
+  const handleRunCode = async () => {
+    if (!userCode.trim()) {
+      setError('Please write some code to run.');
+      return;
+    }
+
+    if (!challengeData?.challenge.programmingLanguage) {
+      setError('Programming language not specified.');
+      return;
+    }
+
+    setIsRunning(true);
+    setError(null);
+
+    try {
+      const result = await executeCode(userCode, challengeData.challenge.programmingLanguage);
+      setExecutionResult(result);
+      
+      if (!result.success && result.error) {
+        setError(result.error);
+      }
+    } catch (e) {
+      setError(`Execution failed: ${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      setIsRunning(false);
+    }
   };
 
   if (!challengeData || !challengeStarted) {
@@ -199,32 +233,28 @@ const CodingChallenges: React.FC = () => {
           <p>{challenge.description}</p>
         </div>
 
-        {challenge.testCases && challenge.testCases.length > 0 && (
-          <div className={styles.testCases}>
-            <h3>Test Cases</h3>
-            {challenge.testCases.map((testCase, index) => (
-              <div key={index} className={styles.testCase}>
-                <p><strong>Input:</strong> {testCase.input}</p>
-                <p><strong>Expected Output:</strong> {testCase.expectedOutput}</p>
-                {testCase.description && <p><strong>Description:</strong> {testCase.description}</p>}
-              </div>
-            ))}
-          </div>
-        )}
+        
 
         <div className={styles.codeSection}>
           <div className={styles.codeHeader}>
             <h3>Your Solution</h3>
-            <div className={styles.codeActions}>
-              {challenge.hints && challenge.hints.length > 0 && (
-                <button onClick={handleToggleHints} className={styles.hintButton}>
-                  {showHints ? 'Hide Hints' : 'Show Hints'}
-                </button>
-              )}
-              <button onClick={handleToggleSolution} className={styles.solutionButton}>
-                {showSolution ? 'Hide Solution' : 'Show Solution'}
-              </button>
-            </div>
+                         <div className={styles.codeActions}>
+               <button 
+                 onClick={handleRunCode} 
+                 disabled={isRunning}
+                 className={styles.runButton}
+               >
+                 {isRunning ? 'Running...' : 'Run Code'}
+               </button>
+               {challenge.hints && challenge.hints.length > 0 && (
+                 <button onClick={handleToggleHints} className={styles.hintButton}>
+                   {showHints ? 'Hide Hints' : 'Show Hints'}
+                 </button>
+               )}
+               <button onClick={handleToggleSolution} className={styles.solutionButton}>
+                 {showSolution ? 'Hide Solution' : 'Show Solution'}
+               </button>
+             </div>
           </div>
 
           {showHints && challenge.hints && (
@@ -238,14 +268,23 @@ const CodingChallenges: React.FC = () => {
             </div>
           )}
 
-          <CodeEditor
-            value={userCode}
-            onChange={handleCodeChange}
-            language={challenge.programmingLanguage}
-            height='400px'
-          />
+                     <CodeEditor
+             value={userCode}
+             onChange={handleCodeChange}
+             language={challenge.programmingLanguage}
+             height='400px'
+           />
 
-          {showSolution && (
+           {executionResult && (
+             <div className={styles.executionResult}>
+               <h4>Execution Result</h4>
+               <pre className={styles.resultOutput}>
+                 {formatExecutionResult(executionResult)}
+               </pre>
+             </div>
+           )}
+
+           {showSolution && (
             <div className={styles.solution}>
               <h4>Solution</h4>
               <CodeEditor
@@ -261,8 +300,8 @@ const CodingChallenges: React.FC = () => {
       </div>
 
       {error && <div className={styles.errorMessage}>{error}</div>}
-    </div>
-  );
+        </div>
+    );
 };
 
 const CodingChallengesWithSuspense: React.FC = () => (

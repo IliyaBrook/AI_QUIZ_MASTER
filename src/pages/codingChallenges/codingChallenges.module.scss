@@ -17,7 +17,9 @@
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
-  .challengeGeneration, .challengePreview, .challengeContent {
+  .challengeGeneration,
+  .challengePreview,
+  .challengeContent {
     background: white;
     border-radius: 15px;
     padding: 2rem;
@@ -38,7 +40,8 @@
       color: #333;
     }
 
-    input, select {
+    input,
+    select {
       width: 100%;
       padding: 12px;
       border: 2px solid #e0e0e0;
@@ -59,7 +62,12 @@
     }
   }
 
-  .generateButton, .startButton, .backButton, .hintButton, .solutionButton {
+  .generateButton,
+  .startButton,
+  .backButton,
+  .hintButton,
+  .solutionButton,
+  .runButton {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     padding: 12px 24px;
@@ -90,7 +98,7 @@
 
   .backButton {
     background: #6c757d;
-    
+
     &:hover:not(:disabled) {
       background: #5a6268;
     }
@@ -98,7 +106,7 @@
 
   .hintButton {
     background: #28a745;
-    
+
     &:hover:not(:disabled) {
       background: #218838;
     }
@@ -107,9 +115,17 @@
   .solutionButton {
     background: #ffc107;
     color: #212529;
-    
+
     &:hover:not(:disabled) {
       background: #e0a800;
+    }
+  }
+
+  .runButton {
+    background: #17a2b8;
+
+    &:hover:not(:disabled) {
+      background: #138496;
     }
   }
 
@@ -176,7 +192,7 @@
       background: #6c757d;
       padding: 8px 16px;
       font-size: 14px;
-      
+
       &:hover {
         background: #5a6268;
       }
@@ -201,7 +217,7 @@
       p {
         margin: 0.5rem 0;
         color: #666;
-        
+
         .difficulty {
           padding: 2px 8px;
           border-radius: 12px;
@@ -229,7 +245,7 @@
 
     .challengeDescription {
       margin-bottom: 2rem;
-      
+
       p {
         color: #666;
         line-height: 1.6;
@@ -267,34 +283,6 @@
       }
     }
 
-    .testCases {
-      margin-bottom: 2rem;
-
-      h3 {
-        color: #333;
-        margin-bottom: 1rem;
-      }
-
-      .testCase {
-        background-color: #f8f9fa;
-        padding: 1rem;
-        border-radius: 8px;
-        margin-bottom: 1rem;
-        border-left: 4px solid #667eea;
-
-        p {
-          margin: 0.5rem 0;
-          color: #333;
-          font-family: 'Courier New', monospace;
-          
-          strong {
-            color: #495057;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          }
-        }
-      }
-    }
-
     .codeSection {
       .codeHeader {
         display: flex;
@@ -310,6 +298,7 @@
         .codeActions {
           display: flex;
           gap: 0.5rem;
+          flex-wrap: wrap;
         }
       }
 
@@ -328,11 +317,37 @@
         ul {
           margin: 0;
           padding-left: 1.5rem;
-          
+
           li {
             color: #004085;
             margin-bottom: 0.5rem;
           }
+        }
+      }
+
+      .executionResult {
+        margin-top: 1rem;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 1rem;
+
+        h4 {
+          color: #495057;
+          margin-bottom: 1rem;
+        }
+
+        .resultOutput {
+          background-color: #212529;
+          color: #f8f9fa;
+          padding: 1rem;
+          border-radius: 4px;
+          font-family: 'Courier New', Consolas, monospace;
+          font-size: 14px;
+          line-height: 1.4;
+          overflow-x: auto;
+          white-space: pre-wrap;
+          margin: 0;
         }
       }
 
@@ -368,7 +383,9 @@
       font-size: 2rem;
     }
 
-    .challengeGeneration, .challengePreview, .challengeContent {
+    .challengeGeneration,
+    .challengePreview,
+    .challengeContent {
       padding: 1.5rem;
       max-width: none;
     }
@@ -395,7 +412,7 @@
     .codeHeader {
       flex-direction: column;
       gap: 1rem;
-      
+
       .codeActions {
         justify-content: center;
       }
