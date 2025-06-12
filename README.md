@@ -32,8 +32,8 @@ An intelligent quiz generation application powered by local AI models. Generate 
 ### Prerequisites
 
 - **Docker & Docker Compose** (recommended)
-- **8GB+ RAM** (for qwen2.5:3b model)
-- **4GB+ free disk space**
+- **4GB+ RAM** (for qwen2.5:3b model)
+- **3GB+ free disk space**
 
 ### Option 1: Docker Setup (Recommended)
 
@@ -143,57 +143,10 @@ make gpu-check    # Check GPU availability
 
 ### Resource Requirements
 
-- **CPU**: 2-4 cores recommended
-- **RAM**: 8GB minimum, 16GB recommended
-- **Disk**: ~5GB for model and containers
-- **GPU**: Optional but recommended for faster processing
-
-## 🔧 Development
-
-### Project Structure
-
-```
-AI_QUIZ_MASTER/
-├── src/
-│   ├── components/          # React components
-│   │   ├── InteractiveQuiz/ # Main quiz component
-│   │   ├── LoadingSpinner/  # Loading indicators
-│   │   └── ...
-│   ├── services/            # API services
-│   │   ├── localAI.service.ts    # Ollama integration
-│   │   └── quizGenerator.service.ts
-│   ├── types/               # TypeScript definitions
-│   ├── constants/           # App constants
-│   └── assets/              # Static assets
-├── docker-compose.yml       # Docker services
-├── Makefile                # Development commands
-└── README.md               # This file
-```
-
-### Key Types
-
-```typescript
-interface IQuizWithWrapper {
-  quiz: IQuizAiResponse;
-}
-
-interface IQuizAiResponse {
-  title: string;
-  language: string;
-  questions: IQuestion[];
-}
-
-interface IQuestion {
-  question: string;
-  answer_options: IAnswerOption[];
-}
-
-interface IAnswerOption {
-  text: string;
-  rationale: string;
-  is_correct: boolean;
-}
-```
+- **CPU**: 2 cores minimum (any modern processor)
+- **RAM**: 4GB minimum, 6GB recommended
+- **Disk**: ~3GB for model and containers
+- **GPU**: Not required (CPU-only operation)
 
 ## 🐛 Troubleshooting
 
