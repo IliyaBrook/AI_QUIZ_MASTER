@@ -49,6 +49,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   return (
     <div className='code-editor-container'>
       <Editor
+        className='code-editor'
         height={height}
         language={getMonacoLanguage(language)}
         value={value}
@@ -69,7 +70,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           folding: true,
           lineDecorationsWidth: 20,
           lineNumbersMinChars: 3,
-          glyphMargin: false
+          glyphMargin: false,
+          fixedOverflowWidgets: true,
         }}
       />
     </div>
