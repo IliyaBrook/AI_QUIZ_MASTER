@@ -1,15 +1,14 @@
 import React, { useState, useCallback, Suspense } from 'react';
-import { generateQuiz, languageNames, modelNames } from '@/services';
-import type { TLang, TModelType } from '@/services';
+import { generateQuiz, languageNames } from '@/services';
+import type { TLang } from '@/services';
 import type { IQuizWithWrapper, IAnswerOption } from '@/types';
-import { DEFAULT_LANGUAGE, DEFAULT_MODEL } from '@/constants';
+import { DEFAULT_LANGUAGE } from '@/constants';
 import { LoadingSpinner } from '@/components';
 import './InteractiveQuiz.scss';
 
 const InteractiveQuiz: React.FC = () => {
   const [topic, setTopic] = useState<string>('');
   const [language, setLanguage] = useState<TLang>(DEFAULT_LANGUAGE);
-  const [modelType, setModelType] = useState<TModelType>(DEFAULT_MODEL);
   const [quizData, setQuizData] = useState<IQuizWithWrapper | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -38,7 +37,7 @@ const InteractiveQuiz: React.FC = () => {
     resetQuizState();
 
     try {
-      const { quizData: newQuizData } = await generateQuiz(topic, language, modelType);
+      const { quizData: newQuizData } = await generateQuiz(topic, language);
       setQuizData(newQuizData);
     } catch (e) {
       console.error('Error generating quiz:', e);
@@ -47,7 +46,7 @@ const InteractiveQuiz: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [topic, language, modelType, isLoading]);
+  }, [topic, language, isLoading]);
 
   const resetQuizState = () => {
     setCurrentQuestionIndex(0);
@@ -139,20 +138,6 @@ const InteractiveQuiz: React.FC = () => {
                     disabled={isLoading}
                   >
                     {Object.entries(languageNames).map(([key, name]) => (
-                      <option key={key} value={key}>{name}</option>
-                    ))}
-                  </select>
-                </div>
-                
-                <div className="form-group">
-                  <label htmlFor="modelSelect">Model:</label>
-                  <select
-                    id="modelSelect"
-                    value={modelType}
-                    onChange={(e) => setModelType(e.target.value as TModelType)}
-                    disabled={isLoading}
-                  >
-                    {Object.entries(modelNames).map(([key, name]) => (
                       <option key={key} value={key}>{name}</option>
                     ))}
                   </select>

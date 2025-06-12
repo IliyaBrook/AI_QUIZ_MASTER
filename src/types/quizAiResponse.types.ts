@@ -19,15 +19,9 @@ export interface IAnswerOption {
   is_correct: boolean;
 }
 
-export type TLang = 'ru' | 'en' | 'es' | 'fr' | 'de';
+export type TLang = 'en' | 'ru' | 'es' | 'fr' | 'de' | 'it' | 'pt' | 'ja' | 'ko' | 'zh' | 'hi' | 'ar' | 'tr' | 'nl' | 'pl' | 'sv' | 'da' | 'no' | 'fi';
 
 export type TLanguageMap = {
   [K in TLang]: string;
-};
-
-export type TModelType = 'local' | 'gemini';
-
-export type TModelMap = {
-  [K in TModelType]: string;
 };
   

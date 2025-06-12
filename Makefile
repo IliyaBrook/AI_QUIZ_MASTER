@@ -1,5 +1,5 @@
-.PHONY: up down build rebuild logs clean ai dev pull-models optimize gpu-check run-model
-model = qwen2.5:3b # options: llama3.2:3b, qwen2.5:3b, phi3:mini
+.PHONY: up down build rebuild logs clean ai dev pull-model optimize gpu-check run-model
+model = qwen2.5:3b
 
 up:
 	docker-compose up -d
@@ -31,12 +31,9 @@ clean:
 	docker system prune -f
 	docker volume prune -f
 
-pull-models:
-	@echo "Pulling models..."
+pull-model:
+	@echo "Pulling qwen2.5:3b model..."
 	docker exec quiz-ollama ollama pull $(model)
-	docker exec quiz-ollama ollama pull llama3.2:3b # q2
-	docker exec quiz-ollama ollama pull qwen2.5:3b  # q1
-	docker exec quiz-ollama ollama pull phi3:mini # q3
 
 optimize:
 	@echo "Optimizing Ollama for Using GPU..."
@@ -62,9 +59,9 @@ help:
 	@echo "  make logs       - Show container logs"
 	@echo "  make ai         - Start only Ollama service"
 	@echo "  make dev        - Start Ollama and run development server via pnpm"
-	@echo "  make pull-models - Download models optimized for Using GPU"
-	@echo "  make run-model  - Run selected model (use model=name to override)"
-	@echo "  make optimize   - Test GPU optimization with selected model"
+	@echo "  make pull-model - Download qwen2.5:3b model"
+	@echo "  make run-model  - Run qwen2.5:3b model"
+	@echo "  make optimize   - Test GPU optimization with qwen2.5:3b model"
 	@echo "  make gpu-check  - Check if GPU is available in Docker"
 	@echo "  make clean      - Stop containers and clean Docker system"
 	@echo "  make help       - Show this help" 

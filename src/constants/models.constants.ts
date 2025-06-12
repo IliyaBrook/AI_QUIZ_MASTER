@@ -1,17 +1,25 @@
-import type { TLang, TLanguageMap, TModelMap } from '@/types/quizAiResponse.types';
+import type { TLang, TLanguageMap } from '@/types/quizAiResponse.types';
 
 export const LANGUAGE_NAMES: TLanguageMap = {
-    'ru': 'Russian',
     'en': 'English',
+    'ru': 'Russian',
     'es': 'Spanish',
     'fr': 'French',
-    'de': 'German'
+    'de': 'German',
+    'it': 'Italian',
+    'pt': 'Portuguese',
+    'ja': 'Japanese',
+    'ko': 'Korean',
+    'zh': 'Chinese',
+    'hi': 'Hindi',
+    'ar': 'Arabic',
+    'tr': 'Turkish',
+    'nl': 'Dutch',
+    'pl': 'Polish',
+    'sv': 'Swedish',
+    'da': 'Danish',
+    'no': 'Norwegian',
+    'fi': 'Finnish'
 };
 
-export const MODEL_NAMES: TModelMap = {
-    'local': 'Local AI (Llama 3.1 8B)',
-    'gemini': 'Google Gemini'
-};
-
-export const DEFAULT_LANGUAGE: TLang = 'ru';
-export const DEFAULT_MODEL = 'local'; 
+export const DEFAULT_LANGUAGE: TLang = 'ru'; 
