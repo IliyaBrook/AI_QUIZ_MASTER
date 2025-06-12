@@ -3,7 +3,7 @@ import { generateQuiz, languageNames } from '@/services';
 import type { TLang } from '@/services';
 import type { IQuizWithWrapper, IAnswerOption } from '@/types';
 import { DEFAULT_LANGUAGE } from '@/constants';
-import { LoadingSpinner } from '@/components';
+import { LoadingSpinner, Input, Select, Button } from '@/components';
 import styles from './quizzes.module.scss';
 
 const Quizzes: React.FC = () => {
@@ -114,46 +114,39 @@ const Quizzes: React.FC = () => {
               <LoadingSpinner message='Generating quiz...' />
             ) : (
               <>
-                <div className={styles.formGroup}>
-                  <label htmlFor='topicInput'>Quiz Topic:</label>
-                  <input
-                    type='text'
-                    id='topicInput'
-                    value={topic}
-                    onChange={e => setTopic(e.target.value)}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' && topic.trim() && !isLoading) {
-                        handleGenerateQuiz();
-                      }
-                    }}
-                    placeholder='e.g., Ancient Egypt History'
-                    disabled={isLoading}
-                  />
-                </div>
+                <Input
+                  label="Quiz Topic"
+                  id="topicInput"
+                  value={topic}
+                  onChange={setTopic}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && topic.trim() && !isLoading) {
+                      handleGenerateQuiz();
+                    }
+                  }}
+                  placeholder="e.g., Ancient Egypt History"
+                  disabled={isLoading}
+                />
 
-                <div className={styles.formGroup}>
-                  <label htmlFor='languageSelect'>Language:</label>
-                  <select
-                    id='languageSelect'
-                    value={language}
-                    onChange={e => setLanguage(e.target.value as TLang)}
-                    disabled={isLoading}
-                  >
-                    {Object.entries(languageNames).map(([key, name]) => (
-                      <option key={key} value={key}>
-                        {name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <Select
+                  label="Language"
+                  id="languageSelect"
+                  value={language}
+                  options={Object.entries(languageNames).map(([key, name]) => ({
+                    value: key,
+                    label: name
+                  }))}
+                  onChange={value => setLanguage(value as TLang)}
+                  disabled={isLoading}
+                />
 
-                <button
+                <Button
                   onClick={handleGenerateQuiz}
                   disabled={isLoading || !topic.trim()}
-                  className={styles.generateButton}
+                  variant="primary"
                 >
                   Generate Quiz
-                </button>
+                </Button>
 
                 {error && <div className={styles.errorMessage}>{error}</div>}
               </>
@@ -166,12 +159,12 @@ const Quizzes: React.FC = () => {
             <p>Number of questions: {quizData.quiz.questions.length}</p>
 
             <div className={styles.quizActions}>
-              <button onClick={handleStartQuiz} className={styles.startButton}>
+              <Button onClick={handleStartQuiz} variant="primary">
                 Start Quiz
-              </button>
-              <button onClick={handleBackToGeneration} className={styles.backButton}>
+              </Button>
+              <Button onClick={handleBackToGeneration} variant="secondary">
                 Create New Quiz
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -186,7 +179,9 @@ const Quizzes: React.FC = () => {
     return (
       <div className={styles.quizContainer}>
         <div className={styles.errorMessage}>Error: Question not found.</div>
-        <button onClick={handleBackToGeneration}>Back to Quiz Creation</button>
+        <Button onClick={handleBackToGeneration} variant="secondary">
+          Back to Quiz Creation
+        </Button>
       </div>
     );
   }
@@ -198,9 +193,9 @@ const Quizzes: React.FC = () => {
         <div className={styles.quizProgress}>
           Question {currentQuestionIndex + 1} of {totalQuestions}
         </div>
-        <button onClick={handleBackToGeneration} className={styles.backToGeneration}>
+        <Button onClick={handleBackToGeneration} variant="secondary" size="small">
           ← New Quiz
-        </button>
+        </Button>
       </div>
 
       {quizCompleted ? (
@@ -216,15 +211,12 @@ const Quizzes: React.FC = () => {
           </p>
 
           <div className={styles.resultsActions}>
-            <button onClick={handleRestartQuiz} className={styles.restartButton}>
+            <Button onClick={handleRestartQuiz} variant="info">
               Retry Quiz
-            </button>
-            <button
-              onClick={handleBackToGeneration}
-              className={styles.newQuizButton}
-            >
+            </Button>
+            <Button onClick={handleBackToGeneration} variant="secondary">
               Create New Quiz
-            </button>
+            </Button>
           </div>
         </div>
       ) : (
@@ -264,19 +256,19 @@ const Quizzes: React.FC = () => {
 
           <div className={styles.questionActions}>
             {!showRationale ? (
-              <button
+              <Button
                 onClick={handleSubmitAnswer}
                 disabled={selectedAnswer === null}
-                className={styles.submitButton}
+                variant="primary"
               >
                 Submit Answer
-              </button>
+              </Button>
             ) : (
-              <button onClick={handleNextQuestion} className={styles.nextButton}>
+              <Button onClick={handleNextQuestion} variant="success">
                 {currentQuestionIndex < totalQuestions - 1
                   ? 'Next Question'
                   : 'Finish Quiz'}
-              </button>
+              </Button>
             )}
           </div>
         </div>

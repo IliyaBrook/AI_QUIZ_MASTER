@@ -2,7 +2,7 @@ import React, { useState, useCallback, Suspense } from 'react';
 import { generateCodingChallenge, languageNames } from '@/services';
 import type { TLang, TProgrammingLanguage, ICodingChallengeWithWrapper } from '@/types';
 import { DEFAULT_LANGUAGE, PROGRAMMING_LANGUAGE_NAMES, DEFAULT_PROGRAMMING_LANGUAGE } from '@/constants';
-import { LoadingSpinner, CodeEditor, Button } from '@/components';
+import { LoadingSpinner, CodeEditor, Button, Select, Input } from '@/components';
 import { executeCode, formatExecutionResult, type CodeExecutionResult } from '@/services';
 import Header from './header/header';
 import styles from './codingChallenges.module.scss';
@@ -55,7 +55,6 @@ const CodingChallenges: React.FC = () => {
   const [challengeStarted, setChallengeStarted] = useState<boolean>(false);
   const [executionResult, setExecutionResult] = useState<CodeExecutionResult | null>(null);
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  console.log("challengeData", challengeData);
   const handleGenerateChallenge = useCallback(async () => {
     if (!topic.trim()) {
       setError('Please enter a challenge topic.');
@@ -160,54 +159,43 @@ const CodingChallenges: React.FC = () => {
               <LoadingSpinner message='Generating coding challenge...' />
             ) : (
               <>
-                <div className={styles.formGroup}>
-                  <label htmlFor='topicInput'>Challenge Topic:</label>
-                  <input
-                    type='text'
-                    id='topicInput'
-                    value={topic}
-                    onChange={e => setTopic(e.target.value)}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' && topic.trim() && !isLoading) {
-                        handleGenerateChallenge();
-                      }
-                    }}
-                    placeholder='e.g., Array Manipulation, Binary Search'
-                    disabled={isLoading}
-                  />
-                </div>
+                <Input
+                  label="Challenge Topic"
+                  id="topicInput"
+                  value={topic}
+                  onChange={setTopic}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && topic.trim() && !isLoading) {
+                      handleGenerateChallenge();
+                    }
+                  }}
+                  placeholder="e.g., Array Manipulation, Binary Search"
+                  disabled={isLoading}
+                />
 
-                <div className={styles.formGroup}>
-                  <label htmlFor='languageSelect'>Language:</label>
-                  <select
-                    id='languageSelect'
-                    value={language}
-                    onChange={e => setLanguage(e.target.value as TLang)}
-                    disabled={isLoading}
-                  >
-                    {Object.entries(languageNames).map(([key, name]) => (
-                      <option key={key} value={key}>
-                        {name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <Select
+                  label="Language"
+                  id="languageSelect"
+                  value={language}
+                  options={Object.entries(languageNames).map(([key, name]) => ({
+                    value: key,
+                    label: name
+                  }))}
+                  onChange={value => setLanguage(value as TLang)}
+                  disabled={isLoading}
+                />
 
-                <div className={styles.formGroup}>
-                  <label htmlFor='programmingLanguageSelect'>Programming Language:</label>
-                  <select
-                    id='programmingLanguageSelect'
-                    value={programmingLanguage}
-                    onChange={e => setProgrammingLanguage(e.target.value as TProgrammingLanguage)}
-                    disabled={isLoading}
-                  >
-                    {Object.entries(PROGRAMMING_LANGUAGE_NAMES).map(([key, name]) => (
-                      <option key={key} value={key}>
-                        {name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <Select
+                  label="Programming Language"
+                  id="programmingLanguageSelect"
+                  value={programmingLanguage}
+                  options={Object.entries(PROGRAMMING_LANGUAGE_NAMES).map(([key, name]) => ({
+                    value: key,
+                    label: name
+                  }))}
+                  onChange={value => setProgrammingLanguage(value as TProgrammingLanguage)}
+                  disabled={isLoading}
+                />
 
                 <Button
                   onClick={handleGenerateChallenge}
