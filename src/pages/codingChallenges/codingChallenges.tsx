@@ -4,13 +4,48 @@ import type { TLang, TProgrammingLanguage, ICodingChallengeWithWrapper } from '@
 import { DEFAULT_LANGUAGE, PROGRAMMING_LANGUAGE_NAMES, DEFAULT_PROGRAMMING_LANGUAGE } from '@/constants';
 import { LoadingSpinner, CodeEditor, Button } from '@/components';
 import { executeCode, formatExecutionResult, type CodeExecutionResult } from '@/services';
+import Header from './header/header';
 import styles from './codingChallenges.module.scss';
+
+const testChallengeData: any = {
+  "challenge": {
+      "title": "Перебор Массивов",
+      "description": "Реализуйте функцию, которая перебирает элементы массива и выполняет определенные действия с ними.",
+      "language": "ru",
+      "programmingLanguage": "javascript",
+      "difficulty": "medium",
+      "initialCode": "\nfunction processArray(arr) {\n    // ваш код здесь\n}\n\nconsole.log('Test case 1:', processArray([1, 2, 3]));\n// Expected output: [result1, result2, result3]\n\nconsole.log('Test case 2:', processArray([4, 5]));\n// Expected output: [result4, result5]\n\nconsole.log('Test case 3:', processArray([]));\n// Expected output: []",
+      "solution": "\nfunction processArray(arr) {\n    let result = [];\n    for (let i = 0; i < arr.length; i++) {\n        // здесь выполняются действия с элементами массива\n        result.push(i * 2);\n    }\n    return result;\n}",
+      "testCases": [
+          {
+              "input": "[1, 2, 3]",
+              "expectedOutput": "[2, 4, 6]"
+          },
+          {
+              "input": "[4, 5]",
+              "expectedOutput": "[8, 10]"
+          },
+          {
+              "input": "[10]",
+              "expectedOutput": "[20]"
+          },
+          {
+              "input": "[]",
+              "expectedOutput": "[]"
+          }
+      ],
+      "hints": [
+          "Попробуйте использовать цикл for для перебора элементов массива.",
+          "Не забудьте вернуть результат из функции."
+      ]
+  }
+}
 
 const CodingChallenges: React.FC = () => {
   const [topic, setTopic] = useState<string>('');
   const [language, setLanguage] = useState<TLang>(DEFAULT_LANGUAGE);
   const [programmingLanguage, setProgrammingLanguage] = useState<TProgrammingLanguage>(DEFAULT_PROGRAMMING_LANGUAGE);
-  const [challengeData, setChallengeData] = useState<ICodingChallengeWithWrapper | null>(null);
+  const [challengeData, setChallengeData] = useState<ICodingChallengeWithWrapper | null>(testChallengeData);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,7 +55,7 @@ const CodingChallenges: React.FC = () => {
   const [challengeStarted, setChallengeStarted] = useState<boolean>(false);
   const [executionResult, setExecutionResult] = useState<CodeExecutionResult | null>(null);
   const [isRunning, setIsRunning] = useState<boolean>(false);
-
+  console.log("challengeData", challengeData);
   const handleGenerateChallenge = useCallback(async () => {
     if (!topic.trim()) {
       setError('Please enter a challenge topic.');
@@ -216,16 +251,7 @@ const CodingChallenges: React.FC = () => {
 
   return (
     <div className={styles.challengeContainer}>
-      <div className={styles.challengeHeader}>
-        <h1>{challenge.title}</h1>
-        <div className={styles.challengeMeta}>
-          <span className={`${styles.difficulty} ${styles[challenge.difficulty]}`}>{challenge.difficulty}</span>
-          <span className={styles.programmingLanguage}>{PROGRAMMING_LANGUAGE_NAMES[challenge.programmingLanguage]}</span>
-        </div>
-        <Button onClick={handleBackToGeneration} variant="secondary" size="small">
-          ← New Challenge
-        </Button>
-      </div>
+      <Header challenge={challenge} onBackToGeneration={handleBackToGeneration} />
 
       <div className={styles.challengeContent}>
         <div className={styles.challengeDescription}>
