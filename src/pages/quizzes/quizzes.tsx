@@ -1,9 +1,12 @@
 import React, { useState, useCallback, Suspense } from 'react';
-import { generateQuiz, languageNames } from '@/services';
+import { generateQuiz } from '@/services';
 import type { TLang } from '@/services';
 import type { IQuizWithWrapper, IAnswerOption } from '@/types';
 import { DEFAULT_LANGUAGE } from '@/constants';
-import { LoadingSpinner, Input, Select, Button } from '@/components';
+import { LoadingSpinner } from '@/components';
+import QuizGeneration from './QuizGeneration/quizGeneration';
+import QuizPreview from './QuizPreview/quizPreview';
+import QuizPlayground from './QuizPlayground/quizPlayground';
 import styles from './quizzes.module.scss';
 
 const Quizzes: React.FC = () => {
@@ -109,170 +112,42 @@ const Quizzes: React.FC = () => {
         <h1>AI Quiz Master</h1>
 
         {!quizData ? (
-          <div className={styles.quizGeneration}>
-            {isLoading ? (
-              <LoadingSpinner message='Generating quiz...' />
-            ) : (
-              <>
-                <Input
-                  label="Quiz Topic"
-                  id="topicInput"
-                  value={topic}
-                  onChange={setTopic}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' && topic.trim() && !isLoading) {
-                      handleGenerateQuiz();
-                    }
-                  }}
-                  placeholder="e.g., Ancient Egypt History"
-                  disabled={isLoading}
-                />
-
-                <Select
-                  label="Language"
-                  id="languageSelect"
-                  value={language}
-                  options={Object.entries(languageNames).map(([key, name]) => ({
-                    value: key,
-                    label: name
-                  }))}
-                  onChange={value => setLanguage(value as TLang)}
-                  disabled={isLoading}
-                />
-
-                <Button
-                  onClick={handleGenerateQuiz}
-                  disabled={isLoading || !topic.trim()}
-                  variant="primary"
-                >
-                  Generate Quiz
-                </Button>
-
-                {error && <div className={styles.errorMessage}>{error}</div>}
-              </>
-            )}
-          </div>
+          <QuizGeneration
+            topic={topic}
+            language={language}
+            isLoading={isLoading}
+            error={error}
+            onTopicChange={setTopic}
+            onLanguageChange={setLanguage}
+            onGenerateQuiz={handleGenerateQuiz}
+          />
         ) : (
-          <div className={styles.quizPreview}>
-            <h2>{quizData.quiz.title}</h2>
-            <p>Language: {languageNames[quizData.quiz.language as TLang]}</p>
-            <p>Number of questions: {quizData.quiz.questions.length}</p>
-
-            <div className={styles.quizActions}>
-              <Button onClick={handleStartQuiz} variant="primary">
-                Start Quiz
-              </Button>
-              <Button onClick={handleBackToGeneration} variant="secondary">
-                Create New Quiz
-              </Button>
-            </div>
-          </div>
+          <QuizPreview
+            quizData={quizData}
+            onStartQuiz={handleStartQuiz}
+            onBackToGeneration={handleBackToGeneration}
+          />
         )}
-      </div>
-    );
-  }
-
-  const currentQuestion = quizData.quiz.questions[currentQuestionIndex];
-  const totalQuestions = quizData.quiz.questions.length;
-
-  if (!currentQuestion) {
-    return (
-      <div className={styles.quizContainer}>
-        <div className={styles.errorMessage}>Error: Question not found.</div>
-        <Button onClick={handleBackToGeneration} variant="secondary">
-          Back to Quiz Creation
-        </Button>
       </div>
     );
   }
 
   return (
     <div className={styles.quizContainer}>
-      <div className={styles.quizHeader}>
-        <h1>{quizData.quiz.title}</h1>
-        <div className={styles.quizProgress}>
-          Question {currentQuestionIndex + 1} of {totalQuestions}
-        </div>
-        <Button onClick={handleBackToGeneration} variant="secondary" size="small">
-          ← New Quiz
-        </Button>
-      </div>
-
-      {quizCompleted ? (
-        <div className={styles.quizResults}>
-          <h2>Quiz Results</h2>
-          <div className={styles.scoreDisplay}>
-            <span className={styles.score}>{score}</span>
-            <span className={styles.separator}>/</span>
-            <span className={styles.total}>{totalQuestions}</span>
-          </div>
-          <p className={styles.scorePercentage}>
-            {Math.round((score / totalQuestions) * 100)}% correct answers
-          </p>
-
-          <div className={styles.resultsActions}>
-            <Button onClick={handleRestartQuiz} variant="info">
-              Retry Quiz
-            </Button>
-            <Button onClick={handleBackToGeneration} variant="secondary">
-              Create New Quiz
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <div className={styles.questionContainer}>
-          <h2 className={styles.questionText}>{currentQuestion.question}</h2>
-
-          <div className={styles.answerOptions}>
-            {currentQuestion.answer_options.map((option, index) => (
-              <button
-                key={index}
-                className={`${styles.answerOption} ${
-                  selectedAnswer === option ? styles.selected : ''
-                } ${showRationale && option.is_correct ? styles.correct : ''} ${
-                  showRationale &&
-                  selectedAnswer === option &&
-                  !option.is_correct
-                    ? styles.incorrect
-                    : ''
-                }`}
-                onClick={() => handleAnswerSelect(option)}
-                disabled={showRationale}
-              >
-                {option.text}
-              </button>
-            ))}
-          </div>
-
-          {showRationale && selectedAnswer && (
-            <div
-              className={`${styles.rationale} ${selectedAnswer.is_correct ? styles.correctRationale : styles.incorrectRationale}`}
-            >
-              <p>{selectedAnswer.rationale}</p>
-            </div>
-          )}
-
-          {error && <div className={styles.errorMessage}>{error}</div>}
-
-          <div className={styles.questionActions}>
-            {!showRationale ? (
-              <Button
-                onClick={handleSubmitAnswer}
-                disabled={selectedAnswer === null}
-                variant="primary"
-              >
-                Submit Answer
-              </Button>
-            ) : (
-              <Button onClick={handleNextQuestion} variant="success">
-                {currentQuestionIndex < totalQuestions - 1
-                  ? 'Next Question'
-                  : 'Finish Quiz'}
-              </Button>
-            )}
-          </div>
-        </div>
-      )}
+      <QuizPlayground
+        quizData={quizData}
+        currentQuestionIndex={currentQuestionIndex}
+        score={score}
+        selectedAnswer={selectedAnswer}
+        showRationale={showRationale}
+        quizCompleted={quizCompleted}
+        error={error}
+        onAnswerSelect={handleAnswerSelect}
+        onSubmitAnswer={handleSubmitAnswer}
+        onNextQuestion={handleNextQuestion}
+        onRestartQuiz={handleRestartQuiz}
+        onBackToGeneration={handleBackToGeneration}
+      />
     </div>
   );
 };
