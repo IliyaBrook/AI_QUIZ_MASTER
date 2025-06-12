@@ -47,7 +47,13 @@ const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
     if (selectedAnswer.is_correct) {
       setScore(prevScore => prevScore + 1);
     }
-  }, [selectedAnswer]);
+    
+    // Debug: log answer data to console
+    console.log('Selected answer:', selectedAnswer);
+    if (currentQuestion) {
+      console.log('All answer options:', currentQuestion.answer_options);
+    }
+  }, [selectedAnswer, currentQuestion]);
 
   const handleNextQuestion = useCallback(() => {
     setShowRationale(false);
@@ -136,7 +142,19 @@ const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
             <div
               className={`${styles.rationale} ${selectedAnswer.is_correct ? styles.correctRationale : styles.incorrectRationale}`}
             >
-              <p>{selectedAnswer.rationale}</p>
+              <p><strong>{selectedAnswer.is_correct ? 'Correct!' : 'Incorrect!'}</strong></p>
+              {selectedAnswer.rationale && selectedAnswer.rationale.trim() && (
+                <p>{selectedAnswer.rationale}</p>
+              )}
+              {!selectedAnswer.is_correct && (() => {
+                const correctOption = currentQuestion.answer_options.find(option => option.is_correct);
+                return correctOption?.rationale && correctOption.rationale.trim() ? (
+                  <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #ddd' }}>
+                    <p><strong>Correct answer:</strong></p>
+                    <p>{correctOption.rationale}</p>
+                  </div>
+                ) : null;
+              })()}
             </div>
           )}
 

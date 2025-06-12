@@ -1,6 +1,6 @@
 import type { IQuizWithWrapper, IQuizAiResponse, TLang, IAIMessage } from '@/types';
 import { LANGUAGE_NAMES } from '@/constants';
-import { generateResponse } from './localAI.service';
+import { generateResponse } from '../localAI.service';
 
 export type { TLang };
 export { LANGUAGE_NAMES as languageNames };
