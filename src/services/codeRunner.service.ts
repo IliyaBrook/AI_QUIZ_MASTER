@@ -1,7 +1,5 @@
 import type { TProgrammingLanguage } from '@/types';
 
-const PISTON_URL = import.meta.env.VITE_PISTON_URL;
-// 'https://emkc.org/api/v2/piston';
 
 export interface PistonFile {
   name?: string;
@@ -67,7 +65,7 @@ const LANGUAGE_MAP: Record<TProgrammingLanguage, string> = {
 
 export async function getAvailableRuntimes(): Promise<PistonRuntime[]> {
   try {
-    const response = await fetch(`${PISTON_URL}/runtimes`);
+    const response = await fetch('/api/v2/runtimes');
     
     if (!response.ok) {
       throw new Error(`Failed to fetch runtimes: ${response.status} ${response.statusText}`);
@@ -101,12 +99,12 @@ export async function executeCode(
         content: code
       }],
       compile_timeout: 10000,
-      run_timeout: 5000,
+      run_timeout: 3000,
       compile_memory_limit: -1,
       run_memory_limit: -1
     };
 
-    const response = await fetch(`${PISTON_URL}/execute`, {
+    const response = await fetch('/api/v2/execute', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
