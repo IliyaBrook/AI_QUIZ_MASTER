@@ -1,23 +1,23 @@
 import { Link } from 'react-router';
 import styles from './Navbar.module.scss';
+import { appPages } from '@/data';
 
 export default function Navbar() {
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
-        <Link to="/" className={styles.logo}>
+        <Link to='/' className={styles.logo}>
           AI Quiz Master
         </Link>
-        
+
         <div className={styles.navLinks}>
-          <Link to="/" className={styles.navLink}>
-            Quiz Generator
-          </Link>
-          <Link to="/page1" className={styles.navLink}>
-            Страница 1
-          </Link>
+          {appPages.map(page => (
+            <Link key={page.id} to={page.path} className={styles.navLink}>
+              {page.label}
+            </Link>
+          ))}
         </div>
       </div>
     </nav>
   );
-} 
+}

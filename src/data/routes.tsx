@@ -1,16 +1,13 @@
-import { Home, Page1 } from '@/pages';
+import { Home } from '@/pages';
 import type { IAppPage } from '@/types';
 
+// add new pages here
 export const appPages: IAppPage[] = [
   {
     index: true,
     element: <Home />,
     label: 'Home',
     path: '/',
-  },
-  {
-    element: <Page1 />,
-    label: 'Page 1',
-    path: '/page1',
-  },
+    id: 'home-page-id-1',
+  }
 ];
