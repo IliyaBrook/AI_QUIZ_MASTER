@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { CodeEditor, Button } from '@/components';
-import { executeCode, formatExecutionResult, type CodeExecutionResult } from '@/services';
+import { useChallengePlayground } from '@/services';
 import type { ICodingChallengeWithWrapper } from '@/types';
 import Header from '../header/header';
 import styles from './challengePlayground.module.scss';
@@ -14,54 +14,21 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
   challengeData,
   onBackToGeneration
 }) => {
-  const [userCode, setUserCode] = useState<string>(challengeData.challenge.initialCode || '');
-  const [showSolution, setShowSolution] = useState<boolean>(false);
-  const [showHints, setShowHints] = useState<boolean>(false);
-  const [executionResult, setExecutionResult] = useState<CodeExecutionResult | null>(null);
-  const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const challenge = challengeData.challenge;
-
-  const handleCodeChange = useCallback((value: string | undefined) => {
-    setUserCode(value || '');
-  }, []);
-
-  const handleToggleSolution = useCallback(() => {
-    setShowSolution(!showSolution);
-  }, [showSolution]);
-
-  const handleToggleHints = useCallback(() => {
-    setShowHints(!showHints);
-  }, [showHints]);
-
-  const handleRunCode = useCallback(async () => {
-    if (!userCode.trim()) {
-      setError('Please write some code to run.');
-      return;
-    }
-
-    if (!challenge.programmingLanguage) {
-      setError('Programming language not specified.');
-      return;
-    }
-
-    setIsRunning(true);
-    setError(null);
-
-    try {
-      const result = await executeCode(userCode, challenge.programmingLanguage);
-      setExecutionResult(result);
-      
-      if (!result.success && result.error) {
-        setError(result.error);
-      }
-    } catch (e) {
-      setError(`Execution failed: ${e instanceof Error ? e.message : String(e)}`);
-    } finally {
-      setIsRunning(false);
-    }
-  }, [userCode, challenge.programmingLanguage]);
+  
+  const {
+    userCode,
+    showSolution,
+    showHints,
+    executionResult,
+    isRunning,
+    error,
+    challenge,
+    handleCodeChange,
+    handleToggleSolution,
+    handleToggleHints,
+    handleRunCode,
+    formatExecutionResult
+  } = useChallengePlayground(challengeData);
 
   return (
     <div className={styles.challengePlayground}>

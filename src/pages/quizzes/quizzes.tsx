@@ -1,59 +1,39 @@
-import React, { useState, Suspense } from 'react';
-import type { IQuizWithWrapper } from '@/types';
+import React, { Suspense } from 'react';
 import { LoadingSpinner } from '@/components';
+import { useQuizNavigation, renderQuizScreen } from '@/services';
 import QuizGeneration from './QuizGeneration/quizGeneration';
 import QuizPreview from './QuizPreview/quizPreview';
 import QuizPlayground from './QuizPlayground/quizPlayground';
 import styles from './quizzes.module.scss';
 
-type QuizScreen = 'generation' | 'preview' | 'playground';
-
 const Quizzes: React.FC = () => {
-  const [currentScreen, setCurrentScreen] = useState<QuizScreen>('generation');
-  const [quizData, setQuizData] = useState<IQuizWithWrapper | null>(null);
+  const {
+    currentScreen,
+    quizData,
+    handleQuizGenerated,
+    handleStartQuiz,
+    handleBackToGeneration
+  } = useQuizNavigation();
 
-  const handleQuizGenerated = (generatedQuizData: IQuizWithWrapper) => {
-    setQuizData(generatedQuizData);
-    setCurrentScreen('preview');
-  };
-
-  const handleStartQuiz = () => {
-    setCurrentScreen('playground');
-  };
-
-  const handleBackToGeneration = () => {
-    setQuizData(null);
-    setCurrentScreen('generation');
-  };
-
-  const renderCurrentScreen = () => {
-    switch (currentScreen) {
-      case 'generation':
-        return <QuizGeneration onQuizGenerated={handleQuizGenerated} />;
-      case 'preview':
-        return quizData ? (
-          <QuizPreview
-            quizData={quizData}
-            onStartQuiz={handleStartQuiz}
-            onBackToGeneration={handleBackToGeneration}
-          />
-        ) : null;
-      case 'playground':
-        return quizData ? (
-          <QuizPlayground
-            quizData={quizData}
-            onBackToGeneration={handleBackToGeneration}
-          />
-        ) : null;
-      default:
-        return null;
+  const currentScreenComponent = renderQuizScreen({
+    currentScreen,
+    quizData,
+    components: {
+      QuizGeneration,
+      QuizPreview,
+      QuizPlayground
+    },
+    handlers: {
+      handleQuizGenerated,
+      handleStartQuiz,
+      handleBackToGeneration
     }
-  };
+  });
 
   return (
     <div className={styles.quizContainer}>
       <h1>AI Quiz Master</h1>
-      {renderCurrentScreen()}
+      {currentScreenComponent}
     </div>
   );
 };

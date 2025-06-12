@@ -1,9 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { LoadingSpinner, Input, Select, Button } from '@/components';
-import { languageNames, generateQuiz } from '@/services';
-import type { TLang } from '@/services';
-import type { IQuizWithWrapper } from '@/types';
-import { DEFAULT_LANGUAGE } from '@/constants';
+import { languageNames, useQuizGeneration } from '@/services';
+import type { TLang, IQuizWithWrapper } from '@/types';
 import styles from './quizGeneration.module.scss';
 
 interface QuizGenerationProps {
@@ -13,35 +11,22 @@ interface QuizGenerationProps {
 const QuizGeneration: React.FC<QuizGenerationProps> = ({
   onQuizGenerated
 }) => {
-  const [topic, setTopic] = useState<string>('');
-  const [language, setLanguage] = useState<TLang>(DEFAULT_LANGUAGE);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    topic,
+    language,
+    isLoading,
+    error,
+    setTopic,
+    setLanguage,
+    handleGenerateQuiz
+  } = useQuizGeneration();
 
-  const handleGenerateQuiz = useCallback(async () => {
-    if (!topic.trim()) {
-      setError('Please enter a quiz topic.');
-      return;
-    }
-
-    if (isLoading) {
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const { quizData } = await generateQuiz(topic, language);
+  const onGenerateClick = async () => {
+    const quizData = await handleGenerateQuiz();
+    if (quizData) {
       onQuizGenerated(quizData);
-    } catch (e) {
-      console.error('Error generating quiz:', e);
-      const errorMessage = e instanceof Error ? e.message : String(e);
-      setError(`Quiz generation error: ${errorMessage}`);
-    } finally {
-      setIsLoading(false);
     }
-  }, [topic, language, isLoading, onQuizGenerated]);
+  };
 
   return (
     <div className={styles.quizGeneration}>
@@ -56,7 +41,7 @@ const QuizGeneration: React.FC<QuizGenerationProps> = ({
             onChange={setTopic}
             onKeyDown={e => {
               if (e.key === 'Enter' && topic.trim() && !isLoading) {
-                handleGenerateQuiz();
+                onGenerateClick();
               }
             }}
             placeholder="e.g., Ancient Egypt History"
@@ -76,7 +61,7 @@ const QuizGeneration: React.FC<QuizGenerationProps> = ({
           />
 
           <Button
-            onClick={handleGenerateQuiz}
+            onClick={onGenerateClick}
             disabled={isLoading || !topic.trim()}
             variant="primary"
           >
