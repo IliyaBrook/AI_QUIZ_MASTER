@@ -1,39 +1,67 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button } from '@/components';
 import type { IQuizWithWrapper, IAnswerOption } from '@/types';
 import styles from './quizPlayground.module.scss';
 
 interface QuizPlaygroundProps {
   quizData: IQuizWithWrapper;
-  currentQuestionIndex: number;
-  score: number;
-  selectedAnswer: IAnswerOption | null;
-  showRationale: boolean;
-  quizCompleted: boolean;
-  error: string | null;
-  onAnswerSelect: (option: IAnswerOption) => void;
-  onSubmitAnswer: () => void;
-  onNextQuestion: () => void;
-  onRestartQuiz: () => void;
   onBackToGeneration: () => void;
 }
 
 const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
   quizData,
-  currentQuestionIndex,
-  score,
-  selectedAnswer,
-  showRationale,
-  quizCompleted,
-  error,
-  onAnswerSelect,
-  onSubmitAnswer,
-  onNextQuestion,
-  onRestartQuiz,
   onBackToGeneration
 }) => {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [score, setScore] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<IAnswerOption | null>(null);
+  const [showRationale, setShowRationale] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const currentQuestion = quizData.quiz.questions[currentQuestionIndex];
   const totalQuestions = quizData.quiz.questions.length;
+
+  const resetQuizState = useCallback(() => {
+    setCurrentQuestionIndex(0);
+    setScore(0);
+    setSelectedAnswer(null);
+    setShowRationale(false);
+    setQuizCompleted(false);
+    setError(null);
+  }, []);
+
+  const handleAnswerSelect = useCallback((option: IAnswerOption) => {
+    if (!showRationale) {
+      setSelectedAnswer(option);
+    }
+  }, [showRationale]);
+
+  const handleSubmitAnswer = useCallback(() => {
+    if (selectedAnswer === null) {
+      setError('Please select an answer option!');
+      return;
+    }
+    setError(null);
+    setShowRationale(true);
+    if (selectedAnswer.is_correct) {
+      setScore(prevScore => prevScore + 1);
+    }
+  }, [selectedAnswer]);
+
+  const handleNextQuestion = useCallback(() => {
+    setShowRationale(false);
+    setSelectedAnswer(null);
+    if (currentQuestionIndex < totalQuestions - 1) {
+      setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+    } else {
+      setQuizCompleted(true);
+    }
+  }, [currentQuestionIndex, totalQuestions]);
+
+  const handleRestartQuiz = useCallback(() => {
+    resetQuizState();
+  }, [resetQuizState]);
 
   if (!currentQuestion) {
     return (
@@ -71,7 +99,7 @@ const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
           </p>
 
           <div className={styles.resultsActions}>
-            <Button onClick={onRestartQuiz} variant="info">
+            <Button onClick={handleRestartQuiz} variant="info">
               Retry Quiz
             </Button>
             <Button onClick={onBackToGeneration} variant="secondary">
@@ -96,7 +124,7 @@ const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
                     ? styles.incorrect
                     : ''
                 }`}
-                onClick={() => onAnswerSelect(option)}
+                onClick={() => handleAnswerSelect(option)}
                 disabled={showRationale}
               >
                 {option.text}
@@ -117,14 +145,14 @@ const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
           <div className={styles.questionActions}>
             {!showRationale ? (
               <Button
-                onClick={onSubmitAnswer}
+                onClick={handleSubmitAnswer}
                 disabled={selectedAnswer === null}
                 variant="primary"
               >
                 Submit Answer
               </Button>
             ) : (
-              <Button onClick={onNextQuestion} variant="success">
+              <Button onClick={handleNextQuestion} variant="success">
                 {currentQuestionIndex < totalQuestions - 1
                   ? 'Next Question'
                   : 'Finish Quiz'}

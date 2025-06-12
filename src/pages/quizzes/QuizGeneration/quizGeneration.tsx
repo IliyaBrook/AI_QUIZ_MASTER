@@ -1,28 +1,48 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { LoadingSpinner, Input, Select, Button } from '@/components';
-import { languageNames } from '@/services';
+import { languageNames, generateQuiz } from '@/services';
 import type { TLang } from '@/services';
+import type { IQuizWithWrapper } from '@/types';
+import { DEFAULT_LANGUAGE } from '@/constants';
 import styles from './quizGeneration.module.scss';
 
 interface QuizGenerationProps {
-  topic: string;
-  language: TLang;
-  isLoading: boolean;
-  error: string | null;
-  onTopicChange: (topic: string) => void;
-  onLanguageChange: (language: TLang) => void;
-  onGenerateQuiz: () => void;
+  onQuizGenerated: (quizData: IQuizWithWrapper) => void;
 }
 
 const QuizGeneration: React.FC<QuizGenerationProps> = ({
-  topic,
-  language,
-  isLoading,
-  error,
-  onTopicChange,
-  onLanguageChange,
-  onGenerateQuiz
+  onQuizGenerated
 }) => {
+  const [topic, setTopic] = useState<string>('');
+  const [language, setLanguage] = useState<TLang>(DEFAULT_LANGUAGE);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleGenerateQuiz = useCallback(async () => {
+    if (!topic.trim()) {
+      setError('Please enter a quiz topic.');
+      return;
+    }
+
+    if (isLoading) {
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { quizData } = await generateQuiz(topic, language);
+      onQuizGenerated(quizData);
+    } catch (e) {
+      console.error('Error generating quiz:', e);
+      const errorMessage = e instanceof Error ? e.message : String(e);
+      setError(`Quiz generation error: ${errorMessage}`);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [topic, language, isLoading, onQuizGenerated]);
+
   return (
     <div className={styles.quizGeneration}>
       {isLoading ? (
@@ -33,10 +53,10 @@ const QuizGeneration: React.FC<QuizGenerationProps> = ({
             label="Quiz Topic"
             id="topicInput"
             value={topic}
-            onChange={onTopicChange}
+            onChange={setTopic}
             onKeyDown={e => {
               if (e.key === 'Enter' && topic.trim() && !isLoading) {
-                onGenerateQuiz();
+                handleGenerateQuiz();
               }
             }}
             placeholder="e.g., Ancient Egypt History"
@@ -51,12 +71,12 @@ const QuizGeneration: React.FC<QuizGenerationProps> = ({
               value: key,
               label: name
             }))}
-            onChange={value => onLanguageChange(value as TLang)}
+            onChange={value => setLanguage(value as TLang)}
             disabled={isLoading}
           />
 
           <Button
-            onClick={onGenerateQuiz}
+            onClick={handleGenerateQuiz}
             disabled={isLoading || !topic.trim()}
             variant="primary"
           >
