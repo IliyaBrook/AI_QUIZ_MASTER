@@ -39,7 +39,7 @@ An intelligent quiz generation application powered by local AI models. Generate 
 
 1. **Clone the repository**
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/IliyaBrook/AI_QUIZ_MASTER.git
 cd AI_QUIZ_MASTER
 ```
 
