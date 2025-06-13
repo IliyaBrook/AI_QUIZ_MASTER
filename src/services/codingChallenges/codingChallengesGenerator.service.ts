@@ -1,12 +1,12 @@
-import type {
-  ICodingChallengeWithWrapper,
-  ICodingChallenge,
-  TLang,
-  TProgrammingLanguage,
-  IAIMessage,
-} from '@/types';
 import { LANGUAGE_NAMES } from '@/constants';
 import { generateResponse } from '@/services';
+import type {
+  IAIMessage,
+  ICodingChallenge,
+  ICodingChallengeWithWrapper,
+  TLang,
+  TProgrammingLanguage,
+} from '@/types';
 
 export type { TProgrammingLanguage };
 export { LANGUAGE_NAMES as languageNames };

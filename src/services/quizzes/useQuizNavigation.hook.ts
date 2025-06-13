@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
+
 import type { IQuizWithWrapper } from '@/types';
 
 export type QuizScreen = 'generation' | 'preview' | 'playground';

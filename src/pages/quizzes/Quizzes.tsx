@@ -1,9 +1,11 @@
 import React, { Suspense } from 'react';
+
 import { LoadingSpinner } from '@/components';
-import { useQuizNavigation, renderQuizScreen } from '@/services';
+import { renderQuizScreen, useQuizNavigation } from '@/services';
+
 import QuizGeneration from './QuizGeneration/quizGeneration';
-import QuizPreview from './QuizPreview/quizPreview';
 import QuizPlayground from './QuizPlayground/quizPlayground';
+import QuizPreview from './QuizPreview/quizPreview';
 import styles from './Quizzes.module.scss';
 
 const RenderQuizzes: React.FC = () => {

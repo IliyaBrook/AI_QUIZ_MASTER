@@ -1,11 +1,11 @@
-import type {
-  IQuizWithWrapper,
-  IQuizAiResponse,
-  TLang,
-  IAIMessage,
-} from '@/types';
 import { LANGUAGE_NAMES } from '@/constants';
 import { generateResponse } from '@/services';
+import type {
+  IAIMessage,
+  IQuizAiResponse,
+  IQuizWithWrapper,
+  TLang,
+} from '@/types';
 
 export type { TLang };
 export { LANGUAGE_NAMES as languageNames };

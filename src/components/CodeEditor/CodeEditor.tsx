@@ -1,6 +1,8 @@
-import React, { useRef } from 'react';
 import Editor from '@monaco-editor/react';
+import React, { useRef } from 'react';
+
 import './CodeEditor.scss';
+
 import type { TProgrammingLanguage } from '@/types';
 
 interface CodeEditorProps {

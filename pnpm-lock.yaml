@@ -27,6 +27,9 @@ importers:
       '@eslint/js':
         specifier: ^9.25.0
         version: 9.28.0
+      '@ianvs/prettier-plugin-sort-imports':
+        specifier: ^4.4.2
+        version: 4.4.2(prettier@3.5.3)
       '@types/node':
         specifier: ^22.10.5
         version: 22.15.30
@@ -72,9 +75,6 @@ importers:
       vite:
         specifier: ^6.3.5
         version: 6.3.5(@types/node@22.15.30)(sass-embedded@1.89.2)(sass@1.89.2)
-      vite-tsconfig-paths:
-        specifier: ^5.1.4
-        version: 5.1.4(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.30)(sass-embedded@1.89.2)(sass@1.89.2))
 
 packages:
 
@@ -377,6 +377,15 @@ packages:
   '@humanwhocodes/retry@0.4.3':
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
+
+  '@ianvs/prettier-plugin-sort-imports@4.4.2':
+    resolution: {integrity: sha512-KkVFy3TLh0OFzimbZglMmORi+vL/i2OFhEs5M07R9w0IwWAGpsNNyE4CY/2u0YoMF5bawKC2+8/fUH60nnNtjw==}
+    peerDependencies:
+      '@vue/compiler-sfc': 2.7.x || 3.x
+      prettier: 2 || 3 || ^4.0.0-0
+    peerDependenciesMeta:
+      '@vue/compiler-sfc':
+        optional: true
 
   '@jridgewell/gen-mapping@0.3.8':
     resolution: {integrity: sha512-imAbBGkb+ebQyxKgzv5Hu2nmROxoDOXHh80evxdoXNOrvAnVx7zimzc1Oo5h9RlfV4vPXaE2iM5pOFbvOCClWA==}
@@ -1202,9 +1211,6 @@ packages:
     resolution: {integrity: sha512-DpLKbNU4WylpxJykQujfCcwYWiV/Jhm50Goo0wrVILAv5jOr9d+H+UR3PhSCD2rCCEIg0uc+G+muBTwD54JhDQ==}
     engines: {node: '>= 0.4'}
 
-  globrex@0.1.2:
-    resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
-
   google-auth-library@9.15.1:
     resolution: {integrity: sha512-Jb6Z0+nvECVz+2lzSMt9u98UsoakXxA2HGHMCxh+so3n90XgYWkq5dur19JAJV7ONiJY22yBTyJB1TSkvPq9Ng==}
     engines: {node: '>=14'}
@@ -2004,16 +2010,6 @@ packages:
     peerDependencies:
       typescript: '>=4.8.4'
 
-  tsconfck@3.1.6:
-    resolution: {integrity: sha512-ks6Vjr/jEw0P1gmOVwutM3B7fWxoWBL2KRDb1JfqGVawBmO5UsvmWOQFGHBPl5yxYz4eERr19E6L7NMv+Fej4w==}
-    engines: {node: ^18 || >=20}
-    hasBin: true
-    peerDependencies:
-      typescript: ^5.0.0
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
@@ -2083,14 +2079,6 @@ packages:
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
-
-  vite-tsconfig-paths@5.1.4:
-    resolution: {integrity: sha512-cYj0LRuLV2c2sMqhqhGpaO3LretdtMn/BVX4cPLanIZuwwrkVl+lK84E/miEXkCHWXuq65rhNN4rXsBcOB3S4w==}
-    peerDependencies:
-      vite: '*'
-    peerDependenciesMeta:
-      vite:
-        optional: true
 
   vite@6.3.5:
     resolution: {integrity: sha512-cZn6NDFE7wdTpINgs++ZJ4N49W2vRp8LCKrn3Ob1kYNtOo21vfDoaV5GzBfLU4MovSAB8uNRm4jgzVQZ+mBzPQ==}
@@ -2457,6 +2445,17 @@ snapshots:
   '@humanwhocodes/retry@0.3.1': {}
 
   '@humanwhocodes/retry@0.4.3': {}
+
+  '@ianvs/prettier-plugin-sort-imports@4.4.2(prettier@3.5.3)':
+    dependencies:
+      '@babel/generator': 7.27.5
+      '@babel/parser': 7.27.5
+      '@babel/traverse': 7.27.4
+      '@babel/types': 7.27.6
+      prettier: 3.5.3
+      semver: 7.7.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@jridgewell/gen-mapping@0.3.8':
     dependencies:
@@ -3469,8 +3468,6 @@ snapshots:
       define-properties: 1.2.1
       gopd: 1.2.0
 
-  globrex@0.1.2: {}
-
   google-auth-library@9.15.1:
     dependencies:
       base64-js: 1.5.1
@@ -4311,10 +4308,6 @@ snapshots:
     dependencies:
       typescript: 5.8.3
 
-  tsconfck@3.1.6(typescript@5.8.3):
-    optionalDependencies:
-      typescript: 5.8.3
-
   tslib@2.8.1:
     optional: true
 
@@ -4400,17 +4393,6 @@ snapshots:
     optional: true
 
   vary@1.1.2: {}
-
-  vite-tsconfig-paths@5.1.4(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.30)(sass-embedded@1.89.2)(sass@1.89.2)):
-    dependencies:
-      debug: 4.4.1
-      globrex: 0.1.2
-      tsconfck: 3.1.6(typescript@5.8.3)
-    optionalDependencies:
-      vite: 6.3.5(@types/node@22.15.30)(sass-embedded@1.89.2)(sass@1.89.2)
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
 
   vite@6.3.5(@types/node@22.15.30)(sass-embedded@1.89.2)(sass@1.89.2):
     dependencies:

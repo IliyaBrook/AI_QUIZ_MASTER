@@ -1,12 +1,14 @@
 import React, { useCallback } from 'react';
-import { LoadingSpinner, Input, Select, Button } from '@/components';
+
+import { Button, Input, LoadingSpinner, Select } from '@/components';
+import { PROGRAMMING_LANGUAGE_NAMES } from '@/constants';
 import { languageNames, useChallengeGeneration } from '@/services';
 import type {
+  ICodingChallengeWithWrapper,
   TLang,
   TProgrammingLanguage,
-  ICodingChallengeWithWrapper,
 } from '@/types';
-import { PROGRAMMING_LANGUAGE_NAMES } from '@/constants';
+
 import styles from './challengeGeneration.module.scss';
 
 interface ChallengeGenerationProps {

@@ -1,7 +1,9 @@
 import React from 'react';
+
 import { Button } from '@/components';
 import { useQuizPlayground } from '@/services';
 import type { IQuizWithWrapper } from '@/types';
+
 import styles from './quizPlayground.module.scss';
 
 interface QuizPlaygroundProps {

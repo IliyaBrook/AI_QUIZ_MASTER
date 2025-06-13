@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+
 import styles from './Home.module.scss';
 
 export function Home() {

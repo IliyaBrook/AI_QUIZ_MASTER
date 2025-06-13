@@ -1,5 +1,6 @@
-import { Home, Quizzes, CodingChallenges } from '@/pages';
+import { CodingChallenges, Home, Quizzes } from '@/pages';
 import type { IAppPage } from '@/types';
+
 export const appPages: IAppPage[] = [
   {
     index: true,

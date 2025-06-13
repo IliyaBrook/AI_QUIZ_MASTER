@@ -1,8 +1,10 @@
 import React from 'react';
+
 import { Button } from '@/components';
-import { languageNames } from '@/services';
-import type { TLang, ICodingChallengeWithWrapper } from '@/types';
 import { PROGRAMMING_LANGUAGE_NAMES } from '@/constants';
+import { languageNames } from '@/services';
+import type { ICodingChallengeWithWrapper, TLang } from '@/types';
+
 import styles from './challengePreview.module.scss';
 
 interface ChallengePreviewProps {

@@ -1,7 +1,9 @@
 import React from 'react';
+
 import { Button } from '@/components';
 import { languageNames } from '@/services';
 import type { IQuizWithWrapper, TLang } from '@/types';
+
 import styles from './quizPreview.module.scss';
 
 interface QuizPreviewProps {

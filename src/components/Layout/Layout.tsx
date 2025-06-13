@@ -1,6 +1,8 @@
 import { Outlet } from 'react-router';
-import styles from './Layout.module.scss';
+
 import { Navbar } from '@/components';
+
+import styles from './Layout.module.scss';
 
 export function Layout() {
   return (

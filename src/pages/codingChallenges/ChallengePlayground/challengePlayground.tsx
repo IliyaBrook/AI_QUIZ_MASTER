@@ -1,7 +1,9 @@
 import React from 'react';
-import { CodeEditor, Button } from '@/components';
+
+import { Button, CodeEditor } from '@/components';
 import { useChallengePlayground } from '@/services';
 import type { ICodingChallengeWithWrapper } from '@/types';
+
 import Header from '../header/header';
 import styles from './challengePlayground.module.scss';
 

@@ -1,5 +1,5 @@
-import type { IAIMessage, IAISettings, IAIResponse } from '@/types';
 import { DEFAULT_AI_SETTINGS } from '@/constants';
+import type { IAIMessage, IAIResponse, IAISettings } from '@/types';
 
 const OLLAMA_URL = import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434';
 

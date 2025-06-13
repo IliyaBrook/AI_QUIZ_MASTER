@@ -1,7 +1,9 @@
 import React from 'react';
+
 import { Button } from '@/components';
 import { PROGRAMMING_LANGUAGE_NAMES } from '@/constants';
 import type { ICodingChallenge } from '@/types';
+
 import styles from './header.module.scss';
 
 interface HeaderProps {

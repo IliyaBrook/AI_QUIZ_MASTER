@@ -1,10 +1,12 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
+
+import type { ICodingChallengeWithWrapper } from '@/types';
+
 import {
   executeCode,
   formatExecutionResult,
   type CodeExecutionResult,
 } from '../codeRunner.service';
-import type { ICodingChallengeWithWrapper } from '@/types';
 
 export const useChallengePlayground = (
   challengeData: ICodingChallengeWithWrapper

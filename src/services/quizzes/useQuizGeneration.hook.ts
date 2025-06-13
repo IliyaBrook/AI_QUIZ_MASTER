@@ -1,7 +1,9 @@
-import { useState, useCallback } from 'react';
-import { generateQuiz } from './quizGenerator.service';
-import type { TLang } from '@/types';
+import { useCallback, useState } from 'react';
+
 import { DEFAULT_LANGUAGE } from '@/constants';
+import type { TLang } from '@/types';
+
+import { generateQuiz } from './quizGenerator.service';
 
 export const useQuizGeneration = () => {
   const [topic, setTopic] = useState<string>('');

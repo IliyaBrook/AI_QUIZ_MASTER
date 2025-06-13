@@ -1,9 +1,11 @@
 import React, { Suspense } from 'react';
+
 import { LoadingSpinner } from '@/components';
-import { useChallengeNavigation, renderChallengeScreen } from '@/services';
+import { renderChallengeScreen, useChallengeNavigation } from '@/services';
+
 import ChallengeGeneration from './ChallengeGeneration/challengeGeneration';
-import ChallengePreview from './ChallengePreview/challengePreview';
 import ChallengePlayground from './ChallengePlayground/challengePlayground';
+import ChallengePreview from './ChallengePreview/challengePreview';
 import styles from './CodingChallenges.module.scss';
 
 const RenderCodingChallenges: React.FC = () => {

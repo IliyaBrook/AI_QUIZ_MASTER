@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
+
 import type { IAnswerOption, IQuizWithWrapper } from '@/types';
 
 export const useQuizPlayground = (quizData: IQuizWithWrapper) => {

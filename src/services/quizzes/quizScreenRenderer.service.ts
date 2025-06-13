@@ -1,5 +1,7 @@
 import React from 'react';
+
 import type { IQuizWithWrapper } from '@/types';
+
 import type { QuizScreen } from './useQuizNavigation.hook';
 
 interface QuizComponents {

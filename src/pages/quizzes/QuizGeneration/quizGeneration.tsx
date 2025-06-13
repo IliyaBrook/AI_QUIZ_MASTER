@@ -1,7 +1,9 @@
 import React from 'react';
-import { LoadingSpinner, Input, Select, Button } from '@/components';
+
+import { Button, Input, LoadingSpinner, Select } from '@/components';
 import { languageNames, useQuizGeneration } from '@/services';
-import type { TLang, IQuizWithWrapper } from '@/types';
+import type { IQuizWithWrapper, TLang } from '@/types';
+
 import styles from './quizGeneration.module.scss';
 
 interface QuizGenerationProps {

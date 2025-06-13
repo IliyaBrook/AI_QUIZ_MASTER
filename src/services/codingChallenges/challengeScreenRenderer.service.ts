@@ -1,6 +1,7 @@
 import React from 'react';
-import type { ICodingChallengeWithWrapper } from '@/types';
+
 import type { ChallengeScreen } from '@/services';
+import type { ICodingChallengeWithWrapper } from '@/types';
 
 interface ChallengeComponents {
   ChallengeGeneration: React.ComponentType<{
