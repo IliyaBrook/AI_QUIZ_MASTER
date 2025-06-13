@@ -4,13 +4,18 @@ import type { ICodingChallengeWithWrapper } from '@/types';
 export type ChallengeScreen = 'generation' | 'preview' | 'playground';
 
 export const useChallengeNavigation = () => {
-  const [currentScreen, setCurrentScreen] = useState<ChallengeScreen>('generation');
-  const [challengeData, setChallengeData] = useState<ICodingChallengeWithWrapper | null>(null);
+  const [currentScreen, setCurrentScreen] =
+    useState<ChallengeScreen>('generation');
+  const [challengeData, setChallengeData] =
+    useState<ICodingChallengeWithWrapper | null>(null);
 
-  const handleChallengeGenerated = useCallback((generatedChallengeData: ICodingChallengeWithWrapper) => {
-    setChallengeData(generatedChallengeData);
-    setCurrentScreen('preview');
-  }, []);
+  const handleChallengeGenerated = useCallback(
+    (generatedChallengeData: ICodingChallengeWithWrapper) => {
+      setChallengeData(generatedChallengeData);
+      setCurrentScreen('preview');
+    },
+    []
+  );
 
   const handleStartChallenge = useCallback(() => {
     setCurrentScreen('playground');
@@ -26,6 +31,6 @@ export const useChallengeNavigation = () => {
     challengeData,
     handleChallengeGenerated,
     handleStartChallenge,
-    handleBackToGeneration
+    handleBackToGeneration,
   };
-}; 
+};

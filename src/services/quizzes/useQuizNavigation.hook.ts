@@ -7,10 +7,13 @@ export const useQuizNavigation = () => {
   const [currentScreen, setCurrentScreen] = useState<QuizScreen>('generation');
   const [quizData, setQuizData] = useState<IQuizWithWrapper | null>(null);
 
-  const handleQuizGenerated = useCallback((generatedQuizData: IQuizWithWrapper) => {
-    setQuizData(generatedQuizData);
-    setCurrentScreen('preview');
-  }, []);
+  const handleQuizGenerated = useCallback(
+    (generatedQuizData: IQuizWithWrapper) => {
+      setQuizData(generatedQuizData);
+      setCurrentScreen('preview');
+    },
+    []
+  );
 
   const handleStartQuiz = useCallback(() => {
     setCurrentScreen('playground');
@@ -26,6 +29,6 @@ export const useQuizNavigation = () => {
     quizData,
     handleQuizGenerated,
     handleStartQuiz,
-    handleBackToGeneration
+    handleBackToGeneration,
   };
-}; 
+};

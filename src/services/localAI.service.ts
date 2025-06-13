@@ -10,7 +10,7 @@ export async function generateResponse<T = unknown>(
 ): Promise<IAIResponse<T>> {
   try {
     const finalSettings = { ...DEFAULT_AI_SETTINGS, ...settings };
-    
+
     if (onProgress) {
       onProgress(15);
     }
@@ -72,9 +72,12 @@ export async function generateResponse<T = unknown>(
       try {
         parsedData = JSON.parse(jsonStr);
       } catch (parseError: unknown) {
-        console.warn('Initial JSON parse failed, attempting cleanup:', parseError);
+        console.warn(
+          'Initial JSON parse failed, attempting cleanup:',
+          parseError
+        );
         console.warn('Raw JSON string:', jsonStr);
-        
+
         const cleanedJsonStr = jsonStr
           .replace(/\\\n/g, '\\n')
           .replace(/\\"/g, '"')
@@ -82,30 +85,50 @@ export async function generateResponse<T = unknown>(
           .replace(/\\\\/g, '\\')
           .replace(/[^\x20-\x7E\x80-\xFF]/g, '')
           .replace(/,(\s*[}\]])/g, '$1');
-        
+
         try {
           parsedData = JSON.parse(cleanedJsonStr);
           console.log('JSON parse successful after cleanup');
         } catch (secondParseError) {
-          console.error('JSON parse failed even after cleanup:', secondParseError);
+          console.error(
+            'JSON parse failed even after cleanup:',
+            secondParseError
+          );
           console.error('Cleaned JSON string:', cleanedJsonStr);
-          
+
           const jsonStartIndex = cleanedJsonStr.indexOf('{');
           const jsonEndIndex = cleanedJsonStr.lastIndexOf('}');
-          
-          if (jsonStartIndex !== -1 && jsonEndIndex !== -1 && jsonEndIndex > jsonStartIndex) {
-            const extractedJson = cleanedJsonStr.substring(jsonStartIndex, jsonEndIndex + 1);
+
+          if (
+            jsonStartIndex !== -1 &&
+            jsonEndIndex !== -1 &&
+            jsonEndIndex > jsonStartIndex
+          ) {
+            const extractedJson = cleanedJsonStr.substring(
+              jsonStartIndex,
+              jsonEndIndex + 1
+            );
             try {
               parsedData = JSON.parse(extractedJson);
               console.log('JSON parse successful after extraction');
             } catch (thirdParseError) {
               console.error('All JSON parse attempts failed:', thirdParseError);
-              const errorMessage = parseError instanceof Error ? parseError.message : String(parseError);
-              throw new Error(`Failed to parse JSON response after multiple cleanup attempts. Original error: ${errorMessage}`);
+              const errorMessage =
+                parseError instanceof Error
+                  ? parseError.message
+                  : String(parseError);
+              throw new Error(
+                `Failed to parse JSON response after multiple cleanup attempts. Original error: ${errorMessage}`
+              );
             }
           } else {
-            const errorMessage = parseError instanceof Error ? parseError.message : String(parseError);
-            throw new Error(`Failed to parse JSON response. Original error: ${errorMessage}`);
+            const errorMessage =
+              parseError instanceof Error
+                ? parseError.message
+                : String(parseError);
+            throw new Error(
+              `Failed to parse JSON response. Original error: ${errorMessage}`
+            );
           }
         }
       }

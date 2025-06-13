@@ -1,7 +1,11 @@
 import React, { useCallback } from 'react';
 import { LoadingSpinner, Input, Select, Button } from '@/components';
 import { languageNames, useChallengeGeneration } from '@/services';
-import type { TLang, TProgrammingLanguage, ICodingChallengeWithWrapper } from '@/types';
+import type {
+  TLang,
+  TProgrammingLanguage,
+  ICodingChallengeWithWrapper,
+} from '@/types';
 import { PROGRAMMING_LANGUAGE_NAMES } from '@/constants';
 import styles from './challengeGeneration.module.scss';
 
@@ -10,7 +14,7 @@ interface ChallengeGenerationProps {
 }
 
 const ChallengeGeneration: React.FC<ChallengeGenerationProps> = ({
-  onChallengeGenerated
+  onChallengeGenerated,
 }) => {
   const {
     topic,
@@ -21,7 +25,7 @@ const ChallengeGeneration: React.FC<ChallengeGenerationProps> = ({
     setTopic,
     setLanguage,
     setProgrammingLanguage,
-    handleGenerateChallenge: generateChallenge
+    handleGenerateChallenge: generateChallenge,
   } = useChallengeGeneration();
 
   const handleGenerateChallenge = useCallback(async () => {
@@ -38,47 +42,51 @@ const ChallengeGeneration: React.FC<ChallengeGenerationProps> = ({
       ) : (
         <>
           <Input
-            label="Challenge Topic"
-            id="topicInput"
+            label='Challenge Topic'
+            id='topicInput'
             value={topic}
             onChange={setTopic}
-            onKeyDown={e => {
+            onKeyDown={(e) => {
               if (e.key === 'Enter' && topic.trim() && !isLoading) {
                 handleGenerateChallenge();
               }
             }}
-            placeholder="e.g., Array Manipulation, Binary Search"
+            placeholder='e.g., Array Manipulation, Binary Search'
             disabled={isLoading}
           />
 
           <Select
-            label="Language"
-            id="languageSelect"
+            label='Language'
+            id='languageSelect'
             value={language}
             options={Object.entries(languageNames).map(([key, name]) => ({
               value: key,
-              label: name
+              label: name,
             }))}
-            onChange={value => setLanguage(value as TLang)}
+            onChange={(value) => setLanguage(value as TLang)}
             disabled={isLoading}
           />
 
           <Select
-            label="Programming Language"
-            id="programmingLanguageSelect"
+            label='Programming Language'
+            id='programmingLanguageSelect'
             value={programmingLanguage}
-            options={Object.entries(PROGRAMMING_LANGUAGE_NAMES).map(([key, name]) => ({
-              value: key,
-              label: name
-            }))}
-            onChange={value => setProgrammingLanguage(value as TProgrammingLanguage)}
+            options={Object.entries(PROGRAMMING_LANGUAGE_NAMES).map(
+              ([key, name]) => ({
+                value: key,
+                label: name,
+              })
+            )}
+            onChange={(value) =>
+              setProgrammingLanguage(value as TProgrammingLanguage)
+            }
             disabled={isLoading}
           />
 
           <Button
             onClick={handleGenerateChallenge}
             disabled={isLoading || !topic.trim()}
-            variant="primary"
+            variant='primary'
           >
             Generate Challenge
           </Button>
@@ -90,4 +98,4 @@ const ChallengeGeneration: React.FC<ChallengeGenerationProps> = ({
   );
 };
 
-export default ChallengeGeneration; 
+export default ChallengeGeneration;

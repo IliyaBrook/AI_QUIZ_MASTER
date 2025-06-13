@@ -12,9 +12,8 @@ interface ChallengePlaygroundProps {
 
 const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
   challengeData,
-  onBackToGeneration
+  onBackToGeneration,
 }) => {
-  
   const {
     userCode,
     showSolution,
@@ -27,7 +26,7 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
     handleToggleSolution,
     handleToggleHints,
     handleRunCode,
-    formatExecutionResult
+    formatExecutionResult,
   } = useChallengePlayground(challengeData);
 
   return (
@@ -44,19 +43,19 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
           <div className={styles.codeHeader}>
             <h3>Your Solution</h3>
             <div className={styles.codeActions}>
-              <Button 
-                onClick={handleRunCode} 
+              <Button
+                onClick={handleRunCode}
                 disabled={isRunning}
-                variant="info"
+                variant='info'
               >
                 {isRunning ? 'Running...' : 'Run Code'}
               </Button>
               {challenge.hints && challenge.hints.length > 0 && (
-                <Button onClick={handleToggleHints} variant="success">
+                <Button onClick={handleToggleHints} variant='success'>
                   {showHints ? 'Hide Hints' : 'Show Hints'}
                 </Button>
               )}
-              <Button onClick={handleToggleSolution} variant="warning">
+              <Button onClick={handleToggleSolution} variant='warning'>
                 {showSolution ? 'Hide Solution' : 'Show Solution'}
               </Button>
             </div>
@@ -109,4 +108,4 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
   );
 };
 
-export default ChallengePlayground; 
+export default ChallengePlayground;

@@ -36,14 +36,6 @@
       "@/assets/*": ["./src/assets/*"]
     }
   },
-  "include": [
-    "src/**/*",
-    "src/**/*.d.ts",
-    "vite.config.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "build"
-  ]
+  "include": ["src/**/*", "src/**/*.d.ts", "vite.config.ts"],
+  "exclude": ["node_modules", "dist", "build"]
 }

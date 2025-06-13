@@ -28,7 +28,7 @@ export const Input: React.FC<InputProps> = ({
   required = false,
   autoComplete,
   inline = false,
-  className = ''
+  className = '',
 }) => {
   const formGroupClass = `${styles.formGroup} ${inline ? styles.inline : ''} ${className}`;
 
@@ -42,7 +42,7 @@ export const Input: React.FC<InputProps> = ({
         type={type}
         id={id}
         value={value}
-        onChange={e => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
         onKeyDown={onKeyDown}
         placeholder={placeholder}
         disabled={disabled}

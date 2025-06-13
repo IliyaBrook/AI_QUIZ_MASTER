@@ -8,9 +8,7 @@ interface QuizGenerationProps {
   onQuizGenerated: (quizData: IQuizWithWrapper) => void;
 }
 
-const QuizGeneration: React.FC<QuizGenerationProps> = ({
-  onQuizGenerated
-}) => {
+const QuizGeneration: React.FC<QuizGenerationProps> = ({ onQuizGenerated }) => {
   const {
     topic,
     language,
@@ -18,7 +16,7 @@ const QuizGeneration: React.FC<QuizGenerationProps> = ({
     error,
     setTopic,
     setLanguage,
-    handleGenerateQuiz
+    handleGenerateQuiz,
   } = useQuizGeneration();
 
   const onGenerateClick = async () => {
@@ -35,35 +33,35 @@ const QuizGeneration: React.FC<QuizGenerationProps> = ({
       ) : (
         <>
           <Input
-            label="Quiz Topic"
-            id="topicInput"
+            label='Quiz Topic'
+            id='topicInput'
             value={topic}
             onChange={setTopic}
-            onKeyDown={e => {
+            onKeyDown={(e) => {
               if (e.key === 'Enter' && topic.trim() && !isLoading) {
                 onGenerateClick();
               }
             }}
-            placeholder="e.g., Ancient Egypt History"
+            placeholder='e.g., Ancient Egypt History'
             disabled={isLoading}
           />
 
           <Select
-            label="Language"
-            id="languageSelect"
+            label='Language'
+            id='languageSelect'
             value={language}
             options={Object.entries(languageNames).map(([key, name]) => ({
               value: key,
-              label: name
+              label: name,
             }))}
-            onChange={value => setLanguage(value as TLang)}
+            onChange={(value) => setLanguage(value as TLang)}
             disabled={isLoading}
           />
 
           <Button
             onClick={onGenerateClick}
             disabled={isLoading || !topic.trim()}
-            variant="primary"
+            variant='primary'
           >
             Generate Quiz
           </Button>
@@ -75,4 +73,4 @@ const QuizGeneration: React.FC<QuizGenerationProps> = ({
   );
 };
 
-export default QuizGeneration; 
+export default QuizGeneration;

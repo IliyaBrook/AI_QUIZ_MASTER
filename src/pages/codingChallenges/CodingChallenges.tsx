@@ -6,27 +6,25 @@ import ChallengePreview from './ChallengePreview/challengePreview';
 import ChallengePlayground from './ChallengePlayground/challengePlayground';
 import styles from './CodingChallenges.module.scss';
 
-
-
 const RenderCodingChallenges: React.FC = () => {
   const {
     currentScreen,
     challengeData,
     handleChallengeGenerated,
     handleStartChallenge,
-    handleBackToGeneration
+    handleBackToGeneration,
   } = useChallengeNavigation();
 
   const components = {
     ChallengeGeneration,
     ChallengePreview,
-    ChallengePlayground
+    ChallengePlayground,
   };
 
   const handlers = {
     handleChallengeGenerated,
     handleStartChallenge,
-    handleBackToGeneration
+    handleBackToGeneration,
   };
 
   return (
@@ -36,7 +34,7 @@ const RenderCodingChallenges: React.FC = () => {
         currentScreen,
         challengeData,
         components,
-        handlers
+        handlers,
       })}
     </div>
   );

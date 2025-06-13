@@ -3,7 +3,7 @@ services:
     image: ollama/ollama:latest
     container_name: quiz-ollama
     ports:
-      - "11434:11434"
+      - '11434:11434'
     volumes:
       - ollama_data:/root/.ollama
     environment:
@@ -25,7 +25,7 @@ services:
         limits:
           memory: 4G
     healthcheck:
-      test: ["CMD", "ollama", "list"]
+      test: ['CMD', 'ollama', 'list']
       interval: 60s
       timeout: 30s
       retries: 10
@@ -35,7 +35,7 @@ services:
     image: ghcr.io/engineer-man/piston
     container_name: quiz-piston
     ports:
-      - "2000:2000"
+      - '2000:2000'
     restart: unless-stopped
     privileged: true
     environment:
@@ -45,19 +45,27 @@ services:
     tmpfs:
       - /tmp:size=512m
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:2000/api/v2/runtimes"]
+      test:
+        [
+          'CMD',
+          'wget',
+          '--quiet',
+          '--tries=1',
+          '--spider',
+          'http://localhost:2000/api/v2/runtimes',
+        ]
       interval: 60s
       timeout: 15s
       retries: 10
       start_period: 300s
 
   quiz-app:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     container_name: quiz-frontend
     ports:
-      - "3000:80"
+      - '3000:80'
     environment:
       - VITE_OLLAMA_URL=http://ollama:11434
       - VITE_PISTON_URL=http://piston:2000

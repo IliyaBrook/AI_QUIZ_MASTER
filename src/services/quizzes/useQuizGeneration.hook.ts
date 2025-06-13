@@ -49,6 +49,6 @@ export const useQuizGeneration = () => {
     setTopic,
     setLanguage,
     handleGenerateQuiz,
-    resetForm
+    resetForm,
   };
-}; 
+};

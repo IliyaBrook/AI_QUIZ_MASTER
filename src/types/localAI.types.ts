@@ -21,4 +21,4 @@ export interface IAISettings {
 export interface IAIResponse<T = unknown> {
   data: T;
   rawResponseText: string;
-} 
+}

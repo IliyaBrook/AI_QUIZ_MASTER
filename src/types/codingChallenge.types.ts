@@ -1,4 +1,14 @@
-export type TProgrammingLanguage = 'javascript' | 'typescript' | 'python' | 'java' | 'cpp' | 'csharp' | 'go' | 'rust' | 'php' | 'ruby';
+export type TProgrammingLanguage =
+  | 'javascript'
+  | 'typescript'
+  | 'python'
+  | 'java'
+  | 'cpp'
+  | 'csharp'
+  | 'go'
+  | 'rust'
+  | 'php'
+  | 'ruby';
 
 export interface ICodingChallenge {
   title: string;
@@ -22,4 +32,4 @@ export interface ICodingChallengeWithWrapper {
   challenge: ICodingChallenge;
 }
 
-export type TProgrammingLanguageMap = Record<TProgrammingLanguage, string>; 
+export type TProgrammingLanguageMap = Record<TProgrammingLanguage, string>;

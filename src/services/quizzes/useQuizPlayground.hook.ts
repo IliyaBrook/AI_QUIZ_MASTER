@@ -4,7 +4,9 @@ import type { IAnswerOption, IQuizWithWrapper } from '@/types';
 export const useQuizPlayground = (quizData: IQuizWithWrapper) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<IAnswerOption | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<IAnswerOption | null>(
+    null
+  );
   const [showRationale, setShowRationale] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,11 +23,14 @@ export const useQuizPlayground = (quizData: IQuizWithWrapper) => {
     setError(null);
   }, []);
 
-  const handleAnswerSelect = useCallback((option: IAnswerOption) => {
-    if (!showRationale) {
-      setSelectedAnswer(option);
-    }
-  }, [showRationale]);
+  const handleAnswerSelect = useCallback(
+    (option: IAnswerOption) => {
+      if (!showRationale) {
+        setSelectedAnswer(option);
+      }
+    },
+    [showRationale]
+  );
 
   const handleSubmitAnswer = useCallback(() => {
     if (selectedAnswer === null) {
@@ -35,7 +40,7 @@ export const useQuizPlayground = (quizData: IQuizWithWrapper) => {
     setError(null);
     setShowRationale(true);
     if (selectedAnswer.is_correct) {
-      setScore(prevScore => prevScore + 1);
+      setScore((prevScore) => prevScore + 1);
     }
   }, [selectedAnswer]);
 
@@ -43,7 +48,7 @@ export const useQuizPlayground = (quizData: IQuizWithWrapper) => {
     setShowRationale(false);
     setSelectedAnswer(null);
     if (currentQuestionIndex < totalQuestions - 1) {
-      setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
     } else {
       setQuizCompleted(true);
     }
@@ -66,6 +71,6 @@ export const useQuizPlayground = (quizData: IQuizWithWrapper) => {
     handleSubmitAnswer,
     handleNextQuestion,
     handleRestartQuiz,
-    resetQuizState
+    resetQuizState,
   };
-}; 
+};

@@ -34,7 +34,8 @@
   }
 }
 
-.questionContainer, .quizResults {
+.questionContainer,
+.quizResults {
   background: white;
   border-radius: 15px;
   padding: 2rem;
@@ -137,16 +138,16 @@
     font-size: 4rem;
     font-weight: 700;
     margin: 2rem 0;
-    
+
     .score {
       color: #4caf50;
     }
-    
+
     .separator {
       color: #666;
       margin: 0 1rem;
     }
-    
+
     .total {
       color: #666;
     }
@@ -190,7 +191,8 @@
 }
 
 @media (max-width: 768px) {
-  .questionContainer, .quizResults {
+  .questionContainer,
+  .quizResults {
     padding: 1.5rem;
   }
 
@@ -216,4 +218,4 @@
   .resultsActions {
     flex-direction: column;
   }
-} 
+}

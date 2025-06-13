@@ -21,5 +21,5 @@ export const appPages: IAppPage[] = [
     label: 'Coding Challenges',
     path: '/coding-challenges',
     id: 'coding-challenges-page-id-1',
-  }
+  },
 ];

@@ -1,6 +1,5 @@
 import type { TProgrammingLanguage } from '@/types';
 
-
 export interface PistonFile {
   name?: string;
   content: string;
@@ -60,17 +59,19 @@ const LANGUAGE_MAP: Record<TProgrammingLanguage, string> = {
   go: 'go',
   rust: 'rust',
   php: 'php',
-  ruby: 'ruby'
+  ruby: 'ruby',
 };
 
 export async function getAvailableRuntimes(): Promise<PistonRuntime[]> {
   try {
     const response = await fetch('/api/v2/runtimes');
-    
+
     if (!response.ok) {
-      throw new Error(`Failed to fetch runtimes: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch runtimes: ${response.status} ${response.statusText}`
+      );
     }
-    
+
     return await response.json();
   } catch (error) {
     console.error('Error fetching Piston runtimes:', error);
@@ -83,25 +84,29 @@ export async function executeCode(
   programmingLanguage: TProgrammingLanguage
 ): Promise<CodeExecutionResult> {
   const startTime = Date.now();
-  
+
   try {
     const pistonLanguage = LANGUAGE_MAP[programmingLanguage];
-    
+
     if (!pistonLanguage) {
-      throw new Error(`Unsupported programming language: ${programmingLanguage}`);
+      throw new Error(
+        `Unsupported programming language: ${programmingLanguage}`
+      );
     }
 
     const executeRequest: PistonExecuteRequest = {
       language: pistonLanguage,
       version: '*',
-      files: [{
-        name: getFileName(programmingLanguage),
-        content: code
-      }],
+      files: [
+        {
+          name: getFileName(programmingLanguage),
+          content: code,
+        },
+      ],
       compile_timeout: 10000,
       run_timeout: 3000,
       compile_memory_limit: -1,
-      run_memory_limit: -1
+      run_memory_limit: -1,
     };
 
     const response = await fetch('/api/v2/execute', {
@@ -109,12 +114,15 @@ export async function executeCode(
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(executeRequest)
+      body: JSON.stringify(executeRequest),
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `Execution failed: ${response.status} ${response.statusText}`);
+      throw new Error(
+        errorData.message ||
+          `Execution failed: ${response.status} ${response.statusText}`
+      );
     }
 
     const result: PistonExecuteResponse = await response.json();
@@ -144,25 +152,24 @@ export async function executeCode(
       output: output.trim(),
       executionTime,
       language: result.language,
-      version: result.version
+      version: result.version,
     };
-    
+
     if (trimmedError) {
       resultObj.error = trimmedError;
     }
-    
-    return resultObj;
 
+    return resultObj;
   } catch (error) {
     const executionTime = Date.now() - startTime;
-    
+
     return {
       success: false,
       output: '',
       error: error instanceof Error ? error.message : String(error),
       executionTime,
       language: programmingLanguage,
-      version: 'unknown'
+      version: 'unknown',
     };
   }
 }
@@ -170,7 +177,7 @@ export async function executeCode(
 function getFileName(programmingLanguage: TProgrammingLanguage): string {
   const extensions: Record<TProgrammingLanguage, string> = {
     javascript: 'main.js',
-    typescript: 'main.ts', 
+    typescript: 'main.ts',
     python: 'main.py',
     java: 'Main.java',
     cpp: 'main.cpp',
@@ -178,15 +185,15 @@ function getFileName(programmingLanguage: TProgrammingLanguage): string {
     go: 'main.go',
     rust: 'main.rs',
     php: 'main.php',
-    ruby: 'main.rb'
+    ruby: 'main.rb',
   };
-  
+
   return extensions[programmingLanguage] || 'main.txt';
 }
 
 export function formatExecutionResult(result: CodeExecutionResult): string {
   let formatted = '';
-  
+
   if (result.success && result.output) {
     formatted += `Output:\n${result.output}`;
   } else if (result.error) {
@@ -194,16 +201,16 @@ export function formatExecutionResult(result: CodeExecutionResult): string {
   } else if (!result.output && !result.error) {
     formatted += 'No output';
   }
-  
+
   if (result.output && result.error) {
     formatted = `Output:\n${result.output}\n\nError:\n${result.error}`;
   }
-  
+
   formatted += `\n\nLanguage: ${result.language} ${result.version}`;
-  
+
   if (result.executionTime !== undefined) {
     formatted += `\nExecution time: ${result.executionTime}ms`;
   }
-  
+
   return formatted;
-} 
+}

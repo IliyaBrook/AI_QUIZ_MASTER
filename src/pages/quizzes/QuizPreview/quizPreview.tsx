@@ -13,7 +13,7 @@ interface QuizPreviewProps {
 const QuizPreview: React.FC<QuizPreviewProps> = ({
   quizData,
   onStartQuiz,
-  onBackToGeneration
+  onBackToGeneration,
 }) => {
   return (
     <div className={styles.quizPreview}>
@@ -22,10 +22,10 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
       <p>Number of questions: {quizData.quiz.questions.length}</p>
 
       <div className={styles.quizActions}>
-        <Button onClick={onStartQuiz} variant="primary">
+        <Button onClick={onStartQuiz} variant='primary'>
           Start Quiz
         </Button>
-        <Button onClick={onBackToGeneration} variant="secondary">
+        <Button onClick={onBackToGeneration} variant='secondary'>
           Create New Quiz
         </Button>
       </div>
@@ -33,4 +33,4 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
   );
 };
 
-export default QuizPreview; 
+export default QuizPreview;

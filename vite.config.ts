@@ -1,6 +1,6 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
-import * as node_fs from 'fs'
+import * as node_fs from 'fs';
 
 import * as path from 'path';
 
@@ -16,7 +16,7 @@ function getPathsFromTsconfig(): Record<string, string> {
     .replace(/\/\/.*$/gm, '');
   const tsconfig: TsConfig = JSON.parse(tsconfigStr);
   const aliases: Record<string, string> = {};
-  
+
   for (const [key, value] of Object.entries(tsconfig.compilerOptions.paths)) {
     if (value[0]) {
       const aliasKey = key.replace('/*', '');
@@ -28,8 +28,8 @@ function getPathsFromTsconfig(): Record<string, string> {
 }
 
 // https://vite.dev/config/
-export default defineConfig(({mode}) => {
-  process.env = {...process.env, ...loadEnv(mode, process.cwd())};
+export default defineConfig(({ mode }) => {
+  process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
   const pistonUrl = process.env.VITE_PISTON_URL;
   return {
     server: {

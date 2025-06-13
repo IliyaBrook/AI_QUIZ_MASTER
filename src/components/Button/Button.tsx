@@ -1,7 +1,13 @@
 import React from 'react';
 import styles from './Button.module.scss';
 
-type ButtonVariant = 'primary' | 'secondary' | 'success' | 'warning' | 'info' | 'danger';
+type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'danger';
 type ButtonSize = 'small' | 'medium' | 'large';
 
 interface IButtonProps {

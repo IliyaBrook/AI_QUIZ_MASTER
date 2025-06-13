@@ -27,7 +27,7 @@ export const Select: React.FC<SelectProps> = ({
   disabled = false,
   placeholder,
   inline = false,
-  className = ''
+  className = '',
 }) => {
   const formGroupClass = `${styles.formGroup} ${inline ? styles.inline : ''} ${className}`;
 
@@ -37,15 +37,15 @@ export const Select: React.FC<SelectProps> = ({
       <select
         id={id}
         value={value}
-        onChange={e => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
       >
         {placeholder && (
-          <option value="" disabled>
+          <option value='' disabled>
             {placeholder}
           </option>
         )}
-        {options.map(option => (
+        {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>

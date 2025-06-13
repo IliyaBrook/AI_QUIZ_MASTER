@@ -6,9 +6,9 @@ interface LoadingSpinnerProps {
   showTimer?: boolean;
 }
 
-export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
-  message = 'Generating response...', 
-  showTimer = true 
+export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
+  message = 'Generating response...',
+  showTimer = true,
 }) => {
   // Ollama-style spinner frames
   const spinnerFrames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
@@ -18,7 +18,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   useEffect(() => {
     // Animate spinner every 100ms (same as Ollama)
     const spinnerInterval = setInterval(() => {
-      setFrame(prev => (prev + 1) % spinnerFrames.length);
+      setFrame((prev) => (prev + 1) % spinnerFrames.length);
     }, 100);
 
     return () => clearInterval(spinnerInterval);
@@ -46,13 +46,15 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   };
 
   return (
-    <div className="loading-spinner">
-      <div className="spinner-container">
-        <span className="ollama-spinner">{spinnerFrames[frame]}</span>
-        <div className="spinner-message">
-          <p className="message">{message}</p>
+    <div className='loading-spinner'>
+      <div className='spinner-container'>
+        <span className='ollama-spinner'>{spinnerFrames[frame]}</span>
+        <div className='spinner-message'>
+          <p className='message'>{message}</p>
           {showTimer && elapsedTime > 0 && (
-            <span className="elapsed-time">{formatElapsedTime(elapsedTime)}</span>
+            <span className='elapsed-time'>
+              {formatElapsedTime(elapsedTime)}
+            </span>
           )}
         </div>
       </div>

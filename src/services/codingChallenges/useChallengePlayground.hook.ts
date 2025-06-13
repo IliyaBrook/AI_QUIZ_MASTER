@@ -1,12 +1,21 @@
 import { useState, useCallback } from 'react';
-import { executeCode, formatExecutionResult, type CodeExecutionResult } from '../codeRunner.service';
+import {
+  executeCode,
+  formatExecutionResult,
+  type CodeExecutionResult,
+} from '../codeRunner.service';
 import type { ICodingChallengeWithWrapper } from '@/types';
 
-export const useChallengePlayground = (challengeData: ICodingChallengeWithWrapper) => {
-  const [userCode, setUserCode] = useState<string>(challengeData.challenge.initialCode || '');
+export const useChallengePlayground = (
+  challengeData: ICodingChallengeWithWrapper
+) => {
+  const [userCode, setUserCode] = useState<string>(
+    challengeData.challenge.initialCode || ''
+  );
   const [showSolution, setShowSolution] = useState<boolean>(false);
   const [showHints, setShowHints] = useState<boolean>(false);
-  const [executionResult, setExecutionResult] = useState<CodeExecutionResult | null>(null);
+  const [executionResult, setExecutionResult] =
+    useState<CodeExecutionResult | null>(null);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,12 +50,14 @@ export const useChallengePlayground = (challengeData: ICodingChallengeWithWrappe
     try {
       const result = await executeCode(userCode, challenge.programmingLanguage);
       setExecutionResult(result);
-      
+
       if (!result.success && result.error) {
         setError(result.error);
       }
     } catch (e) {
-      setError(`Execution failed: ${e instanceof Error ? e.message : String(e)}`);
+      setError(
+        `Execution failed: ${e instanceof Error ? e.message : String(e)}`
+      );
     } finally {
       setIsRunning(false);
     }
@@ -74,6 +85,6 @@ export const useChallengePlayground = (challengeData: ICodingChallengeWithWrappe
     handleToggleHints,
     handleRunCode,
     resetPlayground,
-    formatExecutionResult
+    formatExecutionResult,
   };
-}; 
+};

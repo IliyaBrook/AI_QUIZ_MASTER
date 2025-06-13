@@ -12,7 +12,7 @@ const RenderQuizzes: React.FC = () => {
     quizData,
     handleQuizGenerated,
     handleStartQuiz,
-    handleBackToGeneration
+    handleBackToGeneration,
   } = useQuizNavigation();
 
   const currentScreenComponent = renderQuizScreen({
@@ -21,20 +21,16 @@ const RenderQuizzes: React.FC = () => {
     components: {
       QuizGeneration,
       QuizPreview,
-      QuizPlayground
+      QuizPlayground,
     },
     handlers: {
       handleQuizGenerated,
       handleStartQuiz,
-      handleBackToGeneration
-    }
+      handleBackToGeneration,
+    },
   });
 
-  return (
-    <div className={styles.quizContainer}>
-      {currentScreenComponent}
-    </div>
-  );
+  return <div className={styles.quizContainer}>{currentScreenComponent}</div>;
 };
 
 export const Quizzes: React.FC = () => (

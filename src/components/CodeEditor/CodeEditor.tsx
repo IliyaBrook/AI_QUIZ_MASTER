@@ -18,7 +18,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
   language,
   height = '400px',
   readOnly = false,
-  theme = 'vs-dark'
+  theme = 'vs-dark',
 }) => {
   const editorRef = useRef(null);
 
@@ -41,7 +41,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
       go: 'go',
       rust: 'rust',
       php: 'php',
-      ruby: 'ruby'
+      ruby: 'ruby',
     };
     return languageMap[lang] || 'javascript';
   };

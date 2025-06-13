@@ -6,7 +6,8 @@ import { DEFAULT_LANGUAGE, DEFAULT_PROGRAMMING_LANGUAGE } from '@/constants';
 export const useChallengeGeneration = () => {
   const [topic, setTopic] = useState<string>('');
   const [language, setLanguage] = useState<TLang>(DEFAULT_LANGUAGE);
-  const [programmingLanguage, setProgrammingLanguage] = useState<TProgrammingLanguage>(DEFAULT_PROGRAMMING_LANGUAGE);
+  const [programmingLanguage, setProgrammingLanguage] =
+    useState<TProgrammingLanguage>(DEFAULT_PROGRAMMING_LANGUAGE);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,7 +25,11 @@ export const useChallengeGeneration = () => {
     setError(null);
 
     try {
-      const { challengeData } = await generateCodingChallenge(topic, language, programmingLanguage);
+      const { challengeData } = await generateCodingChallenge(
+        topic,
+        language,
+        programmingLanguage
+      );
       return challengeData;
     } catch (e) {
       console.error('Error generating challenge:', e);
@@ -53,6 +58,6 @@ export const useChallengeGeneration = () => {
     setLanguage,
     setProgrammingLanguage,
     handleGenerateChallenge,
-    resetForm
+    resetForm,
   };
-}; 
+};

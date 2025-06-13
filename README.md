@@ -38,12 +38,14 @@ An intelligent quiz generation application powered by local AI models. Generate 
 ### Option 1: Docker Setup (Recommended)
 
 1. **Clone the repository**
+
 ```bash
 git clone https://github.com/IliyaBrook/AI_QUIZ_MASTER.git
 cd AI_QUIZ_MASTER
 ```
 
 2. **Start all services**
+
 ```bash
 make dev
 # or manually:
@@ -52,18 +54,21 @@ pnpm dev
 ```
 
 3. **Wait for model download**
-The first startup will download qwen2.5:3b (~2GB). Monitor progress:
+   The first startup will download qwen2.5:3b (~2GB). Monitor progress:
+
 ```bash
 docker-compose logs -f ollama
 ```
 
 4. **Access the application**
+
 - **Frontend**: http://localhost:3000
 - **Ollama API**: http://localhost:11434
 
 ### Option 2: Manual Setup
 
 1. **Install Ollama**
+
 ```bash
 # macOS
 brew install ollama
@@ -75,16 +80,19 @@ curl -fsSL https://ollama.ai/install.sh | sh
 ```
 
 2. **Pull the model**
+
 ```bash
 ollama pull qwen2.5:3b
 ```
 
 3. **Start Ollama server**
+
 ```bash
 ollama serve
 ```
 
 4. **Install dependencies and start frontend**
+
 ```bash
 pnpm install
 pnpm dev
@@ -93,6 +101,7 @@ pnpm dev
 ## 📋 Available Commands
 
 ### Development
+
 ```bash
 make dev          # Start Ollama + development server
 make up           # Start all Docker services
@@ -101,6 +110,7 @@ make logs         # View container logs
 ```
 
 ### Model Management
+
 ```bash
 make pull-model   # Download qwen2.5:3b model
 make run-model    # Interactive chat with model
@@ -108,6 +118,7 @@ make optimize     # Test GPU optimization
 ```
 
 ### Maintenance
+
 ```bash
 make clean        # Stop containers and clean system
 make rebuild      # Full rebuild and restart
@@ -137,8 +148,8 @@ make gpu-check    # Check GPU availability
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
+| Variable          | Description        | Default                  |
+| ----------------- | ------------------ | ------------------------ |
 | `VITE_OLLAMA_URL` | Ollama service URL | `http://localhost:11434` |
 
 ### Resource Requirements
@@ -153,11 +164,13 @@ make gpu-check    # Check GPU availability
 ### Model Issues
 
 **Model not downloading:**
+
 ```bash
 docker exec -it quiz-ollama ollama pull qwen2.5:3b
 ```
 
 **Check model status:**
+
 ```bash
 docker exec quiz-ollama ollama list
 ```
@@ -165,11 +178,13 @@ docker exec quiz-ollama ollama list
 ### API Issues
 
 **Check Ollama health:**
+
 ```bash
 curl http://localhost:11434/api/health
 ```
 
 **View Ollama logs:**
+
 ```bash
 docker-compose logs -f ollama
 ```
@@ -232,4 +247,4 @@ If you encounter any issues or have questions:
 
 ---
 
-**Made with ❤️ for the AI community** 
+**Made with ❤️ for the AI community**

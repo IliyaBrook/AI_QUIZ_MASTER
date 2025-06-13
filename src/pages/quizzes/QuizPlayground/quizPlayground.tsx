@@ -11,7 +11,7 @@ interface QuizPlaygroundProps {
 
 const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
   quizData,
-  onBackToGeneration
+  onBackToGeneration,
 }) => {
   const {
     currentQuestionIndex,
@@ -25,14 +25,14 @@ const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
     handleAnswerSelect,
     handleSubmitAnswer,
     handleNextQuestion,
-    handleRestartQuiz
+    handleRestartQuiz,
   } = useQuizPlayground(quizData);
 
   if (!currentQuestion) {
     return (
       <div className={styles.errorFallback}>
         <div className={styles.errorMessage}>Error: Question not found.</div>
-        <Button onClick={onBackToGeneration} variant="secondary">
+        <Button onClick={onBackToGeneration} variant='secondary'>
           Back to Quiz Creation
         </Button>
       </div>
@@ -46,7 +46,7 @@ const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
         <div className={styles.quizProgress}>
           Question {currentQuestionIndex + 1} of {totalQuestions}
         </div>
-        <Button onClick={onBackToGeneration} variant="secondary" size="small">
+        <Button onClick={onBackToGeneration} variant='secondary' size='small'>
           ← New Quiz
         </Button>
       </div>
@@ -64,10 +64,10 @@ const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
           </p>
 
           <div className={styles.resultsActions}>
-            <Button onClick={handleRestartQuiz} variant="info">
+            <Button onClick={handleRestartQuiz} variant='info'>
               Retry Quiz
             </Button>
-            <Button onClick={onBackToGeneration} variant="secondary">
+            <Button onClick={onBackToGeneration} variant='secondary'>
               Create New Quiz
             </Button>
           </div>
@@ -101,19 +101,35 @@ const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
             <div
               className={`${styles.rationale} ${selectedAnswer.is_correct ? styles.correctRationale : styles.incorrectRationale}`}
             >
-              <p><strong>{selectedAnswer.is_correct ? 'Correct!' : 'Incorrect!'}</strong></p>
+              <p>
+                <strong>
+                  {selectedAnswer.is_correct ? 'Correct!' : 'Incorrect!'}
+                </strong>
+              </p>
               {selectedAnswer.rationale && selectedAnswer.rationale.trim() && (
                 <p>{selectedAnswer.rationale}</p>
               )}
-              {!selectedAnswer.is_correct && (() => {
-                const correctOption = currentQuestion.answer_options.find(option => option.is_correct);
-                return correctOption?.rationale && correctOption.rationale.trim() ? (
-                  <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #ddd' }}>
-                    <p><strong>Correct answer:</strong></p>
-                    <p>{correctOption.rationale}</p>
-                  </div>
-                ) : null;
-              })()}
+              {!selectedAnswer.is_correct &&
+                (() => {
+                  const correctOption = currentQuestion.answer_options.find(
+                    (option) => option.is_correct
+                  );
+                  return correctOption?.rationale &&
+                    correctOption.rationale.trim() ? (
+                    <div
+                      style={{
+                        marginTop: '1rem',
+                        paddingTop: '1rem',
+                        borderTop: '1px solid #ddd',
+                      }}
+                    >
+                      <p>
+                        <strong>Correct answer:</strong>
+                      </p>
+                      <p>{correctOption.rationale}</p>
+                    </div>
+                  ) : null;
+                })()}
             </div>
           )}
 
@@ -124,12 +140,12 @@ const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
               <Button
                 onClick={handleSubmitAnswer}
                 disabled={selectedAnswer === null}
-                variant="primary"
+                variant='primary'
               >
                 Submit Answer
               </Button>
             ) : (
-              <Button onClick={handleNextQuestion} variant="success">
+              <Button onClick={handleNextQuestion} variant='success'>
                 {currentQuestionIndex < totalQuestions - 1
                   ? 'Next Question'
                   : 'Finish Quiz'}
@@ -142,4 +158,4 @@ const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
   );
 };
 
-export default QuizPlayground; 
+export default QuizPlayground;

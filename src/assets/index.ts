@@ -1,3 +1,3 @@
 import reactLogo from './react.svg';
 
-export { reactLogo }; 
+export { reactLogo };

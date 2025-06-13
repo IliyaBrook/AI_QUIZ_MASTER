@@ -1,1 +1,1 @@
-export * from './routes.settings'; 
+export * from './routes.settings';

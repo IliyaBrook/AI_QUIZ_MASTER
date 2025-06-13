@@ -1,9 +1,9 @@
-import type { 
-  ICodingChallengeWithWrapper, 
-  ICodingChallenge, 
-  TLang, 
-  TProgrammingLanguage, 
-  IAIMessage 
+import type {
+  ICodingChallengeWithWrapper,
+  ICodingChallenge,
+  TLang,
+  TProgrammingLanguage,
+  IAIMessage,
 } from '@/types';
 import { LANGUAGE_NAMES } from '@/constants';
 import { generateResponse } from '@/services';
@@ -12,8 +12,8 @@ export type { TProgrammingLanguage };
 export { LANGUAGE_NAMES as languageNames };
 
 function createCodingChallengePrompt(
-  topic: string, 
-  languageKey: TLang, 
+  topic: string,
+  languageKey: TLang,
   programmingLanguage: TProgrammingLanguage
 ): IAIMessage[] {
   const languageName = LANGUAGE_NAMES[languageKey];
@@ -63,9 +63,16 @@ export async function generateCodingChallenge(
   language: TLang,
   programmingLanguage: TProgrammingLanguage,
   onProgress?: (progress: number) => void
-): Promise<{ challengeData: ICodingChallengeWithWrapper, rawResponseText: string }> {
-  const messages = createCodingChallengePrompt(topic, language, programmingLanguage);
-  
+): Promise<{
+  challengeData: ICodingChallengeWithWrapper;
+  rawResponseText: string;
+}> {
+  const messages = createCodingChallengePrompt(
+    topic,
+    language,
+    programmingLanguage
+  );
+
   const maxRetries = 2;
   let lastError: Error | null = null;
 
@@ -82,23 +89,34 @@ export async function generateCodingChallenge(
       );
 
       if (response.data && response.data.title && response.data.description) {
-        const challengeData: ICodingChallengeWithWrapper = { challenge: response.data };
-        return { 
-          challengeData, 
-          rawResponseText: response.rawResponseText 
+        const challengeData: ICodingChallengeWithWrapper = {
+          challenge: response.data,
+        };
+        return {
+          challengeData,
+          rawResponseText: response.rawResponseText,
         };
       } else {
-        throw new Error('Generated coding challenge data is not in the expected format.');
+        throw new Error(
+          'Generated coding challenge data is not in the expected format.'
+        );
       }
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
-      
+
       if (attempt < maxRetries) {
-        console.warn(`Attempt ${attempt + 1} failed, retrying:`, lastError.message);
-        await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+        console.warn(
+          `Attempt ${attempt + 1} failed, retrying:`,
+          lastError.message
+        );
+        await new Promise((resolve) =>
+          setTimeout(resolve, 1000 * (attempt + 1))
+        );
       }
     }
   }
 
-  throw new Error(`Failed to generate coding challenge after ${maxRetries + 1} attempts. Last error: ${lastError?.message}`);
-} 
+  throw new Error(
+    `Failed to generate coding challenge after ${maxRetries + 1} attempts. Last error: ${lastError?.message}`
+  );
+}

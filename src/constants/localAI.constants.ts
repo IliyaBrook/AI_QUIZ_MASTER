@@ -13,4 +13,4 @@ export const DEFAULT_AI_SETTINGS: Required<IAISettings> = {
   num_ctx: 2048,
   repeat_penalty: 1.15,
   top_k: 30,
-}; 
+};

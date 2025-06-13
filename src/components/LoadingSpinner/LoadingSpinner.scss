@@ -3,12 +3,12 @@
   justify-content: center;
   align-items: center;
   padding: 3rem 2rem;
-  
+
   .spinner-container {
     display: flex;
     align-items: center;
     gap: 12px;
-    
+
     .ollama-spinner {
       font-family: monospace;
       font-size: 1.5rem;
@@ -19,13 +19,13 @@
       width: 1.5rem;
       text-align: center;
     }
-    
+
     .spinner-message {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       gap: 4px;
-      
+
       .message {
         color: #333;
         font-size: 1.1rem;
@@ -33,7 +33,7 @@
         margin: 0;
         line-height: 1.2;
       }
-      
+
       .elapsed-time {
         font-size: 0.85rem;
         color: #666;
@@ -52,12 +52,12 @@
       .ollama-spinner {
         color: #60a5fa;
       }
-      
+
       .spinner-message {
         .message {
           color: #e5e7eb;
         }
-        
+
         .elapsed-time {
           color: #9ca3af;
         }
@@ -70,24 +70,24 @@
 @media (max-width: 768px) {
   .loading-spinner {
     padding: 2rem 1rem;
-    
+
     .spinner-container {
       gap: 10px;
-      
+
       .ollama-spinner {
         font-size: 1.3rem;
         width: 1.3rem;
       }
-      
+
       .spinner-message {
         .message {
           font-size: 1rem;
         }
-        
+
         .elapsed-time {
           font-size: 0.8rem;
         }
       }
     }
   }
-} 
+}
