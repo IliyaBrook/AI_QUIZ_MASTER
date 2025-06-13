@@ -9,19 +9,26 @@
     justify-content: space-between;
     max-width: 1200px;
     margin: 0 auto;
+    .logoContainer {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      .logoImg {
+        width: 32px;
+        height: 32px;
+      }
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #ffffff;
+        text-decoration: none;
+        transition: color 0.2s ease;
 
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #ffffff;
-      text-decoration: none;
-      transition: color 0.2s ease;
-
-      &:hover {
-        color: #f8f9fa;
+        &:hover {
+          color: #f8f9fa;
+        }
       }
     }
-
     .navLinks {
       display: flex;
       gap: 1rem;

@@ -8,17 +8,19 @@ export function Navbar() {
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
-        <img
-          src='/favicon.svg'
-          alt='AI Quiz Master'
-          className={styles.logo}
-        />
-        <Link
-          to='/'
-          className={styles.logo}
-        >
-          AI Quiz Master
-        </Link>
+        <div className={styles.logoContainer}>
+          <img
+            src='/favicon.svg'
+            alt='AI Quiz Master'
+            className={styles.logoImg}
+          />
+          <Link
+            to='/'
+            className={styles.logo}
+          >
+            AI Quiz Master
+          </Link>
+        </div>
 
         <div className={styles.navLinks}>
           {appPages.map((page) => (
