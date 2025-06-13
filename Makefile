@@ -75,34 +75,34 @@ piston-runtimes:
 piston-install-languages:
 	@echo "Installing programming languages in Piston container..."
 	@echo "Cleaning any existing temporary directory..."
-	@rm -rf ./temp-piston
+	@rm -rf ./.temp-piston
 	@echo "Cloning Piston repository with CLI..."
-	@git clone https://github.com/engineer-man/piston.git ./temp-piston
+	@git clone https://github.com/engineer-man/piston.git ./.temp-piston
 	@echo "Trying to install CLI dependencies (may fail on Windows)..."
-	@cd ./temp-piston/cli && (npm.cmd install || npm install || echo "npm install failed, trying without dependencies...")
+	@cd ./.temp-piston/cli && (npm.cmd install || npm install || echo "npm install failed, trying without dependencies...")
 	@echo "Installing JavaScript/Node.js..."
-	@cd ./temp-piston && (node cli/index.js -u http://localhost:2000 ppman install node || echo "Node.js install failed")
+	@cd ./.temp-piston && (node cli/index.js -u http://localhost:2000 ppman install node || echo "Node.js install failed")
 	@echo "Installing TypeScript..."
-	@cd ./temp-piston && (node cli/index.js -u http://localhost:2000 ppman install typescript || echo "TypeScript install failed")
+	@cd ./.temp-piston && (node cli/index.js -u http://localhost:2000 ppman install typescript || echo "TypeScript install failed")
 	@echo "Installing Python..."
-	@cd ./temp-piston && (node cli/index.js -u http://localhost:2000 ppman install python || echo "Python install failed")
+	@cd ./.temp-piston && (node cli/index.js -u http://localhost:2000 ppman install python || echo "Python install failed")
 	@echo "Installing Java..."
-	@cd ./temp-piston && (node cli/index.js -u http://localhost:2000 ppman install java || echo "Java install failed")
+	@cd ./.temp-piston && (node cli/index.js -u http://localhost:2000 ppman install java || echo "Java install failed")
 	@echo "Installing C++..."
-	@cd ./temp-piston && (node cli/index.js -u http://localhost:2000 ppman install c++ || echo "C++ install failed")
+	@cd ./.temp-piston && (node cli/index.js -u http://localhost:2000 ppman install c++ || echo "C++ install failed")
 	@echo "Installing C#..."
-	@cd ./temp-piston && (node cli/index.js -u http://localhost:2000 ppman install csharp || echo "C# install failed")
+	@cd ./.temp-piston && (node cli/index.js -u http://localhost:2000 ppman install csharp || echo "C# install failed")
 	@echo "Installing Go..."
-	@cd ./temp-piston && (node cli/index.js -u http://localhost:2000 ppman install go || echo "Go install failed")
+	@cd ./.temp-piston && (node cli/index.js -u http://localhost:2000 ppman install go || echo "Go install failed")
 	@echo "Installing Rust..."
-	@cd ./temp-piston && (node cli/index.js -u http://localhost:2000 ppman install rust || echo "Rust install failed")
+	@cd ./.temp-piston && (node cli/index.js -u http://localhost:2000 ppman install rust || echo "Rust install failed")
 	@echo "Installing PHP..."
-	@cd ./temp-piston && (node cli/index.js -u http://localhost:2000 ppman install php || echo "PHP install failed")
+	@cd ./.temp-piston && (node cli/index.js -u http://localhost:2000 ppman install php || echo "PHP install failed")
 	@echo "Installing Ruby..."
-	@cd ./temp-piston && (node cli/index.js -u http://localhost:2000 ppman install ruby || echo "Ruby install failed")
+	@cd ./.temp-piston && (node cli/index.js -u http://localhost:2000 ppman install ruby || echo "Ruby install failed")
 	@echo "Language installation process completed!"
 	@echo "Cleaning up temporary files..."
-	@rm -rf ./temp-piston
+	@rm -rf ./.temp-piston
 
 piston-setup: piston piston-install-languages
 	@echo "Piston is ready with programming languages!"
