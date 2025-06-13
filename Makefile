@@ -1,7 +1,12 @@
-.PHONY: up down build rebuild logs clean ai dev pull-model optimize gpu-check run-model piston piston-logs piston-runtimes code-dev
+.PHONY: up down build rebuild logs clean ai dev pull-model optimize gpu-check run-model piston piston-logs piston-runtimes code-dev up-fresh
 model = qwen2.5:3b
 
+up-fresh: pull-model piston-install-languages
+	docker-compose up -d
+
 up:
+	docker-compose down
+	docker-compose build --no-cache
 	docker-compose up -d
 
 ai:
@@ -40,7 +45,7 @@ clean:
 	docker system prune -f
 	docker volume prune -f
 
-pull-model:
+pull:
 	@echo "Pulling qwen2.5:3b model..."
 	docker exec quiz-ollama ollama pull $(model)
 
