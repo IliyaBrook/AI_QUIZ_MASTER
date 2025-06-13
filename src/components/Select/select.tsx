@@ -42,12 +42,18 @@ export const Select: React.FC<SelectProps> = ({
         disabled={disabled}
       >
         {placeholder && (
-          <option value='' disabled>
+          <option
+            value=''
+            disabled
+          >
             {placeholder}
           </option>
         )}
         {options.map((option) => (
-          <option key={option.value} value={option.value}>
+          <option
+            key={option.value}
+            value={option.value}
+          >
             {option.label}
           </option>
         ))}

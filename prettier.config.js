@@ -16,6 +16,7 @@ const config = {
   endOfLine: 'lf',
   embeddedLanguageFormatting: 'auto',
   htmlWhitespaceSensitivity: 'css',
+  singleAttributePerLine: true,
   plugins: ['@ianvs/prettier-plugin-sort-imports'],
   importOrder: [
     '<BUILTIN_MODULES>',

@@ -34,7 +34,10 @@ const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
     return (
       <div className={styles.errorFallback}>
         <div className={styles.errorMessage}>Error: Question not found.</div>
-        <Button onClick={onBackToGeneration} variant='secondary'>
+        <Button
+          onClick={onBackToGeneration}
+          variant='secondary'
+        >
           Back to Quiz Creation
         </Button>
       </div>
@@ -48,7 +51,11 @@ const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
         <div className={styles.quizProgress}>
           Question {currentQuestionIndex + 1} of {totalQuestions}
         </div>
-        <Button onClick={onBackToGeneration} variant='secondary' size='small'>
+        <Button
+          onClick={onBackToGeneration}
+          variant='secondary'
+          size='small'
+        >
           ← New Quiz
         </Button>
       </div>
@@ -66,10 +73,16 @@ const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
           </p>
 
           <div className={styles.resultsActions}>
-            <Button onClick={handleRestartQuiz} variant='info'>
+            <Button
+              onClick={handleRestartQuiz}
+              variant='info'
+            >
               Retry Quiz
             </Button>
-            <Button onClick={onBackToGeneration} variant='secondary'>
+            <Button
+              onClick={onBackToGeneration}
+              variant='secondary'
+            >
               Create New Quiz
             </Button>
           </div>
@@ -147,7 +160,10 @@ const QuizPlayground: React.FC<QuizPlaygroundProps> = ({
                 Submit Answer
               </Button>
             ) : (
-              <Button onClick={handleNextQuestion} variant='success'>
+              <Button
+                onClick={handleNextQuestion}
+                variant='success'
+              >
                 {currentQuestionIndex < totalQuestions - 1
                   ? 'Next Question'
                   : 'Finish Quiz'}

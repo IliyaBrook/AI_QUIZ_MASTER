@@ -49,10 +49,16 @@ export function Home() {
           </div>
 
           <div className={styles.cta}>
-            <Link to='/quizzes' className={styles.primaryButton}>
+            <Link
+              to='/quizzes'
+              className={styles.primaryButton}
+            >
               Create Quiz
             </Link>
-            <Link to='/coding-challenges' className={styles.secondaryButton}>
+            <Link
+              to='/coding-challenges'
+              className={styles.secondaryButton}
+            >
               Coding Challenge
             </Link>
           </div>

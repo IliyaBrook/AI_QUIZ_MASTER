@@ -25,7 +25,11 @@ const Header: React.FC<HeaderProps> = ({ challenge, onBackToGeneration }) => {
           {PROGRAMMING_LANGUAGE_NAMES[challenge.programmingLanguage]}
         </span>
       </div>
-      <Button onClick={onBackToGeneration} variant='secondary' size='small'>
+      <Button
+        onClick={onBackToGeneration}
+        variant='secondary'
+        size='small'
+      >
         ← New Challenge
       </Button>
     </div>

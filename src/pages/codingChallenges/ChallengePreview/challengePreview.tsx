@@ -43,10 +43,16 @@ const ChallengePreview: React.FC<ChallengePreviewProps> = ({
       </div>
 
       <div className={styles.challengeActions}>
-        <Button onClick={onStartChallenge} variant='primary'>
+        <Button
+          onClick={onStartChallenge}
+          variant='primary'
+        >
           Start Challenge
         </Button>
-        <Button onClick={onBackToGeneration} variant='secondary'>
+        <Button
+          onClick={onBackToGeneration}
+          variant='secondary'
+        >
           Create New Challenge
         </Button>
       </div>

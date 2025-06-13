@@ -33,7 +33,10 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
 
   return (
     <div className={styles.challengePlayground}>
-      <Header challenge={challenge} onBackToGeneration={onBackToGeneration} />
+      <Header
+        challenge={challenge}
+        onBackToGeneration={onBackToGeneration}
+      />
 
       <div className={styles.challengeContent}>
         <div className={styles.challengeDescription}>
@@ -53,11 +56,17 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
                 {isRunning ? 'Running...' : 'Run Code'}
               </Button>
               {challenge.hints && challenge.hints.length > 0 && (
-                <Button onClick={handleToggleHints} variant='success'>
+                <Button
+                  onClick={handleToggleHints}
+                  variant='success'
+                >
                   {showHints ? 'Hide Hints' : 'Show Hints'}
                 </Button>
               )}
-              <Button onClick={handleToggleSolution} variant='warning'>
+              <Button
+                onClick={handleToggleSolution}
+                variant='warning'
+              >
                 {showSolution ? 'Hide Solution' : 'Show Solution'}
               </Button>
             </div>
