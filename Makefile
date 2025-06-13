@@ -1,4 +1,4 @@
-.PHONY: up down build rebuild logs clean ai dev pull-model optimize gpu-check run-model piston piston-logs piston-runtimes code-dev up-fresh
+.PHONY: up down build rebuild logs clean ai dev pull-model optimize gpu-check run-model piston piston-logs piston-runtimes code-dev up-fresh format-fix
 model = qwen2.5:3b
 
 up-fresh: pull-model piston-install-languages
@@ -25,6 +25,12 @@ dev:
 	docker-compose up -d ollama
 	docker-compose up -d piston
 	pnpm dev
+
+format:
+	@echo "Running ESLint fix and Prettier format..."
+	pnpm run lint:fix
+	pnpm run format
+	@echo "Code formatting completed!"
 
 down:
 	docker-compose down
@@ -119,6 +125,7 @@ help:
 	@echo "  make piston          - Start only Piston service"
 	@echo "  make dev             - Start Ollama and run development server via pnpm"
 	@echo "  make code-dev        - Start Ollama, Piston and run development server"
+	@echo "  make format-fix      - Run ESLint fix and Prettier format"
 	@echo "  make pull-model      - Download qwen2.5:3b model"
 	@echo "  make run-model       - Run qwen2.5:3b model"
 	@echo "  make optimize        - Test GPU optimization with qwen2.5:3b model"

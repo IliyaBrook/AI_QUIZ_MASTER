@@ -1,6 +1,31 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
+import * as node_fs from 'fs'
+
+import * as path from 'path';
+
+interface TsConfig {
+  compilerOptions: {
+    paths: Record<string, string[]>;
+  };
+}
+
+function getPathsFromTsconfig(): Record<string, string> {
+  const tsconfigStr = node_fs
+    .readFileSync('./tsconfig.json', 'utf-8')
+    .replace(/\/\/.*$/gm, '');
+  const tsconfig: TsConfig = JSON.parse(tsconfigStr);
+  const aliases: Record<string, string> = {};
+  
+  for (const [key, value] of Object.entries(tsconfig.compilerOptions.paths)) {
+    if (value[0]) {
+      const aliasKey = key.replace('/*', '');
+      const aliasValue = path.resolve(__dirname, value[0].replace('/*', ''));
+      aliases[aliasKey] = aliasValue;
+    }
+  }
+  return aliases;
+}
 
 // https://vite.dev/config/
 export default defineConfig(({mode}) => {
@@ -9,6 +34,9 @@ export default defineConfig(({mode}) => {
   return {
     server: {
       port: 3000,
+      hmr: {
+        overlay: true,
+      },
       proxy: {
         '/api/v2': {
           target: pistonUrl,
@@ -18,20 +46,11 @@ export default defineConfig(({mode}) => {
       },
     },
     resolve: {
-      alias: [
-        {
-          find: '@/components',
-          replacement: resolve(__dirname, 'src/components'),
-        },
-        { find: '@/pages', replacement: resolve(__dirname, 'src/pages') },
-        { find: '@/services', replacement: resolve(__dirname, 'src/services') },
-        { find: '@/types', replacement: resolve(__dirname, 'src/types') },
-        { find: '@/constants', replacement: resolve(__dirname, 'src/constants') },
-        { find: '@/data', replacement: resolve(__dirname, 'src/data') },
-        { find: '@/assets', replacement: resolve(__dirname, 'src/assets') },
-        { find: '@', replacement: resolve(__dirname, 'src') },
-      ],
+      alias: getPathsFromTsconfig(),
     },
     plugins: [react()],
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'react-router'],
+    },
   };
 });

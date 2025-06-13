@@ -52,11 +52,9 @@ export default tseslint.config(
       'prefer-const': 'error',
       'no-var': 'error',
       'no-unused-expressions': 'error',
-      
       'react/prop-types': 'off',
       'react/react-in-jsx-scope': 'off',
       'react/jsx-uses-react': 'off',
-      
       '@typescript-eslint/dot-notation': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
     },

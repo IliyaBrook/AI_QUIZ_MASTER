@@ -31,7 +31,8 @@
       "@/services/*": ["./src/services/*"],
       "@/types/*": ["./src/types/*"],
       "@/constants/*": ["./src/constants/*"],
-      "@/data/*": ["./src/settings/*"],
+      "@/settings/*": ["./src/settings/*"],
+      "@/utils/*": ["./src/utils/*"],
       "@/assets/*": ["./src/assets/*"]
     }
   },

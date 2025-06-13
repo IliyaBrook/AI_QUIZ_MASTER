@@ -1,3 +1,3 @@
-export { default as Home } from './home/Home';
-export { default as Quizzes } from './quizzes/quizzes';
-export { default as CodingChallenges } from './codingChallenges/codingChallenges';
+export { Home } from './home/Home';
+export { Quizzes } from './quizzes/Quizzes';
+export { CodingChallenges } from './codingChallenges/CodingChallenges';

@@ -1,6 +1,6 @@
 import React from 'react';
 import type { ICodingChallengeWithWrapper } from '@/types';
-import type { ChallengeScreen } from './useChallengeNavigation.hook';
+import type { ChallengeScreen } from '@/services';
 
 interface ChallengeComponents {
   ChallengeGeneration: React.ComponentType<{ onChallengeGenerated: (challengeData: ICodingChallengeWithWrapper) => void }>;

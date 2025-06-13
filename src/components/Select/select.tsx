@@ -18,7 +18,7 @@ interface SelectProps {
   className?: string;
 }
 
-const Select: React.FC<SelectProps> = ({
+export const Select: React.FC<SelectProps> = ({
   label,
   id,
   value,
@@ -54,5 +54,3 @@ const Select: React.FC<SelectProps> = ({
     </div>
   );
 };
-
-export default Select; 

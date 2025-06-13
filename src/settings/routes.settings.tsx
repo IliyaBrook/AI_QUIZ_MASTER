@@ -1,7 +1,5 @@
 import { Home, Quizzes, CodingChallenges } from '@/pages';
 import type { IAppPage } from '@/types';
-
-// add new pages here
 export const appPages: IAppPage[] = [
   {
     index: true,

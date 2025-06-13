@@ -4,9 +4,9 @@ import { useQuizNavigation, renderQuizScreen } from '@/services';
 import QuizGeneration from './QuizGeneration/quizGeneration';
 import QuizPreview from './QuizPreview/quizPreview';
 import QuizPlayground from './QuizPlayground/quizPlayground';
-import styles from './quizzes.module.scss';
+import styles from './Quizzes.module.scss';
 
-const Quizzes: React.FC = () => {
+const RenderQuizzes: React.FC = () => {
   const {
     currentScreen,
     quizData,
@@ -32,16 +32,13 @@ const Quizzes: React.FC = () => {
 
   return (
     <div className={styles.quizContainer}>
-      <h1>AI Quiz Master</h1>
       {currentScreenComponent}
     </div>
   );
 };
 
-const QuizzesWithSuspense: React.FC = () => (
+export const Quizzes: React.FC = () => (
   <Suspense fallback={<LoadingSpinner />}>
-    <Quizzes />
+    <RenderQuizzes />
   </Suspense>
 );
-
-export default QuizzesWithSuspense;

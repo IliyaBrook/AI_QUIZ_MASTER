@@ -4,11 +4,11 @@ import { useChallengeNavigation, renderChallengeScreen } from '@/services';
 import ChallengeGeneration from './ChallengeGeneration/challengeGeneration';
 import ChallengePreview from './ChallengePreview/challengePreview';
 import ChallengePlayground from './ChallengePlayground/challengePlayground';
-import styles from './codingChallenges.module.scss';
+import styles from './CodingChallenges.module.scss';
 
 
 
-const CodingChallenges: React.FC = () => {
+const RenderCodingChallenges: React.FC = () => {
   const {
     currentScreen,
     challengeData,
@@ -42,10 +42,8 @@ const CodingChallenges: React.FC = () => {
   );
 };
 
-const CodingChallengesWithSuspense: React.FC = () => (
+export const CodingChallenges: React.FC = () => (
   <Suspense fallback={<LoadingSpinner />}>
-    <CodingChallenges />
+    <RenderCodingChallenges />
   </Suspense>
 );
-
-export default CodingChallengesWithSuspense; 

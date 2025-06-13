@@ -6,7 +6,7 @@ import type {
   IAIMessage 
 } from '@/types';
 import { LANGUAGE_NAMES } from '@/constants';
-import { generateResponse } from '../localAI.service';
+import { generateResponse } from '@/services';
 
 export type { TProgrammingLanguage };
 export { LANGUAGE_NAMES as languageNames };

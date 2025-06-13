@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import Editor from '@monaco-editor/react';
-import type { TProgrammingLanguage } from '@/types';
 import './CodeEditor.scss';
+import type { TProgrammingLanguage } from '@/types';
 
 interface CodeEditorProps {
   value: string;
@@ -12,7 +12,7 @@ interface CodeEditorProps {
   theme?: 'vs-dark' | 'light';
 }
 
-const CodeEditor: React.FC<CodeEditorProps> = ({
+export const CodeEditor: React.FC<CodeEditorProps> = ({
   value,
   onChange,
   language,
@@ -77,5 +77,3 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
     </div>
   );
 };
-
-export default CodeEditor; 

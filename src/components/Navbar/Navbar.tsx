@@ -2,10 +2,11 @@ import { Link } from 'react-router';
 import styles from './Navbar.module.scss';
 import { appPages } from '@/settings';
 
-export default function Navbar() {
+export function Navbar() {
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
+        <img src="/favicon.svg" alt="AI Quiz Master" className={styles.logo} />
         <Link to='/' className={styles.logo}>
           AI Quiz Master
         </Link>

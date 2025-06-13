@@ -6,7 +6,7 @@ interface LoadingSpinnerProps {
   showTimer?: boolean;
 }
 
-const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
+export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
   message = 'Generating response...', 
   showTimer = true 
 }) => {
@@ -59,5 +59,3 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     </div>
   );
 };
-
-export default LoadingSpinner; 

@@ -15,7 +15,7 @@ interface IButtonProps {
   className?: string;
 }
 
-const Button: React.FC<IButtonProps> = ({
+export const Button: React.FC<IButtonProps> = ({
   children,
   variant = 'primary',
   size = 'medium',
@@ -46,5 +46,3 @@ const Button: React.FC<IButtonProps> = ({
     </button>
   );
 };
-
-export default Button; 
