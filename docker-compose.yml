@@ -39,68 +39,70 @@ services:
       - '2000:2000'
     restart: unless-stopped
     privileged: true
+    cap_add:
+      - SYS_ADMIN
+      - SYS_PTRACE
     environment:
       - PISTON_LOG_LEVEL=INFO
+      - PISTON_DISABLE_NETWORKING=false
     volumes:
       - piston_data:/piston
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
     tmpfs:
       - /tmp:size=512m
-    healthcheck:
-      test:
-        [
-          'CMD',
-          'wget',
-          '--quiet',
-          '--tries=1',
-          '--spider',
-          'http://localhost:2000/api/v2/runtimes',
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
-    networks:
-      - quiz-network
-
-  piston-installer:
-    image: node:alpine
-    container_name: quiz-piston-installer
-    depends_on:
-      piston:
-        condition: service_started
     command: >
       sh -c "
-      echo 'Starting language installation...' && \
-      apk add --no-cache git curl && \
+      echo 'Installing required packages...' && \
+      apt-get update && apt-get install -y wget curl git && \
+      echo 'Starting Piston server...' && \
+      node src/index.js &
+      PISTON_PID=$$! && \
+      echo 'Waiting for Piston to be ready...' && \
+      until curl -f http://localhost:2000/api/v2/runtimes >/dev/null 2>&1; do
+        echo 'Waiting for Piston API...'
+        sleep 5
+      done && \
+      echo 'Piston is ready! Installing Node.js for CLI...' && \
+      curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+      apt-get install -y nodejs && \
+      echo 'Cloning Piston CLI...' && \
       git clone https://github.com/engineer-man/piston.git /tmp/piston-cli && \
       cd /tmp/piston-cli/cli && \
       npm install && \
-      echo 'Installing Node.js...' && \
-      (node index.js -u http://piston:2000 ppman install node || echo 'Node.js install failed') && \
-      echo 'Installing TypeScript...' && \
-      (node index.js -u http://piston:2000 ppman install typescript || echo 'TypeScript install failed') && \
-      echo 'Installing JavaScript...' && \
-      (node index.js -u http://piston:2000 ppman install javascript || echo 'JavaScript install failed') && \
-      echo 'Installing Python...' && \
-      (node index.js -u http://piston:2000 ppman install python || echo 'Python install failed') && \
-      echo 'Installing Java...' && \
-      (node index.js -u http://piston:2000 ppman install java || echo 'Java install failed') && \
-      echo 'Installing C++...' && \
-      (node index.js -u http://piston:2000 ppman install c++ || echo 'C++ install failed') && \
-      echo 'Installing C#...' && \
-      (node index.js -u http://piston:2000 ppman install csharp || echo 'C# install failed') && \
-      echo 'Installing Go...' && \
-      (node index.js -u http://piston:2000 ppman install go || echo 'Go install failed') && \
-      echo 'Installing Rust...' && \
-      (node index.js -u http://piston:2000 ppman install rust || echo 'Rust install failed') && \
-      echo 'Installing PHP...' && \
-      (node index.js -u http://piston:2000 ppman install php || echo 'PHP install failed') && \
-      echo 'Installing Ruby...' && \
-      (node index.js -u http://piston:2000 ppman install ruby || echo 'Ruby install failed') && \
+      echo 'Checking and installing core languages...' && \
+      echo 'Getting list of installed packages...' && \
+      INSTALLED_PACKAGES=$$(node index.js ppman list --url http://localhost:2000 2>/dev/null || echo '') && \
+      echo 'Checking Node.js...' && \
+      if echo \"$$INSTALLED_PACKAGES\" | grep -q 'node'; then \
+        echo 'Node.js already installed, skipping...'; \
+      else \
+        echo 'Installing Node.js...' && \
+        (node index.js ppman install node --url http://localhost:2000 || echo 'Node.js install failed'); \
+      fi && \
+      echo 'Checking TypeScript...' && \
+      if echo \"$$INSTALLED_PACKAGES\" | grep -q 'typescript'; then \
+        echo 'TypeScript already installed, skipping...'; \
+      else \
+        echo 'Installing TypeScript...' && \
+        (node index.js ppman install typescript --url http://localhost:2000 || echo 'TypeScript install failed'); \
+      fi && \
+      echo 'Checking Python...' && \
+      if echo \"$$INSTALLED_PACKAGES\" | grep -q 'python'; then \
+        echo 'Python already installed, skipping...'; \
+      else \
+        echo 'Installing Python...' && \
+        (node index.js ppman install python --url http://localhost:2000 || echo 'Python install failed'); \
+      fi && \
       rm -rf /tmp/piston-cli && \
-      echo 'Language installation process completed!'
+      echo 'Language installation completed! Piston is running with all languages.' && \
+      wait $$PISTON_PID
       "
-    restart: 'no'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:2000/api/v2/runtimes']
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 300s
     networks:
       - quiz-network
 
@@ -118,7 +120,7 @@ services:
       ollama:
         condition: service_healthy
       piston:
-        condition: service_started
+        condition: service_healthy
     restart: unless-stopped
     networks:
       - quiz-network
