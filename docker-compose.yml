@@ -30,7 +30,8 @@ services:
       timeout: 30s
       retries: 10
       start_period: 300s
-
+    networks:
+      - quiz-network
   piston:
     image: ghcr.io/engineer-man/piston
     container_name: quiz-piston
@@ -54,10 +55,54 @@ services:
           '--spider',
           'http://localhost:2000/api/v2/runtimes',
         ]
-      interval: 60s
-      timeout: 15s
-      retries: 10
-      start_period: 300s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - quiz-network
+
+  piston-installer:
+    image: node:alpine
+    container_name: quiz-piston-installer
+    depends_on:
+      piston:
+        condition: service_started
+    command: >
+      sh -c "
+      echo 'Starting language installation...' && \
+      apk add --no-cache git curl && \
+      git clone https://github.com/engineer-man/piston.git /tmp/piston-cli && \
+      cd /tmp/piston-cli/cli && \
+      npm install && \
+      echo 'Installing Node.js...' && \
+      (node index.js -u http://piston:2000 ppman install node || echo 'Node.js install failed') && \
+      echo 'Installing TypeScript...' && \
+      (node index.js -u http://piston:2000 ppman install typescript || echo 'TypeScript install failed') && \
+      echo 'Installing JavaScript...' && \
+      (node index.js -u http://piston:2000 ppman install javascript || echo 'JavaScript install failed') && \
+      echo 'Installing Python...' && \
+      (node index.js -u http://piston:2000 ppman install python || echo 'Python install failed') && \
+      echo 'Installing Java...' && \
+      (node index.js -u http://piston:2000 ppman install java || echo 'Java install failed') && \
+      echo 'Installing C++...' && \
+      (node index.js -u http://piston:2000 ppman install c++ || echo 'C++ install failed') && \
+      echo 'Installing C#...' && \
+      (node index.js -u http://piston:2000 ppman install csharp || echo 'C# install failed') && \
+      echo 'Installing Go...' && \
+      (node index.js -u http://piston:2000 ppman install go || echo 'Go install failed') && \
+      echo 'Installing Rust...' && \
+      (node index.js -u http://piston:2000 ppman install rust || echo 'Rust install failed') && \
+      echo 'Installing PHP...' && \
+      (node index.js -u http://piston:2000 ppman install php || echo 'PHP install failed') && \
+      echo 'Installing Ruby...' && \
+      (node index.js -u http://piston:2000 ppman install ruby || echo 'Ruby install failed') && \
+      rm -rf /tmp/piston-cli && \
+      echo 'Language installation process completed!'
+      "
+    restart: 'no'
+    networks:
+      - quiz-network
 
   quiz-app:
     build:
@@ -72,7 +117,15 @@ services:
     depends_on:
       ollama:
         condition: service_healthy
+      piston:
+        condition: service_started
     restart: unless-stopped
+    networks:
+      - quiz-network
+
+networks:
+  quiz-network:
+    driver: bridge
 
 volumes:
   ollama_data:
