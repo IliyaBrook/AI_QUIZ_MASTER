@@ -1,6 +1,8 @@
 import React from 'react';
 
 import { Button, CodeEditor } from '@/components';
+import { isTestCodeChallangeGen as isTest } from '@/constants';
+import { useChallengePlaygroundData as testData } from '@/data';
 import { useChallengePlayground } from '@/services';
 import type { ICodingChallengeWithWrapper } from '@/types';
 
@@ -17,27 +19,31 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
   onBackToGeneration,
 }) => {
   const {
-    userCode,
     showSolution,
     showHints,
     executionResult,
-    isRunning,
     error,
-    challenge,
+    userCode,
     handleCodeChange,
     handleToggleSolution,
     handleToggleHints,
     handleRunCode,
     formatExecutionResult,
+    ...rest
   } = useChallengePlayground(challengeData);
 
-  console.log('user code:', userCode);
-  console.log('challenge:', challenge);
-  console.log('executionResult:', executionResult);
-  console.log('isRunning:', isRunning);
-  console.log('error:', error);
-  console.log('showSolution:', showSolution);
-  console.log('showHints:', showHints);
+  const challenge = isTest ? testData.challenge : rest.challenge;
+  const isRunning = isTest ? false : rest.isRunning;
+
+  if (isRunning) {
+    console.log('user code:', userCode);
+    console.log('challenge:', challenge);
+    console.log('executionResult:', executionResult);
+    console.log('isRunning:', isRunning);
+    console.log('error:', error);
+    console.log('showSolution:', showSolution);
+    console.log('showHints:', showHints);
+  }
 
   return (
     <div className={styles.challengePlayground}>

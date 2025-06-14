@@ -1,16 +1,18 @@
 import { useCallback, useState } from 'react';
 
+import { isTestCodeChallangeGen as isTest } from '@/constants';
+import { useChallengePlaygroundData as testData } from '@/data';
 import type { ICodingChallengeWithWrapper } from '@/types';
 
 export type ChallengeScreen = 'generation' | 'preview' | 'playground';
 
 export const useChallengeNavigation = () => {
-  // const [currentScreen, setCurrentScreen] =
-  //   useState<ChallengeScreen>('generation');
+  const defaultRoute = isTest ? 'playground' : 'generation';
+
   const [currentScreen, setCurrentScreen] =
-    useState<ChallengeScreen>('generation');
+    useState<ChallengeScreen>(defaultRoute);
   const [challengeData, setChallengeData] =
-    useState<ICodingChallengeWithWrapper | null>(null);
+    useState<ICodingChallengeWithWrapper | null>(isTest ? testData : null);
 
   const handleChallengeGenerated = useCallback(
     (generatedChallengeData: ICodingChallengeWithWrapper) => {
@@ -28,6 +30,8 @@ export const useChallengeNavigation = () => {
     setChallengeData(null);
     setCurrentScreen('generation');
   }, []);
+
+  console.log('challengeData', challengeData);
 
   return {
     currentScreen,

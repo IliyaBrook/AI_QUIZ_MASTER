@@ -23,9 +23,9 @@ export interface ICodingChallenge {
 }
 
 export interface ITestCase {
-  input: string;
-  expectedOutput: string;
-  description: string;
+  input: string | Array<string>;
+  expectedOutput: string | Array<string>;
+  description?: string;
 }
 
 export interface ICodingChallengeWithWrapper {
