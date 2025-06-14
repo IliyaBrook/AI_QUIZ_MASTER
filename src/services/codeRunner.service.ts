@@ -84,8 +84,7 @@ export async function executeCode(
     }
 
     const executeRequest: PistonExecuteRequest = {
-      // language: pistonLanguage,
-      language: 'js',
+      language: pistonLanguage,
       version: '*',
       files: [
         {

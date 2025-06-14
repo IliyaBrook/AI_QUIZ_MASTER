@@ -14,12 +14,14 @@ dev:
 	docker-compose up -d ollama
 	docker-compose up -d piston
 	docker-compose up -d piston-installer
+	docker-compose down -d quiz-frontend
 	pnpm dev
 devb:
 	@echo "Starting Ollama and development server..."
 	docker-compose up -d ollama --build
 	docker-compose up -d piston --build
 	docker-compose up -d piston-installer --build
+	docker-compose down -d quiz-frontend
 	pnpm dev
 get-av-langs:
 	curl http://localhost:2000/api/v2/packages

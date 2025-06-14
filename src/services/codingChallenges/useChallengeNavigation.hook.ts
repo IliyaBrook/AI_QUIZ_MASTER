@@ -31,8 +31,6 @@ export const useChallengeNavigation = () => {
     setCurrentScreen('generation');
   }, []);
 
-  console.log('challengeData', challengeData);
-
   return {
     currentScreen,
     challengeData,
