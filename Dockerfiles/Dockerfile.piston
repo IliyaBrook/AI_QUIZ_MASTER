@@ -1,11 +1,34 @@
-FROM ghcr.io/engineer-man/piston
+FROM ghcr.io/engineer-man/piston:latest
 
-RUN apt-get update && apt-get install -y wget curl git
+USER root
 
-COPY Dockerfiles/piston-lang-init.sh /usr/local/bin/piston-lang-init.sh
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    git \
+    nodejs \
+    npm \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN chmod +x /usr/local/bin/piston-lang-init.sh
+WORKDIR /piston
+
+RUN node src/index.js &
+RUN sleep 30
+
+RUN curl -X POST http://localhost:2000/api/v2/packages \
+    -H "Content-Type: application/json" \
+    -d '{"language": "javascript", "version": "18.15.0"}' || echo "JS install failed"
+
+RUN curl -X POST http://localhost:2000/api/v2/packages \
+    -H "Content-Type: application/json" \
+    -d '{"language": "typescript", "version": "5.0.3"}' || echo "TS install failed"
+
+RUN curl -X POST http://localhost:2000/api/v2/packages \
+    -H "Content-Type: application/json" \
+    -d '{"language": "python", "version": "3.10.0"}' || echo "Python install failed"
+
+USER piston
 
 EXPOSE 2000
 
-CMD ["/usr/local/bin/piston-lang-init.sh"] 
+CMD ["node", "src/index.js"] 

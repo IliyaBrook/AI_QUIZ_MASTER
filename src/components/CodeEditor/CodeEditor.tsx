@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 
 import './CodeEditor.scss';
 
+import { PROGRAMMING_LANGUAGE_NAMES_LOWER_CASE } from '@/data';
 import type { TProgrammingLanguage } from '@/types';
 
 interface CodeEditorProps {
@@ -33,19 +34,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
   };
 
   const getMonacoLanguage = (lang: TProgrammingLanguage): string => {
-    const languageMap: Record<TProgrammingLanguage, string> = {
-      javascript: 'javascript',
-      typescript: 'typescript',
-      python: 'python',
-      java: 'java',
-      cpp: 'cpp',
-      csharp: 'csharp',
-      go: 'go',
-      rust: 'rust',
-      php: 'php',
-      ruby: 'ruby',
-    };
-    return languageMap[lang] || 'javascript';
+    return PROGRAMMING_LANGUAGE_NAMES_LOWER_CASE[lang] || 'node';
   };
 
   return (

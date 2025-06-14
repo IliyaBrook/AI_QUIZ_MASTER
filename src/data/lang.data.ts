@@ -23,14 +23,14 @@ export const LANGUAGE_NAMES: TLanguageMap = {
 };
 
 export const PROGRAMMING_LANGUAGE_NAMES: TProgrammingLanguageMap = {
-  javascript: 'JavaScript',
+  node: 'Node',
   typescript: 'TypeScript',
   python: 'Python',
-  java: 'Java',
-  cpp: 'C++',
-  csharp: 'C#',
-  go: 'Go',
-  rust: 'Rust',
-  php: 'PHP',
-  ruby: 'Ruby',
 };
+
+export const PROGRAMMING_LANGUAGE_NAMES_LOWER_CASE: TProgrammingLanguageMap =
+  Object.entries(PROGRAMMING_LANGUAGE_NAMES).reduce(
+    (acc, [key, value]) =>
+      Object.assign(acc, { [key]: value.toLocaleLowerCase() }),
+    PROGRAMMING_LANGUAGE_NAMES
+  );

@@ -5,11 +5,15 @@ up:
 	docker-compose down
 	docker-compose build --no-cache
 	docker-compose up -d
-	
+piston:
+	docker-compose down piston
+	docker-compose build --no-cache piston
+	docker-compose up -d piston
 dev:
 	@echo "Starting Ollama and development server..."
 	docker-compose up -d ollama
 	docker-compose up -d piston
+	docker-compose up -d piston-installer
 	pnpm dev
 get-av-langs:
 	curl http://localhost:2000/api/v2/packages

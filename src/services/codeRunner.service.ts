@@ -1,3 +1,4 @@
+import { PROGRAMMING_LANGUAGE_NAMES_LOWER_CASE } from '@/data';
 import type { TProgrammingLanguage } from '@/types';
 
 export interface PistonFile {
@@ -49,19 +50,6 @@ export interface CodeExecutionResult {
   version: string;
 }
 
-const LANGUAGE_MAP: Record<TProgrammingLanguage, string> = {
-  javascript: 'javascript',
-  typescript: 'typescript',
-  python: 'python',
-  java: 'java',
-  cpp: 'cpp',
-  csharp: 'csharp',
-  go: 'go',
-  rust: 'rust',
-  php: 'php',
-  ruby: 'ruby',
-};
-
 export async function getAvailableRuntimes(): Promise<PistonRuntime[]> {
   try {
     const response = await fetch('/api/v2/runtimes');
@@ -86,7 +74,8 @@ export async function executeCode(
   const startTime = Date.now();
 
   try {
-    const pistonLanguage = LANGUAGE_MAP[programmingLanguage];
+    const pistonLanguage =
+      PROGRAMMING_LANGUAGE_NAMES_LOWER_CASE[programmingLanguage];
 
     if (!pistonLanguage) {
       throw new Error(
@@ -95,7 +84,8 @@ export async function executeCode(
     }
 
     const executeRequest: PistonExecuteRequest = {
-      language: pistonLanguage,
+      // language: pistonLanguage,
+      language: 'js',
       version: '*',
       files: [
         {
@@ -176,16 +166,9 @@ export async function executeCode(
 
 function getFileName(programmingLanguage: TProgrammingLanguage): string {
   const extensions: Record<TProgrammingLanguage, string> = {
-    javascript: 'main.js',
+    node: 'main.js',
     typescript: 'main.ts',
     python: 'main.py',
-    java: 'Main.java',
-    cpp: 'main.cpp',
-    csharp: 'Main.cs',
-    go: 'main.go',
-    rust: 'main.rs',
-    php: 'main.php',
-    ruby: 'main.rb',
   };
 
   return extensions[programmingLanguage] || 'main.txt';
