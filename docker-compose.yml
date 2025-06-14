@@ -33,7 +33,9 @@ services:
     networks:
       - quiz-network
   piston:
-    image: ghcr.io/engineer-man/piston
+    build:
+      context: .
+      dockerfile: Dockerfiles/Dockerfile.piston
     container_name: quiz-piston
     ports:
       - '2000:2000'
@@ -50,53 +52,6 @@ services:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
     tmpfs:
       - /tmp:size=512m
-    command: >
-      sh -c "
-      echo 'Installing required packages...' && \
-      apt-get update && apt-get install -y wget curl git && \
-      echo 'Starting Piston server...' && \
-      node src/index.js &
-      PISTON_PID=$$! && \
-      echo 'Waiting for Piston to be ready...' && \
-      until curl -f http://localhost:2000/api/v2/runtimes >/dev/null 2>&1; do
-        echo 'Waiting for Piston API...'
-        sleep 5
-      done && \
-      echo 'Piston is ready! Installing Node.js for CLI...' && \
-      curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-      apt-get install -y nodejs && \
-      echo 'Cloning Piston CLI...' && \
-      git clone https://github.com/engineer-man/piston.git /tmp/piston-cli && \
-      cd /tmp/piston-cli/cli && \
-      npm install && \
-      echo 'Checking and installing core languages...' && \
-      echo 'Getting list of installed packages...' && \
-      INSTALLED_PACKAGES=$$(node index.js ppman list --url http://localhost:2000 2>/dev/null || echo '') && \
-      echo 'Checking Node.js...' && \
-      if echo \"$$INSTALLED_PACKAGES\" | grep -q 'node'; then \
-        echo 'Node.js already installed, skipping...'; \
-      else \
-        echo 'Installing Node.js...' && \
-        (node index.js ppman install node --url http://localhost:2000 || echo 'Node.js install failed'); \
-      fi && \
-      echo 'Checking TypeScript...' && \
-      if echo \"$$INSTALLED_PACKAGES\" | grep -q 'typescript'; then \
-        echo 'TypeScript already installed, skipping...'; \
-      else \
-        echo 'Installing TypeScript...' && \
-        (node index.js ppman install typescript --url http://localhost:2000 || echo 'TypeScript install failed'); \
-      fi && \
-      echo 'Checking Python...' && \
-      if echo \"$$INSTALLED_PACKAGES\" | grep -q 'python'; then \
-        echo 'Python already installed, skipping...'; \
-      else \
-        echo 'Installing Python...' && \
-        (node index.js ppman install python --url http://localhost:2000 || echo 'Python install failed'); \
-      fi && \
-      rm -rf /tmp/piston-cli && \
-      echo 'Language installation completed! Piston is running with all languages.' && \
-      wait $$PISTON_PID
-      "
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:2000/api/v2/runtimes']
       interval: 15s

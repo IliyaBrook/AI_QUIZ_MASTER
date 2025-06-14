@@ -11,6 +11,8 @@ dev:
 	docker-compose up -d ollama
 	docker-compose up -d piston
 	pnpm dev
+get-av-langs:
+	curl http://localhost:2000/api/v2/packages
 
 format:
 	@echo "Running ESLint fix and Prettier format..."

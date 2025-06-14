@@ -1,0 +1,11 @@
+FROM ghcr.io/engineer-man/piston
+
+RUN apt-get update && apt-get install -y wget curl git
+
+COPY Dockerfiles/piston-lang-init.sh /usr/local/bin/piston-lang-init.sh
+
+RUN chmod +x /usr/local/bin/piston-lang-init.sh
+
+EXPOSE 2000
+
+CMD ["/usr/local/bin/piston-lang-init.sh"] 
