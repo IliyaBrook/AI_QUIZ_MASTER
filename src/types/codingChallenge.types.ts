@@ -1,4 +1,4 @@
-export type TProgrammingLanguage = 'node' | 'typescript' | 'python';
+export type TProgrammingLanguage = 'typescript' | 'python' | 'javascript';
 
 export interface ICodingChallenge {
   title: string;

@@ -14,7 +14,7 @@ export const useChallengePlaygroundData: IUseChallengePlaygroundData = {
     description:
       'Реализуйте функцию, которая перебирает элементы массива и выполняет определенные действия с каждым из них.',
     language: 'ru',
-    programmingLanguage: 'node',
+    programmingLanguage: 'javascript',
     difficulty: 'medium',
     initialCode:
       "function processArray(arr) {\n    // ваш код здесь\n}\n\nconsole.log('Test case 1:', processArray([1, 2, 3]));\n// Expected output: [result1, result2, result3]\n\nconsole.log('Test case 2:', processArray(['a', 'b']));\n// Expected output: ['resultA', 'resultB']\n\nconsole.log('Test case 3:', processArray([]));\n// Expected output: []",
