@@ -30,7 +30,8 @@
       "@/constants/*": ["./src/constants/*"],
       "@/settings/*": ["./src/settings/*"],
       "@/utils/*": ["./src/utils/*"],
-      "@/assets/*": ["./src/assets/*"]
+      "@/assets/*": ["./src/assets/*"],
+      "@/data/*": ["./src/data/*"]
     }
   },
   "include": ["src/**/*", "src/**/*.d.ts", "vite.config.ts"],

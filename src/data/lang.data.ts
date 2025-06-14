@@ -1,4 +1,4 @@
-import type { TLang, TLanguageMap } from '@/types/quizAiResponse.types';
+import type { TLanguageMap, TProgrammingLanguageMap } from '@/types';
 
 export const LANGUAGE_NAMES: TLanguageMap = {
   en: 'English',
@@ -22,4 +22,15 @@ export const LANGUAGE_NAMES: TLanguageMap = {
   fi: 'Finnish',
 };
 
-export const DEFAULT_LANGUAGE: TLang = 'ru';
+export const PROGRAMMING_LANGUAGE_NAMES: TProgrammingLanguageMap = {
+  javascript: 'JavaScript',
+  typescript: 'TypeScript',
+  python: 'Python',
+  java: 'Java',
+  cpp: 'C++',
+  csharp: 'C#',
+  go: 'Go',
+  rust: 'Rust',
+  php: 'PHP',
+  ruby: 'Ruby',
+};

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 
 import { Button, Input, LoadingSpinner, Select } from '@/components';
-import { PROGRAMMING_LANGUAGE_NAMES } from '@/constants';
+import { PROGRAMMING_LANGUAGE_NAMES } from '@/data';
 import { languageNames, useChallengeGeneration } from '@/services';
 import type {
   ICodingChallengeWithWrapper,

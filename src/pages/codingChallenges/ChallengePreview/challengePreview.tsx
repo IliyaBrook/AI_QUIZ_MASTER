@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Button } from '@/components';
-import { PROGRAMMING_LANGUAGE_NAMES } from '@/constants';
+import { PROGRAMMING_LANGUAGE_NAMES } from '@/data';
 import { languageNames } from '@/services';
 import type { ICodingChallengeWithWrapper, TLang } from '@/types';
 

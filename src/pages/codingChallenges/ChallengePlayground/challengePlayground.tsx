@@ -31,6 +31,14 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
     formatExecutionResult,
   } = useChallengePlayground(challengeData);
 
+  console.log('user code:', userCode);
+  console.log('challenge:', challenge);
+  console.log('executionResult:', executionResult);
+  console.log('isRunning:', isRunning);
+  console.log('error:', error);
+  console.log('showSolution:', showSolution);
+  console.log('showHints:', showHints);
+
   return (
     <div className={styles.challengePlayground}>
       <Header

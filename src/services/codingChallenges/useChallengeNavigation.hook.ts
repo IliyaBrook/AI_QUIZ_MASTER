@@ -5,6 +5,8 @@ import type { ICodingChallengeWithWrapper } from '@/types';
 export type ChallengeScreen = 'generation' | 'preview' | 'playground';
 
 export const useChallengeNavigation = () => {
+  // const [currentScreen, setCurrentScreen] =
+  //   useState<ChallengeScreen>('generation');
   const [currentScreen, setCurrentScreen] =
     useState<ChallengeScreen>('generation');
   const [challengeData, setChallengeData] =

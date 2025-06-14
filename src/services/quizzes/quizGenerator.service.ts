@@ -1,4 +1,4 @@
-import { LANGUAGE_NAMES } from '@/constants';
+import { LANGUAGE_NAMES } from '@/data';
 import { generateResponse } from '@/services';
 import type {
   IAIMessage,

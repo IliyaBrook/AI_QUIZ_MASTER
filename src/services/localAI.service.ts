@@ -1,7 +1,6 @@
-import { DEFAULT_AI_SETTINGS } from '@/constants';
+import { ollamaUrl } from '@/constants';
+import { DEFAULT_AI_SETTINGS } from '@/settings';
 import type { IAIMessage, IAIResponse, IAISettings } from '@/types';
-
-const OLLAMA_URL = import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434';
 
 export async function generateResponse<T = unknown>(
   messages: IAIMessage[],
@@ -15,7 +14,7 @@ export async function generateResponse<T = unknown>(
       onProgress(15);
     }
 
-    const response = await fetch(`${OLLAMA_URL}/v1/chat/completions`, {
+    const response = await fetch(`${ollamaUrl}/v1/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
