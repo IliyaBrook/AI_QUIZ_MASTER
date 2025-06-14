@@ -1,0 +1,15 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml ./
+
+RUN npm install -g pnpm && pnpm install --frozen-lockfile
+
+COPY . .
+
+RUN pnpm build
+
+RUN mkdir -p /shared
+
+CMD ["sh", "-c", "cp -r /app/dist/* /shared/ && echo 'Frontend build copied successfully' && tail -f /dev/null"] 
