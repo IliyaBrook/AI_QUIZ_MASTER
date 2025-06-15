@@ -101,6 +101,62 @@
         }
       }
 
+      .codeAnalysis {
+        margin-top: 1rem;
+        background-color: #f0f8ff;
+        border: 1px solid #b8daff;
+        border-radius: 8px;
+        padding: 1rem;
+
+        .analysisHeader {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1rem;
+
+          h4 {
+            color: #0056b3;
+            margin: 0;
+          }
+        }
+
+        .analysisSection {
+          margin-bottom: 1rem;
+
+          h5 {
+            color: #0056b3;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+          }
+
+          ul {
+            margin: 0;
+            padding-left: 1.5rem;
+
+            li {
+              margin-bottom: 0.5rem;
+              line-height: 1.4;
+            }
+          }
+
+          .errorItem {
+            color: #dc3545;
+          }
+
+          .suggestionItem {
+            color: #17a2b8;
+          }
+
+          .improvementItem {
+            color: #28a745;
+          }
+
+          .practiceItem {
+            color: #6f42c1;
+          }
+        }
+      }
+
       .solution {
         margin-top: 2rem;
         background-color: #fff3cd;

@@ -1,7 +1,12 @@
 import { useCallback, useState } from 'react';
 
-import type { ICodingChallengeWithWrapper } from '@/types';
+import { DEFAULT_LANGUAGE } from '@/constants';
+import type { ICodingChallengeWithWrapper, TLang } from '@/types';
 
+import {
+  generateCodeAnalysis,
+  type ICodeAnalysisWithWrapper,
+} from '../AI/aiCodingGenHints.service';
 import {
   executeCode,
   formatExecutionResult,
@@ -20,6 +25,10 @@ export const useChallengePlayground = (
     useState<CodeExecutionResult | null>(null);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [codeAnalysis, setCodeAnalysis] =
+    useState<ICodeAnalysisWithWrapper | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
+  const [showAnalysis, setShowAnalysis] = useState<boolean>(false);
 
   const challenge = challengeData.challenge;
 
@@ -34,6 +43,46 @@ export const useChallengePlayground = (
   const handleToggleHints = useCallback(() => {
     setShowHints(!showHints);
   }, [showHints]);
+
+  const handleToggleAnalysis = useCallback(() => {
+    setShowAnalysis(!showAnalysis);
+  }, [showAnalysis]);
+
+  const handleAnalyzeCode = useCallback(async () => {
+    if (!userCode.trim()) {
+      setError('Please write some code to analyze.');
+      return;
+    }
+
+    if (!challenge.programmingLanguage) {
+      setError('Programming language not specified.');
+      return;
+    }
+
+    setIsAnalyzing(true);
+    setError(null);
+
+    try {
+      const result = await executeCode(userCode, challenge.programmingLanguage);
+      const executionResultText = formatExecutionResult(result);
+
+      const { analysisData } = await generateCodeAnalysis(
+        userCode,
+        executionResultText,
+        challenge,
+        (challenge.language as TLang) || DEFAULT_LANGUAGE
+      );
+
+      setCodeAnalysis(analysisData);
+      setShowAnalysis(true);
+    } catch (e) {
+      setError(
+        `Analysis failed: ${e instanceof Error ? e.message : String(e)}`
+      );
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }, [userCode, challenge]);
 
   const handleRunCode = useCallback(async () => {
     if (!userCode.trim()) {
@@ -72,6 +121,9 @@ export const useChallengePlayground = (
     setExecutionResult(null);
     setIsRunning(false);
     setError(null);
+    setCodeAnalysis(null);
+    setIsAnalyzing(false);
+    setShowAnalysis(false);
   }, [challengeData.challenge.initialCode]);
 
   return {
@@ -82,10 +134,15 @@ export const useChallengePlayground = (
     isRunning,
     error,
     challenge,
+    codeAnalysis,
+    isAnalyzing,
+    showAnalysis,
     handleCodeChange,
     handleToggleSolution,
     handleToggleHints,
     handleRunCode,
+    handleAnalyzeCode,
+    handleToggleAnalysis,
     resetPlayground,
     formatExecutionResult,
   };

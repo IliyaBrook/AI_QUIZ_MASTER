@@ -24,10 +24,15 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
     executionResult,
     error,
     userCode,
+    codeAnalysis,
+    isAnalyzing,
+    showAnalysis,
     handleCodeChange,
     handleToggleSolution,
     handleToggleHints,
     handleRunCode,
+    handleAnalyzeCode,
+    handleToggleAnalysis,
     formatExecutionResult,
     ...rest
   } = useChallengePlayground(challengeData);
@@ -68,6 +73,13 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
                 variant='info'
               >
                 {isRunning ? 'Running...' : 'Run Code'}
+              </Button>
+              <Button
+                onClick={handleAnalyzeCode}
+                disabled={isAnalyzing}
+                variant='primary'
+              >
+                {isAnalyzing ? 'Analyzing...' : 'Analyze Code'}
               </Button>
               {challenge.hints && challenge.hints.length > 0 && (
                 <Button
@@ -110,6 +122,91 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
               <pre className={styles.resultOutput}>
                 {formatExecutionResult(executionResult)}
               </pre>
+            </div>
+          )}
+
+          {showAnalysis && codeAnalysis && (
+            <div className={styles.codeAnalysis}>
+              <div className={styles.analysisHeader}>
+                <h4>Code Analysis</h4>
+                <Button
+                  onClick={handleToggleAnalysis}
+                  variant='secondary'
+                  size='small'
+                >
+                  Hide Analysis
+                </Button>
+              </div>
+
+              {codeAnalysis.analysis.errors.length > 0 && (
+                <div className={styles.analysisSection}>
+                  <h5>Issues Found</h5>
+                  <ul>
+                    {codeAnalysis.analysis.errors.map((error, index) => (
+                      <li
+                        key={index}
+                        className={styles.errorItem}
+                      >
+                        {error}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {codeAnalysis.analysis.suggestions.length > 0 && (
+                <div className={styles.analysisSection}>
+                  <h5>Suggestions</h5>
+                  <ul>
+                    {codeAnalysis.analysis.suggestions.map(
+                      (suggestion, index) => (
+                        <li
+                          key={index}
+                          className={styles.suggestionItem}
+                        >
+                          {suggestion}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              )}
+
+              {codeAnalysis.analysis.improvements.length > 0 && (
+                <div className={styles.analysisSection}>
+                  <h5>Improvements</h5>
+                  <ul>
+                    {codeAnalysis.analysis.improvements.map(
+                      (improvement, index) => (
+                        <li
+                          key={index}
+                          className={styles.improvementItem}
+                        >
+                          {improvement}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              )}
+
+              {codeAnalysis.analysis.bestPractices.length > 0 && (
+                <div className={styles.analysisSection}>
+                  <h5>Best Practices</h5>
+                  <ul>
+                    {codeAnalysis.analysis.bestPractices.map(
+                      (practice, index) => (
+                        <li
+                          key={index}
+                          className={styles.practiceItem}
+                        >
+                          {practice}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
 
