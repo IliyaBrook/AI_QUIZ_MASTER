@@ -35,7 +35,7 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
   const challenge = isTest ? testData.challenge : rest.challenge;
   const isRunning = isTest ? false : rest.isRunning;
 
-  if (isRunning) {
+  if (isTest) {
     console.log('user code:', userCode);
     console.log('challenge:', challenge);
     console.log('executionResult:', executionResult);
