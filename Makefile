@@ -1,4 +1,4 @@
-.PHONY: up down build rebuild logs clean dev format pull run-model
+.PHONY: up down build rebuild logs clean dev format pull run-model rm
 model = qwen2.5:3b
 
 up:
@@ -10,18 +10,16 @@ piston:
 	docker-compose build --no-cache piston
 	docker-compose up -d piston
 dev:
-	@echo "Starting Ollama and development server..."
+	@echo "Starting development server..."
 	docker-compose up -d ollama
 	docker-compose up -d piston
 	docker-compose up -d piston-installer
 	docker-compose down -d quiz-frontend
 	pnpm dev
-devb:
-	@echo "Starting Ollama and development server..."
-	docker-compose up -d ollama --build
-	docker-compose up -d piston --build
-	docker-compose up -d piston-installer --build
-	docker-compose down -d quiz-frontend
+devc:
+	@echo "Clean and Build and Starting development server..."
+	$(MAKE) rm
+	$(MAKE) dev
 	pnpm dev
 get-av-langs:
 	curl http://localhost:2000/api/v2/packages
@@ -58,3 +56,11 @@ pull:
 run-model:
 	@echo "Running model: $(model)"
 	docker exec -it quiz-ollama ollama run $(model)
+
+rm:
+	@echo "Removing all quiz containers, images and volumes..."
+	-docker stop quiz-frontend quiz-piston-installer quiz-ollama quiz-piston 2>/dev/null || true
+	-docker rm quiz-frontend quiz-piston-installer quiz-ollama quiz-piston 2>/dev/null || true
+	-docker rmi $$(docker images --format "table {{.Repository}}:{{.Tag}}" | grep -E "(quiz-frontend|quiz-piston-installer|quiz-ollama|quiz-piston)" | tr -d ' ') 2>/dev/null || true
+	-docker volume rm $$(docker volume ls -q | grep -E "(quiz|frontend|piston|ollama)") 2>/dev/null || true
+	@echo "Cleanup completed!"
