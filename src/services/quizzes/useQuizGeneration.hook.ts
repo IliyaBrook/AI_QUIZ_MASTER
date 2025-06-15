@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { DEFAULT_LANGUAGE } from '@/constants';
 import type { TLang } from '@/types';
 
-import { generateQuiz } from './quizGenerator.service';
+import { generateQuiz } from '../AI/aiQuizGen.service';
 
 export const useQuizGeneration = () => {
   const [topic, setTopic] = useState<string>('');

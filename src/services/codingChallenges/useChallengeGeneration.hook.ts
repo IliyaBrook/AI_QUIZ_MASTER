@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { DEFAULT_LANGUAGE, DEFAULT_PROGRAMMING_LANGUAGE } from '@/constants';
 import type { TLang, TProgrammingLanguage } from '@/types';
 
-import { generateCodingChallenge } from './codingChallengesGenerator.service';
+import { generateCodingChallenge } from '../AI/aiCodingChallengesGen.service';
 
 export const useChallengeGeneration = () => {
   const [topic, setTopic] = useState<string>('');
