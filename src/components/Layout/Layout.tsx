@@ -6,9 +6,9 @@ import styles from './Layout.module.scss';
 
 export function Layout() {
   return (
-    <div className={styles['layout']}>
+    <div className={styles.layout}>
       <Navbar />
-      <main className={styles['main']}>
+      <main className={styles.main}>
         <Outlet />
       </main>
     </div>

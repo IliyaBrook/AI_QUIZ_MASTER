@@ -10,14 +10,14 @@ export const useChallengePlaygroundData: IUseChallengePlaygroundData = {
   showSolution: true,
   showHints: true,
   challenge: {
-    title: 'Перебор Массивов',
+    title: 'Array Iteration',
     description:
-      'Реализуйте функцию, которая перебирает элементы массива и выполняет определенные действия с каждым из них.',
-    language: 'ru',
+      'Implement a function that iterates through array elements and performs certain actions with each of them.',
+    language: 'en',
     programmingLanguage: 'javascript',
     difficulty: 'medium',
     initialCode:
-      "function processArray(arr) {\n    // ваш код здесь\n}\n\nconsole.log('Test case 1:', processArray([1, 2, 3]));\n// Expected output: [result1, result2, result3]\n\nconsole.log('Test case 2:', processArray(['a', 'b']));\n// Expected output: ['resultA', 'resultB']\n\nconsole.log('Test case 3:', processArray([]));\n// Expected output: []",
+      "function processArray(arr) {\n    // your code here\n}\n\nconsole.log('Test case 1:', processArray([1, 2, 3]));\n// Expected output: [result1, result2, result3]\n\nconsole.log('Test case 2:', processArray(['a', 'b']));\n// Expected output: ['resultA', 'resultB']\n\nconsole.log('Test case 3:', processArray([]));\n// Expected output: []",
     solution:
       'function processArray(arr) {\n    let result = [];\n    for (let i = 0; i < arr.length; i++) {\n        result.push(i * 2);\n    }\n    return result;\n}',
     testCases: [
@@ -35,15 +35,15 @@ export const useChallengePlaygroundData: IUseChallengePlaygroundData = {
       },
     ],
     hints: [
-      'Попробуйте использовать цикл for для перебора массива.',
-      'Не забудьте вернуть результат из функции.',
+      'Try using a for loop to iterate through the array.',
+      "Don't forget to return the result from the function.",
     ],
   },
 };
 
 export const userCode = `
 user code: function processArray(arr) {
-    // ваш код здесь
+    // your code here
 }
 
 console.log('Test case 1:', processArray([1, 2, 3]));

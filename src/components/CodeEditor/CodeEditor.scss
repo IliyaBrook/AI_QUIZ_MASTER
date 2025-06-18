@@ -1,3 +1,5 @@
+@use '../../_globals.scss' as *;
+
 .code-editor-container {
   padding: 10px 0;
   border: 1px solid #e0e0e0;
@@ -9,6 +11,6 @@
 }
 
 .code-editor-container.light {
-  background-color: #ffffff;
+  background-color: $background-light;
   border: 1px solid #d1d5db;
 }

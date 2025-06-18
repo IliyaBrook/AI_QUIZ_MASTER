@@ -1,3 +1,5 @@
+@use '../../_globals.scss' as *;
+
 .navbar {
   background-color: #343a40;
   padding: 1rem 2rem;
@@ -20,7 +22,7 @@
       .logo {
         font-size: 1.5rem;
         font-weight: bold;
-        color: #ffffff;
+        color: $background-light;
         text-decoration: none;
         transition: color 0.2s ease;
 
@@ -34,7 +36,7 @@
       gap: 1rem;
 
       .navLink {
-        color: #ffffff;
+        color: $background-light;
         text-decoration: none;
         padding: 0.5rem 1rem;
         border-radius: 4px;

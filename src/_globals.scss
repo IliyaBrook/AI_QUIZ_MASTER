@@ -1,0 +1,14 @@
+// Variables
+$main-bg-color: #764ba2;
+$primary-color: #646cff;
+$primary-hover: #535bf2;
+$light-primary-hover: #747bff;
+$background-dark: #242424;
+$background-light: #ffffff;
+$text-dark: rgba(255, 255, 255, 0.87);
+$text-light: #213547;
+$button-bg-dark: #1a1a1a;
+$button-bg-light: #f9f9f9;
+@mixin height {
+  min-height: calc(100vh - 80px);
+}
