@@ -128,7 +128,6 @@
   .navbar {
     padding: 0.75rem 1rem;
     position: relative;
-
     .container {
       .logoContainer .logo {
         font-size: 1.3rem;
@@ -136,6 +135,7 @@
 
       .mobileMenuToggle {
         display: flex;
+        padding: 0.3rem;
       }
 
       .navLinks {
