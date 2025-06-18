@@ -26,7 +26,7 @@ const ChallengePreview: React.FC<ChallengePreviewProps> = ({
       <div className={styles.challengeMeta}>
         <p>Language: {languageNames[challenge.language as TLang]}</p>
         <p>
-          Programming Language:{' '}
+          Programming Language:
           {PROGRAMMING_LANGUAGE_NAMES[challenge.programmingLanguage]}
         </p>
         <p>
