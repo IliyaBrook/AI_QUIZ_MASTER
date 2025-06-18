@@ -71,6 +71,7 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
                 onClick={handleRunCode}
                 disabled={isRunning}
                 variant='info'
+                size='small'
               >
                 {isRunning ? 'Running...' : 'Run Code'}
               </Button>
@@ -78,6 +79,7 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
                 onClick={handleAnalyzeCode}
                 disabled={isAnalyzing}
                 variant='primary'
+                size='small'
               >
                 {isAnalyzing ? 'Analyzing...' : 'Analyze Code'}
               </Button>
@@ -85,6 +87,7 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
                 <Button
                   onClick={handleToggleHints}
                   variant='success'
+                  size='small'
                 >
                   {showHints ? 'Hide Hints' : 'Show Hints'}
                 </Button>
@@ -92,6 +95,7 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
               <Button
                 onClick={handleToggleSolution}
                 variant='warning'
+                size='small'
               >
                 {showSolution ? 'Hide Solution' : 'Show Solution'}
               </Button>
