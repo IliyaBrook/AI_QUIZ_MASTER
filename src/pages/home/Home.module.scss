@@ -269,16 +269,48 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   .container {
     grid-template-columns: 1fr;
-    gap: 2rem;
-    padding: 1rem;
+    gap: 3rem;
     text-align: center;
   }
 
   .titleMain {
+    font-size: 3rem;
+  }
+
+  .floatingCards {
+    width: 250px;
+    height: 250px;
+  }
+
+  .card {
+    padding: 1.2rem;
+  }
+
+  .features {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem;
+    gap: 2rem;
+  }
+
+  .titleMain {
     font-size: 2.5rem;
+  }
+
+  .titleSub {
+    font-size: 1.1rem;
+  }
+
+  .description {
+    font-size: 1rem;
+    margin-bottom: 2rem;
   }
 
   .features {
@@ -288,25 +320,184 @@
   .feature {
     flex-direction: column;
     text-align: center;
+    white-space: normal;
+  }
+
+  .featureIcon {
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 1.8rem;
   }
 
   .cta {
     flex-direction: column;
     align-items: center;
+    gap: 0.8rem;
   }
 
   .primaryButton,
   .secondaryButton {
     width: 100%;
-    max-width: 300px;
+    max-width: 280px;
+    padding: 0.9rem 1.5rem;
   }
 
   .floatingCards {
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
   }
 
   .card {
     padding: 1rem;
+  }
+
+  .cardIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
+    gap: 1.5rem;
+    min-height: auto;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .titleMain {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  .titleSub {
+    font-size: 1rem;
+  }
+
+  .description {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .features {
+    gap: 1rem;
+  }
+
+  .feature {
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+
+  .featureIcon {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    padding: 0.8rem 1.2rem;
+    font-size: 0.9rem;
+    max-width: 250px;
+  }
+
+  .visual {
+    display: none;
+  }
+}
+
+@media (max-width: 375px) {
+  .container {
+    padding: 0.8rem;
+  }
+
+  .titleMain {
+    font-size: 1.8rem;
+  }
+
+  .titleSub {
+    font-size: 0.95rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .feature {
+    h3 {
+      font-size: 1rem;
+    }
+
+    p {
+      font-size: 0.85rem;
+    }
+  }
+
+  .featureIcon {
+    width: 2.8rem;
+    height: 2.8rem;
+    font-size: 1.3rem;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+    max-width: 220px;
+  }
+}
+
+@media (max-width: 320px) {
+  .container {
+    padding: 0.6rem;
+  }
+
+  .titleMain {
+    font-size: 1.6rem;
+  }
+
+  .titleSub {
+    font-size: 0.9rem;
+  }
+
+  .description {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .features {
+    gap: 0.8rem;
+  }
+
+  .feature {
+    h3 {
+      font-size: 0.95rem;
+    }
+
+    p {
+      font-size: 0.8rem;
+    }
+  }
+
+  .featureIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.2rem;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+    max-width: 200px;
   }
 }

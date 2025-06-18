@@ -12,7 +12,6 @@
     justify-content: space-between;
     max-width: 1200px;
     margin: 0 auto;
-    position: relative;
 
     .logoContainer {
       display: flex;
@@ -49,23 +48,27 @@
       width: 30px;
       height: 30px;
       justify-content: space-between;
+      position: relative;
 
       .hamburgerLine {
         width: 100%;
         height: 3px;
         background-color: $background-light;
         transition: all 0.3s ease;
-        transform-origin: center;
+        border-radius: 1px;
+        position: relative;
+      }
 
-        &.active {
+      &.active {
+        .hamburgerLine {
           &:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
+            transform: rotate(45deg) translate(5px, 5px);
           }
           &:nth-child(2) {
             opacity: 0;
           }
           &:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
+            transform: rotate(-45deg) translate(7px, -7px);
           }
         }
       }
@@ -124,6 +127,7 @@
 @media (max-width: 768px) {
   .navbar {
     padding: 0.75rem 1rem;
+    position: relative;
 
     .container {
       .logoContainer .logo {
@@ -143,14 +147,15 @@
         flex-direction: column;
         gap: 0;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transform: translateY(-100%);
+        max-height: 0;
+        overflow: hidden;
         opacity: 0;
         visibility: hidden;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 1000;
 
         &.mobileOpen {
-          transform: translateY(0);
+          max-height: 300px;
           opacity: 1;
           visibility: visible;
         }
@@ -160,6 +165,7 @@
           border-bottom: 1px solid #495057;
           border-radius: 0;
           font-size: 1rem;
+          transition: background-color 0.2s ease;
 
           &:last-child {
             border-bottom: none;
@@ -190,6 +196,27 @@
 
         .logo {
           font-size: 1.2rem;
+        }
+      }
+
+      .mobileMenuToggle {
+        width: 28px;
+        height: 28px;
+        padding: 0.4rem;
+
+        .hamburgerLine {
+          height: 2.5px;
+        }
+
+        &.active {
+          .hamburgerLine {
+            &:nth-child(1) {
+              transform: rotate(45deg) translate(4px, 4px);
+            }
+            &:nth-child(3) {
+              transform: rotate(-45deg) translate(5px, -5px);
+            }
+          }
         }
       }
 

@@ -19,7 +19,6 @@
 @media (max-width: 1200px) {
   .layout {
     .main {
-      margin: 0 1rem;
       max-width: none;
     }
   }
@@ -28,7 +27,6 @@
 @media (max-width: 768px) {
   .layout {
     .main {
-      margin: 0 0.5rem;
       min-height: calc(100vh - 100px);
     }
   }

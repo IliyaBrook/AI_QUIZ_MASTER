@@ -30,19 +30,13 @@ export function Navbar() {
         </div>
 
         <button
-          className={styles.mobileMenuToggle}
+          className={`${styles.mobileMenuToggle} ${isMobileMenuOpen ? styles.active : ''}`}
           onClick={toggleMobileMenu}
           aria-label='Toggle navigation menu'
         >
-          <span
-            className={`${styles.hamburgerLine} ${isMobileMenuOpen ? styles.active : ''}`}
-          ></span>
-          <span
-            className={`${styles.hamburgerLine} ${isMobileMenuOpen ? styles.active : ''}`}
-          ></span>
-          <span
-            className={`${styles.hamburgerLine} ${isMobileMenuOpen ? styles.active : ''}`}
-          ></span>
+          <span className={styles.hamburgerLine}></span>
+          <span className={styles.hamburgerLine}></span>
+          <span className={styles.hamburgerLine}></span>
         </button>
 
         <div
