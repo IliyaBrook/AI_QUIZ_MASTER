@@ -31,7 +31,8 @@
       "@/settings/*": ["./src/settings/*"],
       "@/utils/*": ["./src/utils/*"],
       "@/assets/*": ["./src/assets/*"],
-      "@/data/*": ["./src/data/*"]
+      "@/data/*": ["./src/data/*"],
+      "@/hooks/*": ["./src/hooks/*"]
     }
   },
   "include": ["src/**/*", "src/**/*.d.ts", "vite.config.ts"],

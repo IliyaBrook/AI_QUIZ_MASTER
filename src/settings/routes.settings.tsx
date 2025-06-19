@@ -1,5 +1,5 @@
 import { CodingChallenges, Home, Quizzes } from '@/pages';
-import type { IAppPage } from '@/types';
+import type { IAppPage, TransformedAppLabels } from '@/types';
 
 export const appPages: IAppPage[] = [
   {
@@ -24,3 +24,8 @@ export const appPages: IAppPage[] = [
     id: 'coding-challenges-page-id-1',
   },
 ];
+
+export const appPagesOptions = appPages.map((page: IAppPage) =>
+  page.label.toLowerCase().replace(/\s+/g, '-')
+) as TransformedAppLabels[];
+export type AppPagesVariants = (typeof appPagesOptions)[number];

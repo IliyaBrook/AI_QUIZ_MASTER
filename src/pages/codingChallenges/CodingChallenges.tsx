@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 
 import { LoadingSpinner } from '@/components';
+import { useSetPageStyleAttribute } from '@/hooks';
 import { renderChallengeScreen, useChallengeNavigation } from '@/services';
 
 import ChallengeGeneration from './ChallengeGeneration/challengeGeneration';
@@ -9,6 +10,8 @@ import ChallengePreview from './ChallengePreview/challengePreview';
 import styles from './CodingChallenges.module.scss';
 
 const RenderCodingChallenges: React.FC = () => {
+  useSetPageStyleAttribute('coding-challenges');
+
   const {
     currentScreen,
     challengeData,

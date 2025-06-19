@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 
 import { LoadingSpinner } from '@/components';
+import { useSetPageStyleAttribute } from '@/hooks';
 import { renderQuizScreen, useQuizNavigation } from '@/services';
 
 import QuizGeneration from './QuizGeneration/quizGeneration';
@@ -9,6 +10,8 @@ import QuizPreview from './QuizPreview/quizPreview';
 import styles from './Quizzes.module.scss';
 
 const RenderQuizzes: React.FC = () => {
+  useSetPageStyleAttribute('quizzes');
+
   const {
     currentScreen,
     quizData,
