@@ -1,9 +1,9 @@
 @use '../../_globals.scss' as *;
 
 .home {
-  @include height;
+  height: 100%;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
 
   &::before {
     content: '';
