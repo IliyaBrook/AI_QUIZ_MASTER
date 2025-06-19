@@ -181,12 +181,14 @@
     font-weight: 500;
   }
 
-  @media (max-width: 768px) {
-    padding: 10px;
-
+  @media (max-width: 878px) {
+    padding: 0;
+    width: 100%;
     .challengeContent {
-      padding: 1.5rem;
+      width: 100%;
       max-width: none;
+      border-radius: 0;
+      box-shadow: none;
     }
 
     .codeHeader {

@@ -66,12 +66,8 @@
     }
   }
 
-  @media (max-width: 768px) {
-    padding: 1.5rem;
-    max-width: none;
-
+  @media (max-width: 878px) {
     .challengeActions {
-      flex-direction: column;
     }
   }
 }
