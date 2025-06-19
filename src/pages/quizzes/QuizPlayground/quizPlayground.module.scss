@@ -254,8 +254,8 @@
 
 @media (max-width: 480px) {
   .quizPlayground {
-    height: 100%;
     overflow-y: auto;
+    display: flex;
   }
 
   .quizHeader,
@@ -269,13 +269,6 @@
     width: 100%;
   }
 
-  .quizHeader {
-    padding: 1rem;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-
   .questionContainer,
   .quizResults,
   .errorFallback {
@@ -283,21 +276,35 @@
     @include height;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+  }
+
+  .quizHeader {
+    flex: 0 0 30%;
   }
 
   .questionContainer {
+    flex: 1;
     .questionText {
       font-size: 1.1rem;
     }
 
     .answerOptions {
       gap: 0.8rem;
+      margin-bottom: 1rem;
     }
 
     .answerOption {
       padding: 1rem;
       font-size: 15px;
+    }
+  }
+  .questionActions {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    button {
+      height: fit-content;
     }
   }
 
