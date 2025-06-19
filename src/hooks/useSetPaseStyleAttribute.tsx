@@ -1,14 +1,12 @@
 import { useEffect } from 'react';
+import { useLocation } from 'react-router';
 
-import type { AppPagesVariants, QuizScreen } from '@/settings';
+export const useSetPageStyleAttribute = () => {
+  const pathname = useLocation();
 
-export const useSetPageStyleAttribute = (
-  page: AppPagesVariants | QuizScreen
-) => {
+  const routeName = pathname.pathname.split('/')[1];
+
   useEffect(() => {
-    document.body.setAttribute('page', page);
-    return () => {
-      document.body.removeAttribute('page');
-    };
-  }, [page]);
+    document.body.setAttribute('page', routeName || 'home');
+  }, [routeName]);
 };

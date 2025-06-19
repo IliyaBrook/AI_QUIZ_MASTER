@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 
-import type { QuizScreen } from '@/settings';
-import type { IQuizWithWrapper } from '@/types';
+import type { IQuizWithWrapper, QuizScreen } from '@/types';
+import { setStyleAttributeByRoute } from '@/utils/setStyleAttributeByRoute';
 
 export const useQuizNavigation = () => {
   const [currentScreen, setCurrentScreen] =
@@ -12,17 +12,20 @@ export const useQuizNavigation = () => {
     (generatedQuizData: IQuizWithWrapper) => {
       setQuizData(generatedQuizData);
       setCurrentScreen('quizzes-preview');
+      setStyleAttributeByRoute('quizzes-preview');
     },
     []
   );
 
   const handleStartQuiz = useCallback(() => {
     setCurrentScreen('quizzes-playground');
+    setStyleAttributeByRoute('quizzes-playground');
   }, []);
 
   const handleBackToGeneration = useCallback(() => {
     setQuizData(null);
     setCurrentScreen('quizzes-generation');
+    setStyleAttributeByRoute('quizzes-generation');
   }, []);
 
   return {

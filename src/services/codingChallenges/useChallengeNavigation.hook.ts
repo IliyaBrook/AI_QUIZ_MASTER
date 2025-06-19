@@ -2,12 +2,13 @@ import { useCallback, useState } from 'react';
 
 import { isTestCodeChallangeGen as isTest } from '@/constants';
 import { useChallengePlaygroundData as testData } from '@/data';
-import type { ICodingChallengeWithWrapper } from '@/types';
-
-export type ChallengeScreen = 'generation' | 'preview' | 'playground';
+import type { ChallengeScreen, ICodingChallengeWithWrapper } from '@/types';
+import { setStyleAttributeByRoute } from '@/utils/setStyleAttributeByRoute';
 
 export const useChallengeNavigation = () => {
-  const defaultRoute = isTest ? 'playground' : 'generation';
+  const defaultRoute = isTest
+    ? 'coding-challenges-playground'
+    : 'coding-challenges-generation';
 
   const [currentScreen, setCurrentScreen] =
     useState<ChallengeScreen>(defaultRoute);
@@ -17,18 +18,21 @@ export const useChallengeNavigation = () => {
   const handleChallengeGenerated = useCallback(
     (generatedChallengeData: ICodingChallengeWithWrapper) => {
       setChallengeData(generatedChallengeData);
-      setCurrentScreen('preview');
+      setCurrentScreen('coding-challenges-preview');
+      setStyleAttributeByRoute('coding-challenges-preview');
     },
     []
   );
 
   const handleStartChallenge = useCallback(() => {
-    setCurrentScreen('playground');
+    setCurrentScreen('coding-challenges-playground');
+    setStyleAttributeByRoute('coding-challenges-playground');
   }, []);
 
   const handleBackToGeneration = useCallback(() => {
     setChallengeData(null);
-    setCurrentScreen('generation');
+    setCurrentScreen('coding-challenges-generation');
+    setStyleAttributeByRoute('coding-challenges-generation');
   }, []);
 
   return {

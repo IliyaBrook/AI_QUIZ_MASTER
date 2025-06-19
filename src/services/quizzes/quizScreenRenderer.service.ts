@@ -1,7 +1,6 @@
 import React from 'react';
 
-import type { QuizScreen } from '@/settings';
-import type { IQuizWithWrapper } from '@/types';
+import type { IQuizWithWrapper, QuizScreen } from '@/types';
 
 interface QuizComponents {
   QuizGeneration: React.ComponentType<{

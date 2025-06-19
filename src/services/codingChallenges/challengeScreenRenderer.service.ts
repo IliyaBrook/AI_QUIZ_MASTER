@@ -1,7 +1,6 @@
 import React from 'react';
 
-import type { ChallengeScreen } from '@/services';
-import type { ICodingChallengeWithWrapper } from '@/types';
+import type { ChallengeScreen, ICodingChallengeWithWrapper } from '@/types';
 
 interface ChallengeComponents {
   ChallengeGeneration: React.ComponentType<{
@@ -46,11 +45,11 @@ export const renderChallengeScreen = ({
   } = handlers;
 
   switch (currentScreen) {
-    case 'generation':
+    case 'coding-challenges-generation':
       return React.createElement(ChallengeGeneration, {
         onChallengeGenerated: handleChallengeGenerated,
       });
-    case 'preview':
+    case 'coding-challenges-preview':
       return challengeData
         ? React.createElement(ChallengePreview, {
             challengeData,
@@ -58,7 +57,7 @@ export const renderChallengeScreen = ({
             onBackToGeneration: handleBackToGeneration,
           })
         : null;
-    case 'playground':
+    case 'coding-challenges-playground':
       return challengeData
         ? React.createElement(ChallengePlayground, {
             challengeData,
