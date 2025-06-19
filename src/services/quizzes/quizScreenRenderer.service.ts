@@ -1,8 +1,7 @@
 import React from 'react';
 
+import type { QuizScreen } from '@/settings';
 import type { IQuizWithWrapper } from '@/types';
-
-import type { QuizScreen } from './useQuizNavigation.hook';
 
 interface QuizComponents {
   QuizGeneration: React.ComponentType<{
@@ -41,11 +40,11 @@ export const renderQuizScreen = ({
     handlers;
 
   switch (currentScreen) {
-    case 'generation':
+    case 'quizzes-generation':
       return React.createElement(QuizGeneration, {
         onQuizGenerated: handleQuizGenerated,
       });
-    case 'preview':
+    case 'quizzes-preview':
       return quizData
         ? React.createElement(QuizPreview, {
             quizData,
@@ -53,7 +52,7 @@ export const renderQuizScreen = ({
             onBackToGeneration: handleBackToGeneration,
           })
         : null;
-    case 'playground':
+    case 'quizzes-playground':
       return quizData
         ? React.createElement(QuizPlayground, {
             quizData,

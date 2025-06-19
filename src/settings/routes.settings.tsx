@@ -29,3 +29,10 @@ export const appPagesOptions = appPages.map((page: IAppPage) =>
   page.label.toLowerCase().replace(/\s+/g, '-')
 ) as TransformedAppLabels[];
 export type AppPagesVariants = (typeof appPagesOptions)[number];
+
+console.log(appPagesOptions);
+
+export type QuizScreen =
+  | 'quizzes-preview'
+  | 'quizzes-playground'
+  | 'quizzes-generation';

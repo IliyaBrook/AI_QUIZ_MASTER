@@ -19,6 +19,7 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  transition: all 0.3s ease;
 
   h1 {
     color: #333 !important;
@@ -45,6 +46,7 @@
   margin-bottom: 1rem;
   margin-left: auto;
   margin-right: auto;
+  transition: all 0.3s ease;
 }
 
 .questionContainer {
@@ -188,11 +190,39 @@
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+  .quizHeader,
+  .questionContainer,
+  .quizResults,
+  .errorFallback {
+    max-width: 90%;
+  }
+
+  .quizHeader {
+    padding: 1.3rem;
+  }
+
+  .questionContainer,
+  .quizResults,
+  .errorFallback {
+    padding: 1.8rem;
+  }
 }
 
 @media (max-width: 768px) {
+  .quizHeader,
   .questionContainer,
-  .quizResults {
+  .quizResults,
+  .errorFallback {
+    max-width: 95%;
+  }
+
+  .questionContainer,
+  .quizResults,
+  .errorFallback {
     padding: 1.5rem;
   }
 
@@ -202,7 +232,7 @@
     text-align: center;
 
     h1 {
-      font-size: 1.25rem;
+      font-size: 1.25rem !important;
     }
   }
 
@@ -217,5 +247,99 @@
 
   .resultsActions {
     flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .quizPlayground {
+    height: 100vh;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .quizHeader,
+  .questionContainer,
+  .quizResults,
+  .errorFallback {
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .quizHeader {
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .questionContainer,
+  .quizResults,
+  .errorFallback {
+    padding: 1.5rem 1rem;
+    min-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .questionContainer {
+    .questionText {
+      font-size: 1.1rem;
+    }
+
+    .answerOptions {
+      gap: 0.8rem;
+    }
+
+    .answerOption {
+      padding: 1rem;
+      font-size: 15px;
+    }
+  }
+
+  .quizResults {
+    .scoreDisplay {
+      font-size: 2.5rem;
+    }
+
+    .scorePercentage {
+      font-size: 1.3rem;
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .quizHeader {
+    padding: 0.8rem;
+
+    h1 {
+      font-size: 1.1rem !important;
+    }
+  }
+
+  .questionContainer,
+  .quizResults,
+  .errorFallback {
+    padding: 1rem 0.75rem;
+  }
+
+  .questionContainer {
+    .questionText {
+      font-size: 1rem;
+    }
+
+    .answerOption {
+      padding: 0.8rem;
+      font-size: 14px;
+    }
+  }
+
+  .quizResults {
+    .scoreDisplay {
+      font-size: 2rem;
+    }
   }
 }

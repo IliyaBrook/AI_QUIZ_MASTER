@@ -1,12 +1,8 @@
 import { Link } from 'react-router';
 
-import { useSetPageStyleAttribute } from '@/hooks';
-
 import styles from './Home.module.scss';
 
 export function Home() {
-  useSetPageStyleAttribute('home');
-
   return (
     <div className={styles.home}>
       <div className={styles.container}>

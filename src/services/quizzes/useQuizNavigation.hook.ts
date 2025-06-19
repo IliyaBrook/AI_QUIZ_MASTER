@@ -1,28 +1,28 @@
 import { useCallback, useState } from 'react';
 
+import type { QuizScreen } from '@/settings';
 import type { IQuizWithWrapper } from '@/types';
 
-export type QuizScreen = 'generation' | 'preview' | 'playground';
-
 export const useQuizNavigation = () => {
-  const [currentScreen, setCurrentScreen] = useState<QuizScreen>('generation');
+  const [currentScreen, setCurrentScreen] =
+    useState<QuizScreen>('quizzes-generation');
   const [quizData, setQuizData] = useState<IQuizWithWrapper | null>(null);
 
   const handleQuizGenerated = useCallback(
     (generatedQuizData: IQuizWithWrapper) => {
       setQuizData(generatedQuizData);
-      setCurrentScreen('preview');
+      setCurrentScreen('quizzes-preview');
     },
     []
   );
 
   const handleStartQuiz = useCallback(() => {
-    setCurrentScreen('playground');
+    setCurrentScreen('quizzes-playground');
   }, []);
 
   const handleBackToGeneration = useCallback(() => {
     setQuizData(null);
-    setCurrentScreen('generation');
+    setCurrentScreen('quizzes-generation');
   }, []);
 
   return {

@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 
-import type { AppPagesVariants } from '@/settings';
+import type { AppPagesVariants, QuizScreen } from '@/settings';
 
-export const useSetPageStyleAttribute = (page: AppPagesVariants) => {
+export const useSetPageStyleAttribute = (
+  page: AppPagesVariants | QuizScreen
+) => {
   useEffect(() => {
     document.body.setAttribute('page', page);
     return () => {
