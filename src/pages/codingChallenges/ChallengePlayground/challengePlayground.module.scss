@@ -1,3 +1,5 @@
+@use '../../../_globals.scss' as *;
+
 .challengePlayground {
   text-align: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -182,13 +184,16 @@
   }
 
   @media (max-width: 878px) {
+    height: 100%;
     padding: 0;
     width: 100%;
     .challengeContent {
+      @include height;
       width: 100%;
       max-width: none;
       border-radius: 0;
       box-shadow: none;
+      margin: 0;
     }
 
     .codeHeader {

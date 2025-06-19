@@ -3,12 +3,13 @@
 .challengeContainer {
   text-align: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  min-height: 100vh;
+  height: 100%;
   padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  overflow: auto;
 
   h1 {
     color: white;
@@ -29,6 +30,7 @@
 
 @media (max-width: 878px) {
   .challengeContainer {
-    padding: 0 !important;
+    padding: 0;
+    margin-bottom: 0;
   }
 }
