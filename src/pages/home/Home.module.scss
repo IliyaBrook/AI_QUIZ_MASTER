@@ -21,12 +21,11 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  gap: 1rem;
   align-items: center;
-  min-height: 100vh;
   position: relative;
   z-index: 1;
 }
@@ -62,7 +61,7 @@
 .description {
   font-size: 1.1rem;
   line-height: 1.6;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   opacity: 0.9;
   animation: slideInLeft 1s ease-out 0.4s both;
 }
@@ -282,8 +281,10 @@
       align-items: center;
       justify-content: center;
       gap: 1rem;
-      .description {
-        margin: 0 4rem 1rem 4rem;
+      @media (min-width: 700px) {
+        .description {
+          margin: 0 5rem 1rem 5rem;
+        }
       }
       .features {
         margin-bottom: 0;
