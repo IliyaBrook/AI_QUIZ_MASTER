@@ -19,9 +19,11 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
 }) => {
   return (
     <div className={styles.quizPreview}>
-      <h2>{quizData.quiz.title}</h2>
-      <p>Language: {languageNames[quizData.quiz.language as TLang]}</p>
-      <p>Number of questions: {quizData.quiz.questions.length}</p>
+      <div>
+        <h2>{quizData.quiz.title}</h2>
+        <p>Language: {languageNames[quizData.quiz.language as TLang]}</p>
+        <p>Number of questions: {quizData.quiz.questions.length}</p>
+      </div>
 
       <div className={styles.quizActions}>
         <Button

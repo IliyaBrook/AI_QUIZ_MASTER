@@ -11,7 +11,7 @@
     margin: 0 auto;
     background: linear-gradient(135deg, #667eea 0%, $main-bg-color 100%);
     width: 100%;
-    min-height: calc(100vh - 80px);
+    @include height;
   }
 }
 
@@ -27,7 +27,7 @@
 @media (max-width: 768px) {
   .layout {
     .main {
-      min-height: calc(100vh - 100px);
+      @include height;
     }
   }
 }
