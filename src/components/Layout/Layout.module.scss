@@ -10,7 +10,7 @@
   .main {
     flex: 1;
     margin: 0 auto;
-    background: linear-gradient(135deg, #667eea 0%, $main-bg-color 100%);
+    background: $main-gradient-color;
     width: 100%;
     @include height;
   }

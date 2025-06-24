@@ -374,9 +374,20 @@
 }
 
 @media (max-width: 480px) {
+  .cta {
+    margin-top: 20%;
+  }
+  .cardIcon,
+  .featureIcon {
+    display: none;
+  }
+  .title,
+  .description {
+    margin: 0 !important;
+  }
   .container {
     padding: 1rem;
-    gap: 1.5rem;
+    gap: 3rem;
     min-height: auto;
     padding-top: 2rem;
     padding-bottom: 2rem;
@@ -430,6 +441,10 @@
 }
 
 @media (max-width: 375px) {
+  .cardIcon,
+  .featureIcon {
+    display: none;
+  }
   .container {
     padding: 0.8rem;
   }
