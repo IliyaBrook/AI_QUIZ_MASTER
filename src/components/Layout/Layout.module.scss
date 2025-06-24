@@ -13,6 +13,7 @@
     background: $main-gradient-color;
     width: 100%;
     @include height;
+    overflow-y: auto;
   }
 }
 

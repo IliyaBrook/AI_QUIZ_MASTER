@@ -34,7 +34,7 @@ const QuizGeneration: React.FC<QuizGenerationProps> = ({ onQuizGenerated }) => {
         <LoadingSpinner message='Generating quiz...' />
       ) : (
         <>
-          <div className={styles.inputContainer}>
+          <div>
             <Input
               label='Quiz Topic'
               id='topicInput'
