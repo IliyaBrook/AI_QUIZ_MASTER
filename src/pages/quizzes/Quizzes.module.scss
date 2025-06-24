@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   overflow: auto;
-  height: 100%;
+  @include height;
   h1 {
     color: white;
     font-size: 2.5rem;
@@ -42,6 +42,7 @@
 
 @media (max-width: 480px) {
   .quizContainer {
+    height: 100%;
     padding: 0;
 
     h1 {

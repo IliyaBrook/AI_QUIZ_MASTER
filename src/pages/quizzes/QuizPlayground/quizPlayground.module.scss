@@ -43,7 +43,6 @@
   padding: 2rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   width: 100%;
-  max-width: 600px;
   margin-bottom: 1rem;
   margin-left: auto;
   margin-right: auto;
@@ -268,7 +267,7 @@
     padding: 0;
     margin: 0;
     min-height: 100%;
-    overflow-y: auto;
+    max-height: 100vh;
   }
 
   .quizHeader,
@@ -293,7 +292,7 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    min-height: 0;
+    -webkit-overflow-scrolling: touch;
 
     .questionText {
       font-size: 1.1rem;
@@ -303,7 +302,6 @@
     .answerOptions {
       gap: 0.8rem;
       margin-bottom: 1rem;
-      flex: 0 0 auto;
     }
 
     .answerOption {
@@ -312,7 +310,6 @@
     }
 
     .rationale {
-      flex: 0 0 auto;
       margin: 1rem 0;
     }
   }
@@ -337,6 +334,7 @@
     display: flex;
     flex-direction: column;
     @include height;
+    overflow-y: auto;
   }
 
   .quizResults {
