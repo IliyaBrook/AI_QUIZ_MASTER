@@ -27,3 +27,4 @@ dist-ssr
 cheatsheet
 # env files
 *.env
+.yarn

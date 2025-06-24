@@ -17,6 +17,7 @@ LANGUAGES=(
   "javascript"
 )
 
+
 echo "Installing programming languages..."
 
 for lang in "${LANGUAGES[@]}"; do
