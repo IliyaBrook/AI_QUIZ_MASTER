@@ -1,3 +1,4 @@
+import { pistonUrl } from '@/constants';
 import { PROGRAMMING_LANGUAGE_NAMES_LOWER_CASE } from '@/data';
 import type { TProgrammingLanguage } from '@/types';
 
@@ -52,7 +53,7 @@ export interface CodeExecutionResult {
 
 export async function getAvailableRuntimes(): Promise<PistonRuntime[]> {
   try {
-    const response = await fetch('/api/v2/runtimes');
+    const response = await fetch(`${pistonUrl}/api/v2/runtimes`);
 
     if (!response.ok) {
       throw new Error(
@@ -98,7 +99,7 @@ export async function executeCode(
       run_memory_limit: -1,
     };
 
-    const response = await fetch('/api/v2/execute', {
+    const response = await fetch(`${pistonUrl}/api/v2/execute`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -30,7 +30,9 @@ function getPathsFromTsconfig(): Record<string, string> {
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
-  const pistonUrl = process.env.VITE_PISTON_URL;
+  const pistonUrl = process.env.VITE_PISTON_URL || 'http://localhost:2000';
+  const ollamaUrl = process.env.VITE_OLLAMA_URL || 'http://localhost:11434';
+
   return {
     server: {
       port: 3000,
@@ -41,6 +43,11 @@ export default defineConfig(({ mode }) => {
       proxy: {
         '/api/v2': {
           target: pistonUrl,
+          changeOrigin: true,
+          secure: false,
+        },
+        '/v1': {
+          target: ollamaUrl,
           changeOrigin: true,
           secure: false,
         },
