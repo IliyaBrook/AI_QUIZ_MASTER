@@ -38,7 +38,8 @@ export type TLang =
   | 'sv'
   | 'da'
   | 'no'
-  | 'fi';
+  | 'fi'
+  | 'he';
 
 export type TLanguageMap = {
   [K in TLang]: string;

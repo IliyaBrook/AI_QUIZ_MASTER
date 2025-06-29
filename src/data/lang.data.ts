@@ -3,6 +3,7 @@ import type { TLanguageMap, TProgrammingLanguageMap } from '@/types';
 export const LANGUAGE_NAMES: TLanguageMap = {
   en: 'English',
   ru: 'Russian',
+  he: 'Hebrew',
   es: 'Spanish',
   fr: 'French',
   de: 'German',

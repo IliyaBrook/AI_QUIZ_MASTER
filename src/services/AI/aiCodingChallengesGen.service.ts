@@ -25,7 +25,7 @@ function createCodingChallengePrompt(
   "language": "${languageKey}",
   "programmingLanguage": "${programmingLanguage}",
   "difficulty": "easy|medium|hard",
-  "initialCode": "function with test cases as console.log calls",
+  "initialCode": "function template with test usage code",
   "solution": "complete solution code with working implementation",
   "testCases": [
     {"input": "test input", "expectedOutput": "expected result", "description": "test description"}
@@ -33,18 +33,15 @@ function createCodingChallengePrompt(
   "hints": ["helpful hint 1", "helpful hint 2"]
 }
 
-IMPORTANT: In initialCode, include the function template and test cases as console.log calls showing expected output in comments. Example:
-function functionName(param) {
-    // your code here
-}
+CRITICAL RULES for initialCode:
+1. Include empty function template with "// your code here" comment
+2. Include test/usage code below the function so user can click Run Code immediately
+3. For return-value functions: use console.log calls with the function
+4. For closures/side-effect functions: create instances and call them
+5. Use proper newline characters \\n in JSON string
+6. NO working implementation in function body - only "// your code here"`;
 
-console.log("Test case 1:", functionName([1, 2, 3]));
-// Expected output: [result1, result2, result3]
-
-console.log("Test case 2:", functionName([4, 5]));
-// Expected output: [result4, result5]`;
-
-  const userMessage = `Topic: "${topic}". Create ${programmingLanguage} coding challenge. ${languageName} language. Include function template with test cases as console.log calls in initialCode. Provide working solution. Include 3-4 test cases. JSON only.`;
+  const userMessage = `Topic: "${topic}". Create ${programmingLanguage} coding challenge. ${languageName} language. MUST include function template AND test/usage code in initialCode so user can immediately run code. Empty function body with "// your code here" only. JSON format only.`;
 
   return [
     {
