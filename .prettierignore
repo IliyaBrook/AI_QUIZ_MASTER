@@ -34,4 +34,5 @@ Thumbs.db
 # Package managers
 pnpm-lock.yaml
 yarn.lock
-package-lock.json 
+package-lock.json
+.pnpm-store 

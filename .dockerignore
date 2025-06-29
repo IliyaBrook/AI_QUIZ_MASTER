@@ -4,6 +4,8 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 pnpm-debug.log*
+.pnpm-store
+pnpm-lock.yaml
 .DS_Store
 .env.local
 .env.development.local
