@@ -155,32 +155,30 @@ async function generateTestCode(
   );
 
   try {
-    const response = await generateResponse<{ code: string }>(messages, {});
+    const response = await generateResponse(messages, { format: 'text' });
 
     if (!response || !response.rawResponseText) {
       throw new Error('Empty response from AI');
     }
 
-    // AI should return just the code, not wrapped in JSON
-    if (response.rawResponseText.includes('```')) {
-      // Extract code from markdown blocks
-      const codeMatch = response.rawResponseText.match(
-        /```(?:typescript|javascript|ts|js)?\n([\s\S]*?)\n```/
+    let codeText = response.rawResponseText.trim();
+
+    if (codeText.includes('```')) {
+      const codeMatch = codeText.match(
+        /```(?:typescript|javascript|ts|js|python|py)?\n([\s\S]*?)\n```/
       );
       if (codeMatch && codeMatch[1]) {
-        return codeMatch[1].trim();
+        codeText = codeMatch[1].trim();
       }
     }
 
-    // If no code blocks, treat entire response as code
-    return response.rawResponseText.trim();
+    return codeText;
   } catch (error) {
     console.error(
       'Failed to generate test code with AI, falling back to simple approach:',
       error
     );
 
-    // Fallback to basic approach
     const functionName = extractFunctionName(functionCode);
     let testCode = functionCode + '\n\n';
 
@@ -291,42 +289,121 @@ export async function checkSolution(
   rawResponseText: string;
 }> {
   console.log('🔍 AI Solution Checker - Starting execution-based check');
-  console.log('👤 User Code:', userCode);
-  console.log('🏆 Official Solution:', challenge.solution);
+  console.log('👤 User Code (RAW):', userCode);
+  console.log('🏆 Official Solution (RAW):', challenge.solution);
 
   try {
     onProgress?.(20);
 
-    const userFunctionCode = extractFunctionFromCode(userCode);
+    let userFunctionCode = extractFunctionFromCode(userCode);
     const officialFunctionCode = extractFunctionFromCode(challenge.solution);
 
     console.log('📝 Extracted User Function:', userFunctionCode);
     console.log('📝 Extracted Official Function:', officialFunctionCode);
 
+    if (
+      userFunctionCode.includes('// your code here') ||
+      userFunctionCode.trim() === challenge.description
+    ) {
+      console.warn(
+        '⚠️ User function code still contains placeholder or description - using full user code'
+      );
+      userFunctionCode = userCode.trim();
+      console.log('📝 Using corrected user code:', userFunctionCode);
+    }
+
+    if (officialFunctionCode.includes('// your code here')) {
+      console.error(
+        '❌ Official solution contains placeholder - cannot validate'
+      );
+      const errorResult: ISolutionCheckResult = {
+        isCorrect: false,
+        message:
+          'Internal error: Official solution is not properly configured. Please contact the administrator.',
+        details: {
+          expectedOutput: 'Valid official solution required',
+          actualOutput: 'Official solution contains placeholder',
+          testCase: challenge.title,
+        },
+      };
+
+      return {
+        checkData: { result: errorResult },
+        rawResponseText: JSON.stringify(errorResult),
+      };
+    }
+
     onProgress?.(40);
 
-    console.log('🧪 Running user code...');
-    const userResults = await runCodeWithTests(
-      userFunctionCode,
-      challenge.testCases,
-      challenge.programmingLanguage,
-      language
-    );
+    let userResults: string[];
+    try {
+      console.log('🧪 Running user code...');
+      userResults = await runCodeWithTests(
+        userFunctionCode,
+        challenge.testCases,
+        challenge.programmingLanguage,
+        language
+      );
+      console.log('📊 User Results:', userResults);
+    } catch (userError) {
+      console.error('❌ User code execution failed:', userError);
+
+      const isCompilationError =
+        userError instanceof Error &&
+        userError.message.includes('Compilation Error');
+
+      const errorResult: ISolutionCheckResult = {
+        isCorrect: false,
+        message: isCompilationError
+          ? 'Your code contains compilation errors. Make sure the function is correctly implemented and returns a value.'
+          : `Error executing your code: ${userError instanceof Error ? userError.message : String(userError)}`,
+        details: {
+          expectedOutput: 'Code should compile and execute successfully',
+          actualOutput:
+            userError instanceof Error ? userError.message : String(userError),
+          testCase: challenge.title,
+        },
+      };
+
+      return {
+        checkData: { result: errorResult },
+        rawResponseText: JSON.stringify(errorResult),
+      };
+    }
 
     onProgress?.(60);
 
-    console.log('🧪 Running official solution...');
-    const officialResults = await runCodeWithTests(
-      officialFunctionCode,
-      challenge.testCases,
-      challenge.programmingLanguage,
-      language
-    );
+    let officialResults: string[];
+    try {
+      console.log('🧪 Running official solution...');
+      officialResults = await runCodeWithTests(
+        officialFunctionCode,
+        challenge.testCases,
+        challenge.programmingLanguage,
+        language
+      );
+      console.log('📊 Official Results:', officialResults);
+    } catch (officialError) {
+      console.error('❌ Official solution execution failed:', officialError);
+
+      const errorResult: ISolutionCheckResult = {
+        isCorrect: false,
+        message:
+          'Internal error: Failed to execute the reference solution. Please contact the administrator.',
+        details: {
+          expectedOutput: 'Reference solution should work correctly',
+          actualOutput: userResults.join(', '),
+          testCase: challenge.title,
+        },
+      };
+
+      return {
+        checkData: { result: errorResult },
+        rawResponseText: JSON.stringify(errorResult),
+      };
+    }
 
     onProgress?.(80);
-
-    console.log('📊 User Results:', userResults);
-    console.log('📊 Official Results:', officialResults);
 
     const resultsMatch =
       JSON.stringify(userResults) === JSON.stringify(officialResults);
@@ -337,11 +414,11 @@ export async function checkSolution(
       const result: ISolutionCheckResult = {
         isCorrect: true,
         message:
-          'Отлично! Ваше решение работает правильно и дает корректные результаты.',
+          'Excellent! Your solution works correctly and produces the expected results.',
         details: {
           expectedOutput: officialResults.join(', '),
           actualOutput: userResults.join(', '),
-          testCase: `Все тесты пройдены успешно для задачи: ${challenge.title}`,
+          testCase: `All tests passed successfully for challenge: ${challenge.title}`,
         },
       };
 
@@ -377,14 +454,14 @@ export async function checkSolution(
       );
     }
   } catch (error) {
-    console.error('❌ Solution check failed:', error);
+    console.error('❌ Unexpected error in solution check:', error);
 
     const errorResult: ISolutionCheckResult = {
       isCorrect: false,
-      message: `Ошибка при выполнении кода: ${error instanceof Error ? error.message : String(error)}`,
+      message: `An unexpected error occurred while checking the solution: ${error instanceof Error ? error.message : String(error)}`,
       details: {
-        expectedOutput: 'Не удалось выполнить',
-        actualOutput: 'Ошибка выполнения',
+        expectedOutput: 'Failed to perform check',
+        actualOutput: 'System error',
         testCase: challenge.title,
       },
     };

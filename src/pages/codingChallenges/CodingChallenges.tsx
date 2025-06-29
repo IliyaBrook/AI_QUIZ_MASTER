@@ -6,7 +6,7 @@ import { renderChallengeScreen, useChallengeNavigation } from '@/services';
 import ChallengeGeneration from './ChallengeGeneration/challengeGeneration';
 import ChallengePlayground from './ChallengePlayground/challengePlayground';
 import ChallengePreview from './ChallengePreview/challengePreview';
-import styles from './CodingChallenges.module.scss';
+import styles from './codingChallenges.module.scss';
 
 const RenderCodingChallenges: React.FC = () => {
   const {
