@@ -75,6 +75,52 @@ function extractFunctionName(code: string): string {
   return 'func';
 }
 
+function analyzeFunctionSignature(code: string): {
+  name: string;
+  parameterCount: number;
+  parameters: string[];
+} {
+  const functionName = extractFunctionName(code);
+
+  const functionMatch = code.match(/function\s+\w+\s*\(([^)]*)\)/);
+  if (functionMatch && functionMatch[1] !== undefined) {
+    const paramsStr = functionMatch[1].trim();
+    if (!paramsStr) {
+      return { name: functionName, parameterCount: 0, parameters: [] };
+    }
+
+    const parameters = paramsStr
+      .split(',')
+      .map((p) => p.trim().split(':')[0]?.trim() || '')
+      .filter((p) => p);
+    return {
+      name: functionName,
+      parameterCount: parameters.length,
+      parameters,
+    };
+  }
+
+  const constMatch = code.match(/const\s+\w+\s*=\s*\(([^)]*)\)/);
+  if (constMatch && constMatch[1] !== undefined) {
+    const paramsStr = constMatch[1].trim();
+    if (!paramsStr) {
+      return { name: functionName, parameterCount: 0, parameters: [] };
+    }
+
+    const parameters = paramsStr
+      .split(',')
+      .map((p) => p.trim().split(':')[0]?.trim() || '')
+      .filter((p) => p);
+    return {
+      name: functionName,
+      parameterCount: parameters.length,
+      parameters,
+    };
+  }
+
+  return { name: functionName, parameterCount: 0, parameters: [] };
+}
+
 function createTestCodeGenerationPrompt(
   functionCode: string,
   testCases: any[],
@@ -179,14 +225,22 @@ async function generateTestCode(
       error
     );
 
-    const functionName = extractFunctionName(functionCode);
+    const signature = analyzeFunctionSignature(functionCode);
     let testCode = functionCode + '\n\n';
 
     testCases.forEach((testCase) => {
-      if (programmingLanguage === 'typescript') {
-        testCode += `console.log(JSON.stringify(${functionName}(${testCase.input})));\n`;
+      let functionCall: string;
+
+      if (signature.parameterCount === 0) {
+        functionCall = `${signature.name}()`;
       } else {
-        testCode += `print(json.dumps(${functionName}(${testCase.input})))\n`;
+        functionCall = `${signature.name}(${testCase.input})`;
+      }
+
+      if (programmingLanguage === 'typescript') {
+        testCode += `console.log(JSON.stringify(${functionCall}));\n`;
+      } else {
+        testCode += `print(json.dumps(${functionCall}))\n`;
       }
     });
 
