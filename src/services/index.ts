@@ -2,6 +2,7 @@ export * from './AI/ai.service';
 export * from './AI/aiQuizGen.service';
 export * from './AI/aiCodingChallengesGen.service';
 export * from './AI/aiCodingGenHints.service';
+export * from './AI/aiSolutionChecker.service';
 export * from './quizzes/useQuizNavigation.hook';
 export * from './quizzes/useQuizGeneration.hook';
 export * from './quizzes/useQuizPlayground.hook';

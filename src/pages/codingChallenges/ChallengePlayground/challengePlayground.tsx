@@ -27,12 +27,17 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
     codeAnalysis,
     isAnalyzing,
     showAnalysis,
+    solutionCheck,
+    isChecking,
+    showSolutionCheck,
     handleCodeChange,
     handleToggleSolution,
     handleToggleHints,
     handleRunCode,
     handleAnalyzeCode,
     handleToggleAnalysis,
+    handleCheckSolution,
+    handleToggleSolutionCheck,
     formatExecutionResult,
     ...rest
   } = useChallengePlayground(challengeData);
@@ -82,6 +87,14 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
                 size='small'
               >
                 {isAnalyzing ? 'Analyzing...' : 'Analyze Code'}
+              </Button>
+              <Button
+                onClick={handleCheckSolution}
+                disabled={isChecking}
+                variant='secondary'
+                size='small'
+              >
+                {isChecking ? 'Checking...' : 'Check Solution'}
               </Button>
               {challenge.hints && challenge.hints.length > 0 && (
                 <Button
@@ -213,6 +226,51 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
                   </ul>
                 </div>
               )}
+            </div>
+          )}
+
+          {showSolutionCheck && solutionCheck && (
+            <div className={styles.solutionCheck}>
+              <div className={styles.checkHeader}>
+                <h4>Solution Check</h4>
+                <Button
+                  onClick={handleToggleSolutionCheck}
+                  variant='secondary'
+                  size='small'
+                >
+                  Hide Check
+                </Button>
+              </div>
+
+              <div className={styles.checkResult}>
+                {solutionCheck.result.isCorrect ? (
+                  <div className={styles.successMessage}>
+                    <h5>🎉 Congratulations!</h5>
+                    <p>{solutionCheck.result.message}</p>
+                  </div>
+                ) : (
+                  <div className={styles.failureMessage}>
+                    <h5>❌ Solution Incorrect</h5>
+                    <p>{solutionCheck.result.message}</p>
+                    {solutionCheck.result.details && (
+                      <div className={styles.comparisonDetails}>
+                        <p>
+                          <strong>Test Case:</strong>{' '}
+                          {solutionCheck.result.details.testCase}
+                        </p>
+                        <p>
+                          <strong>Expected Output:</strong>{' '}
+                          {solutionCheck.result.details.expectedOutput}
+                        </p>
+                        <p>
+                          <strong>Your Output:</strong>{' '}
+                          {solutionCheck.result.details.actualOutput}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
