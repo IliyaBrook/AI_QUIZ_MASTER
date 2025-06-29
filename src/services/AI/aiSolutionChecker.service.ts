@@ -34,44 +34,38 @@ function createSolutionCheckPrompt(
   }
 }
 
-MANDATORY ANALYSIS PROCESS:
-1. IGNORE the official solution completely - it's only for reference
-2. Read ONLY the task description and evaluate user's code against it
-3. If description contains vague words like "операции", "действия", "actions", "operations" - be VERY flexible
-4. If description is specific like "вывести каждый", "print each", "calculate sum" - be strict
+CRITICAL EVALUATION RULES:
+1. NEVER compare implementation methods (for vs forEach vs while) - only results matter
+2. Focus ONLY on whether the code achieves the described outcome
+3. Different implementation approaches are equally valid if they produce the same result
+4. IGNORE the official solution completely - it's just one possible approach
 
-VAGUE DESCRIPTIONS (mark as CORRECT if code does ANY meaningful operation):
-- "выполняет операции с элементами" → ANY operation on elements is correct
-- "perform actions with elements" → ANY action is correct
-- "process array elements" → ANY processing is correct
-- "работает с массивом" → ANY work with array is correct
+TASK OUTCOME EVALUATION:
+- If task says "перебирает массив и выводит каждый элемент" → ANY iteration method + console.log(each element) = CORRECT
+- If task says "вычисляет сумму" → ANY method that calculates sum = CORRECT  
+- If task says "находит максимум" → ANY method that finds maximum = CORRECT
 
-SPECIFIC DESCRIPTIONS (be strict):
-- "выводит каждый элемент" → must print each element individually
-- "вычисляет сумму" → must calculate sum
-- "print each element" → must print each element
-- "finds maximum" → must find maximum
+IMPLEMENTATION FLEXIBILITY:
+✅ CORRECT approaches for "print each element":
+- for loop + console.log(arr[i])
+- forEach + console.log(elem)
+- for..of + console.log(elem)
+- while loop + console.log
+- map + console.log (if used for side effect)
 
-CURRENT TASK ANALYSIS:
-If description says "выполняет определенные операции" or similar vague wording, then user's code is correct if it:
-- Iterates through array (for, forEach, while, etc.)
-- Does something meaningful with elements (sum, print, transform, etc.)
+❌ INCORRECT only if:
+- Doesn't iterate through array at all
+- Doesn't print each element individually
+- Prints something different (like sum instead of each element)
 
-NEVER compare with official solution for vague descriptions!
+ALGORITHM vs IMPLEMENTATION:
+- Algorithm: WHAT the code does (iterate + print each)
+- Implementation: HOW the code does it (for vs forEach)
+- Evaluate ALGORITHM, ignore IMPLEMENTATION differences
 
-If correct - congratulate user enthusiastically. If incorrect - explain why the code doesn't match the task requirements.`;
+If user's code produces the same outcome as described in task - mark as CORRECT regardless of implementation method.
 
-  const testCasesText = challenge.testCases
-    .map(
-      (tc, index) =>
-        `Test Case ${index + 1}: Input: ${typeof tc.input === 'string' ? tc.input : JSON.stringify(tc.input)}, Expected: ${typeof tc.expectedOutput === 'string' ? tc.expectedOutput : JSON.stringify(tc.expectedOutput)}`
-    )
-    .join('\n');
-
-  const isVagueDescription =
-    /операции|действия|actions|operations|process.*elements|работает.*массив/i.test(
-      challenge.description
-    );
+If correct - congratulate user enthusiastically. If incorrect - explain why the outcome doesn't match requirements.`;
 
   const userMessage = `Challenge: "${challenge.title}"
 Description: "${challenge.description}"
@@ -79,38 +73,26 @@ Description: "${challenge.description}"
 User's Code:
 ${userCode}
 
-${
-  !isVagueDescription
-    ? `Official Solution (for reference only):
-${challenge.solution}
+ANALYSIS TASK:
+1. Read the task description: "${challenge.description}"
+2. Understand WHAT outcome the task requires (not HOW to implement it)
+3. Evaluate if user's code achieves the same outcome
+4. Ignore implementation differences (for vs forEach vs while etc.)
 
-Test Cases (for reference):
-${testCasesText}`
-    : ''
-}
+EVALUATION FOCUS:
+- Task: "перебирает массив и выводит каждый элемент" 
+- Question: Does user's code iterate through array AND output each element?
+- Methods: for, forEach, for..of, while - ALL are valid if they achieve the outcome
 
-ANALYSIS INSTRUCTIONS:
-Description Analysis: "${challenge.description}"
-${
-  isVagueDescription
-    ? `🔄 VAGUE DESCRIPTION DETECTED: This description uses general terms like "операции/actions/operations". 
-  ✅ RULE: Any meaningful iteration + operation on array elements = CORRECT
-  ❌ DO NOT compare with official solution
-  ✅ Accept ANY approach that iterates and does something useful with elements`
-    : `🎯 SPECIFIC DESCRIPTION: This description has specific requirements.
-  ✅ RULE: User code must match the specific requirements described
-  🔍 Compare with official solution if needed for clarity`
-}
+- Task: "вычисляет сумму элементов"
+- Question: Does user's code calculate sum of elements?
+- Methods: reduce, for loop, forEach - ALL are valid if they calculate sum
 
-EVALUATION CRITERIA:
-${
-  isVagueDescription
-    ? `For VAGUE description - mark as CORRECT if user's code:
-  1. Successfully iterates through array (any method: for, forEach, while, etc.)
-  2. Performs ANY meaningful operation with elements (sum, print, multiply, transform, etc.)
-  3. Code is syntactically correct and would execute without errors`
-    : `For SPECIFIC description - evaluate based on exact requirements in description`
-}
+DECISION LOGIC:
+✅ CORRECT if: User's code achieves the described outcome (regardless of method)
+❌ INCORRECT if: User's code does NOT achieve the described outcome
+
+Do NOT compare implementation style with any reference solution - only evaluate if the outcome matches the task description.
 
 Analyze user's code against the task description. Return JSON format. Message in ${languageName} language.`;
 
