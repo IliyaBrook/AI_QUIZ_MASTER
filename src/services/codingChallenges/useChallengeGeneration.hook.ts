@@ -1,7 +1,11 @@
 import { useCallback, useState } from 'react';
 
-import { DEFAULT_LANGUAGE, DEFAULT_PROGRAMMING_LANGUAGE } from '@/constants';
-import type { TLang, TProgrammingLanguage } from '@/types';
+import {
+  DEFAULT_DIFFICULTY,
+  DEFAULT_LANGUAGE,
+  DEFAULT_PROGRAMMING_LANGUAGE,
+} from '@/constants';
+import type { TDifficulty, TLang, TProgrammingLanguage } from '@/types';
 
 import { generateCodingChallenge } from '../AI/aiCodingChallengesGen.service';
 
@@ -10,6 +14,7 @@ export const useChallengeGeneration = () => {
   const [language, setLanguage] = useState<TLang>(DEFAULT_LANGUAGE);
   const [programmingLanguage, setProgrammingLanguage] =
     useState<TProgrammingLanguage>(DEFAULT_PROGRAMMING_LANGUAGE);
+  const [difficulty, setDifficulty] = useState<TDifficulty>(DEFAULT_DIFFICULTY);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,7 +35,8 @@ export const useChallengeGeneration = () => {
       const { challengeData } = await generateCodingChallenge(
         topic,
         language,
-        programmingLanguage
+        programmingLanguage,
+        difficulty
       );
       return challengeData;
     } catch (e) {
@@ -41,12 +47,13 @@ export const useChallengeGeneration = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [topic, language, programmingLanguage, isLoading]);
+  }, [topic, language, programmingLanguage, difficulty, isLoading]);
 
   const resetForm = useCallback(() => {
     setTopic('');
     setLanguage(DEFAULT_LANGUAGE);
     setProgrammingLanguage(DEFAULT_PROGRAMMING_LANGUAGE);
+    setDifficulty(DEFAULT_DIFFICULTY);
     setError(null);
   }, []);
 
@@ -54,11 +61,13 @@ export const useChallengeGeneration = () => {
     topic,
     language,
     programmingLanguage,
+    difficulty,
     isLoading,
     error,
     setTopic,
     setLanguage,
     setProgrammingLanguage,
+    setDifficulty,
     handleGenerateChallenge,
     resetForm,
   };

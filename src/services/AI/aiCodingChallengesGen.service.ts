@@ -4,6 +4,7 @@ import type {
   IAIMessage,
   ICodingChallenge,
   ICodingChallengeWithWrapper,
+  TDifficulty,
   TLang,
   TProgrammingLanguage,
 } from '@/types';
@@ -14,7 +15,8 @@ export { LANGUAGE_NAMES as languageNames };
 function createCodingChallengePrompt(
   topic: string,
   languageKey: TLang,
-  programmingLanguage: TProgrammingLanguage
+  programmingLanguage: TProgrammingLanguage,
+  difficulty: TDifficulty
 ): IAIMessage[] {
   const languageName = LANGUAGE_NAMES[languageKey];
 
@@ -24,7 +26,7 @@ function createCodingChallengePrompt(
   "description": "Task description",
   "language": "${languageKey}",
   "programmingLanguage": "${programmingLanguage}",
-  "difficulty": "easy|medium|hard",
+  "difficulty": "${difficulty}",
   "initialCode": "function template with test usage code",
   "solution": "complete solution code with working implementation",
   "testCases": [
@@ -59,6 +61,7 @@ export async function generateCodingChallenge(
   topic: string,
   language: TLang,
   programmingLanguage: TProgrammingLanguage,
+  difficulty: TDifficulty,
   onProgress?: (progress: number) => void
 ): Promise<{
   challengeData: ICodingChallengeWithWrapper;
@@ -67,7 +70,8 @@ export async function generateCodingChallenge(
   const messages = createCodingChallengePrompt(
     topic,
     language,
-    programmingLanguage
+    programmingLanguage,
+    difficulty
   );
 
   const maxRetries = 2;

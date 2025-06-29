@@ -1,4 +1,8 @@
-import type { TLanguageMap, TProgrammingLanguageMap } from '@/types';
+import type {
+  TDifficultyMap,
+  TLanguageMap,
+  TProgrammingLanguageMap,
+} from '@/types';
 
 export const LANGUAGE_NAMES: TLanguageMap = {
   en: 'English',
@@ -35,3 +39,9 @@ export const PROGRAMMING_LANGUAGE_NAMES_LOWER_CASE: TProgrammingLanguageMap =
       Object.assign(acc, { [key]: value.toLocaleLowerCase() }),
     PROGRAMMING_LANGUAGE_NAMES
   );
+
+export const DIFFICULTY_NAMES: TDifficultyMap = {
+  easy: 'Easy',
+  medium: 'Medium',
+  ' hard': 'Hard',
+};

@@ -1,4 +1,4 @@
-export type TProgrammingLanguage = 'typescript' | 'python' | 'javascript';
+import type { TDifficulty, TProgrammingLanguage } from './options.type';
 
 export interface ICodingChallenge {
   title: string;
@@ -23,3 +23,4 @@ export interface ICodingChallengeWithWrapper {
 }
 
 export type TProgrammingLanguageMap = Record<TProgrammingLanguage, string>;
+export type TDifficultyMap = Record<TDifficulty, string>;

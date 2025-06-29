@@ -1,3 +1,5 @@
+import type { TLang } from './options.type';
+
 export interface IQuizAiResponse {
   title: string;
   language: string;
@@ -18,28 +20,6 @@ export interface IAnswerOption {
   rationale: string;
   is_correct: boolean;
 }
-
-export type TLang =
-  | 'en'
-  | 'ru'
-  | 'es'
-  | 'fr'
-  | 'de'
-  | 'it'
-  | 'pt'
-  | 'ja'
-  | 'ko'
-  | 'zh'
-  | 'hi'
-  | 'ar'
-  | 'tr'
-  | 'nl'
-  | 'pl'
-  | 'sv'
-  | 'da'
-  | 'no'
-  | 'fi'
-  | 'he';
 
 export type TLanguageMap = {
   [K in TLang]: string;

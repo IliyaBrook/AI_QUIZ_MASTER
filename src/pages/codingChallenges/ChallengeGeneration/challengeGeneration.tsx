@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react';
 
 import { Button, Input, LoadingSpinner, Select } from '@/components';
-import { PROGRAMMING_LANGUAGE_NAMES } from '@/data';
+import { DIFFICULTY_NAMES, PROGRAMMING_LANGUAGE_NAMES } from '@/data';
 import { languageNames, useChallengeGeneration } from '@/services';
 import type {
   ICodingChallengeWithWrapper,
+  TDifficulty,
   TLang,
   TProgrammingLanguage,
 } from '@/types';
@@ -22,11 +23,13 @@ const ChallengeGeneration: React.FC<ChallengeGenerationProps> = ({
     topic,
     language,
     programmingLanguage,
+    difficulty,
     isLoading,
     error,
     setTopic,
     setLanguage,
     setProgrammingLanguage,
+    setDifficulty,
     handleGenerateChallenge: generateChallenge,
   } = useChallengeGeneration();
 
@@ -82,6 +85,18 @@ const ChallengeGeneration: React.FC<ChallengeGenerationProps> = ({
             onChange={(value) =>
               setProgrammingLanguage(value as TProgrammingLanguage)
             }
+            disabled={isLoading}
+          />
+
+          <Select
+            label='Difficulty'
+            id='difficultySelect'
+            value={difficulty}
+            options={Object.entries(DIFFICULTY_NAMES).map(([key, name]) => ({
+              value: key,
+              label: name,
+            }))}
+            onChange={(value) => setDifficulty(value as TDifficulty)}
             disabled={isLoading}
           />
 
