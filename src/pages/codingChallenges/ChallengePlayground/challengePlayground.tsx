@@ -118,6 +118,7 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
             onChange={handleCodeChange}
             language={challenge.programmingLanguage}
             height='400px'
+            path={`user-code.${challenge.programmingLanguage === 'typescript' ? 'ts' : 'py'}`}
           />
 
           {executionResult && (
@@ -223,6 +224,7 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
                 language={challenge.programmingLanguage}
                 height='300px'
                 readOnly={true}
+                path={`solution-code.${challenge.programmingLanguage === 'typescript' ? 'ts' : 'py'}`}
               />
             </div>
           )}

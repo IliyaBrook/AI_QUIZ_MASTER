@@ -12,6 +12,7 @@ interface CodeEditorProps {
   height?: string;
   readOnly?: boolean;
   theme?: 'vs-dark' | 'light';
+  path?: string;
 }
 
 export const CodeEditor: React.FC<CodeEditorProps> = ({
@@ -21,8 +22,10 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
   height = '400px',
   readOnly = false,
   theme = 'vs-dark',
+  path,
 }) => {
   const editorRef = useRef(null);
+  const uniqueId = useRef(Math.random().toString(36).substr(2, 9));
 
   const handleEditorDidMount = (editor: any) => {
     editorRef.current = editor;
@@ -103,7 +106,10 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
         onMount={handleEditorDidMount}
         beforeMount={handleBeforeMount}
         theme={theme}
-        path={language === 'typescript' ? 'file.ts' : 'file.py'}
+        path={
+          path ||
+          `${readOnly ? 'solution' : 'user'}-${uniqueId.current}.${language === 'typescript' ? 'ts' : 'py'}`
+        }
         options={{
           readOnly,
           minimap: { enabled: false },
