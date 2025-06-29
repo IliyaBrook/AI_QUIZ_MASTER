@@ -61,10 +61,34 @@ export async function generateResponse<T = unknown>(
     let jsonStr = fullResponseText.trim();
 
     if (finalSettings.format === 'json') {
+      // First try to extract JSON from markdown fences
       const fenceRegex = /^```(?:json)?\s*\n?(.*?)\n?\s*```$/s;
       const match = jsonStr.match(fenceRegex);
       if (match && match[1]) {
         jsonStr = match[1].trim();
+      } else {
+        // If no fences, try to extract the first complete JSON object
+        const jsonStartIndex = jsonStr.indexOf('{');
+        if (jsonStartIndex !== -1) {
+          let braceCount = 0;
+          let jsonEndIndex = -1;
+
+          for (let i = jsonStartIndex; i < jsonStr.length; i++) {
+            if (jsonStr[i] === '{') {
+              braceCount++;
+            } else if (jsonStr[i] === '}') {
+              braceCount--;
+              if (braceCount === 0) {
+                jsonEndIndex = i;
+                break;
+              }
+            }
+          }
+
+          if (jsonEndIndex !== -1) {
+            jsonStr = jsonStr.substring(jsonStartIndex, jsonEndIndex + 1);
+          }
+        }
       }
 
       let parsedData: T;
