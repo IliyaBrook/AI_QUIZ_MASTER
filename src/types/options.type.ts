@@ -19,6 +19,6 @@ export type TLang =
   | 'no'
   | 'fi'
   | 'he';
-export type TProgrammingLanguage = 'typescript' | 'python' | 'javascript';
+export type TProgrammingLanguage = 'typescript' | 'python';
 
 export type TDifficulty = 'easy' | 'medium' | ' hard';

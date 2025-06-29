@@ -30,7 +30,7 @@ const ChallengePreview: React.FC<ChallengePreviewProps> = ({
           {PROGRAMMING_LANGUAGE_NAMES[challenge.programmingLanguage]}
         </p>
         <p>
-          Difficulty:{' '}
+          Difficulty:
           <span
             className={`${styles.difficulty} ${styles[challenge.difficulty]}`}
           >

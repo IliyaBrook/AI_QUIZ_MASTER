@@ -28,7 +28,6 @@ export const LANGUAGE_NAMES: TLanguageMap = {
 };
 
 export const PROGRAMMING_LANGUAGE_NAMES: TProgrammingLanguageMap = {
-  javascript: 'JavaScript',
   typescript: 'TypeScript',
   python: 'Python',
 };

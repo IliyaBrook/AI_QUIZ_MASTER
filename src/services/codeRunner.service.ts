@@ -166,7 +166,6 @@ export async function executeCode(
 
 function getFileName(programmingLanguage: TProgrammingLanguage): string {
   const extensions: Record<TProgrammingLanguage, string> = {
-    javascript: 'main.js',
     typescript: 'main.ts',
     python: 'main.py',
   };

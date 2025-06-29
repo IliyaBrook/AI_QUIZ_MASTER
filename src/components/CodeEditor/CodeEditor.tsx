@@ -3,7 +3,6 @@ import React, { useRef } from 'react';
 
 import './CodeEditor.scss';
 
-import { PROGRAMMING_LANGUAGE_NAMES_LOWER_CASE } from '@/data';
 import type { TProgrammingLanguage } from '@/types';
 
 interface CodeEditorProps {
@@ -34,8 +33,8 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
   };
 
   const handleBeforeMount = (monaco: any) => {
-    // Configure JavaScript/TypeScript language service for better IntelliSense
-    monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+    // Configure TypeScript language service for better IntelliSense
+    const compilerOptions = {
       target: monaco.languages.typescript.ScriptTarget.ES2020,
       allowNonTsExtensions: true,
       moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
@@ -46,20 +45,51 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
       reactNamespace: 'React',
       allowJs: true,
       typeRoots: ['node_modules/@types'],
-    });
+      strict: false,
+      noImplicitAny: false,
+    };
 
-    // Configure diagnostics
-    monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+    const diagnosticsOptions = {
       noSemanticValidation: false,
       noSyntaxValidation: false,
-    });
+      // Don't show TypeScript-specific errors for pure language features
+      diagnosticCodesToIgnore: [],
+    };
 
-    // Enable IntelliSense suggestions
+    // Configure TypeScript defaults
+    monaco.languages.typescript.typescriptDefaults.setCompilerOptions(
+      compilerOptions
+    );
+    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions(
+      diagnosticsOptions
+    );
+    monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
+
+    // Also configure JavaScript defaults for backwards compatibility
+    monaco.languages.typescript.javascriptDefaults.setCompilerOptions(
+      compilerOptions
+    );
+    monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
+      diagnosticsOptions
+    );
     monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
+
+    // Ensure TypeScript language is properly registered
+    if (
+      !monaco.languages
+        .getLanguages()
+        .find((lang: any) => lang.id === 'typescript')
+    ) {
+      console.warn('TypeScript language not found in Monaco Editor');
+    }
   };
 
   const getMonacoLanguage = (lang: TProgrammingLanguage): string => {
-    return PROGRAMMING_LANGUAGE_NAMES_LOWER_CASE[lang] || 'node';
+    const languageMap: Record<TProgrammingLanguage, string> = {
+      typescript: 'typescript',
+      python: 'python',
+    };
+    return languageMap[lang] || 'typescript';
   };
 
   return (
@@ -73,6 +103,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
         onMount={handleEditorDidMount}
         beforeMount={handleBeforeMount}
         theme={theme}
+        path={language === 'typescript' ? 'file.ts' : 'file.py'}
         options={{
           readOnly,
           minimap: { enabled: false },

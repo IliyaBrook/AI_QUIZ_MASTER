@@ -41,7 +41,9 @@ CRITICAL RULES for initialCode:
 3. For return-value functions: use console.log calls with the function
 4. For closures/side-effect functions: create instances and call them
 5. Use proper newline characters \\n in JSON string
-6. NO working implementation in function body - only "// your code here"`;
+6. NO working implementation in function body - only "// your code here"
+7. For TypeScript: ALWAYS include type annotations for parameters (e.g., arr: number[], str: string)
+8. For TypeScript: Include return type annotations when appropriate`;
 
   const userMessage = `Topic: "${topic}". Create ${programmingLanguage} coding challenge. ${languageName} language. MUST include function template AND test/usage code in initialCode so user can immediately run code. Empty function body with "// your code here" only. JSON format only.`;
 
