@@ -35,17 +35,71 @@ function createCodingChallengePrompt(
   "hints": ["helpful hint 1", "helpful hint 2"]
 }
 
+CRITICAL JSON FORMAT RULES:
+- NEVER use template literals (backticks \`) in JSON
+- ALWAYS use double quotes for strings
+- Use \\n for newlines inside JSON strings
+- Use proper escaping for all special characters
+
+Example of CORRECT initialCode JSON format:
+"initialCode": "function processArray(arr: number[]): number[] {\\n    // your code here\\n}\\n\\nconsole.log(processArray([1, 2, 3])); // Expected: [2, 4, 6]\\nconsole.log(processArray([4, 5])); // Expected: [8, 10]"
+
 CRITICAL RULES for initialCode:
 1. Include empty function template with "// your code here" comment
 2. Include test/usage code below the function so user can click Run Code immediately
-3. For return-value functions: use console.log calls with the function
-4. For closures/side-effect functions: create instances and call them
-5. Use proper newline characters \\n in JSON string
-6. NO working implementation in function body - only "// your code here"
-7. For TypeScript: ALWAYS include type annotations for parameters (e.g., arr: number[], str: string)
-8. For TypeScript: Include return type annotations when appropriate`;
+3. ALL functions MUST return something - avoid void functions
+4. Use console.log calls to show the returned results
+5. Add comments showing expected output for each test call
+6. Use ONLY \\n for newlines in JSON strings - NO template literals
+7. NO working implementation in function body - only "// your code here"
+8. For TypeScript: ALWAYS include type annotations for parameters (e.g., arr: number[], str: string)
+9. For TypeScript: Include return type annotations - NEVER use void, always return something useful
 
-  const userMessage = `Topic: "${topic}". Create ${programmingLanguage} coding challenge. ${languageName} language. MUST include function template AND test/usage code in initialCode so user can immediately run code. Empty function body with "// your code here" only. JSON format only.`;
+FUNCTION DESIGN RULES:
+10. ALL functions must return meaningful values:
+    - Array processing → return processed array or result
+    - Closures → return function that can be called
+    - Calculations → return computed value
+    - Transformations → return transformed data
+11. Test code must include expected output comments:
+    - console.log(myFunction([1, 2, 3])); // Expected: [2, 4, 6]
+    - console.log(closure()); // Expected: "Functions executed"
+12. NEVER use void return type - always return something useful
+
+TYPESCRIPT TYPING RULES:
+13. Use CORRECT TypeScript syntax - double check all type annotations
+14. For function arrays: use (() => void)[] for simple functions, (() => ReturnType)[] for functions that return
+15. For function parameters: use (param: Type) => ReturnType
+16. For generic types: use proper generic syntax T, U, etc.
+17. For objects: use proper interface or inline object types
+18. VERIFY all TypeScript types are syntactically correct before generating
+19. Common patterns:
+    - Function array: (() => void)[] or (() => string)[]
+    - Callback function: (value: T) => U
+    - Optional parameters: param?: Type
+    - Union types: string | number
+    - Array types: Type[] or Array<Type>
+20. Return types should be specific: number[], string, () => void, etc.`;
+
+  const userMessage = `Topic: "${topic}". Create ${programmingLanguage} coding challenge. ${languageName} language. 
+
+CRITICAL REQUIREMENTS:
+- Function MUST return something useful (never void) - arrays return arrays, closures return functions, etc.
+- MUST include function template AND test/usage code in initialCode so user can immediately run code
+- Empty function body with "// your code here" only
+- Test calls MUST have comments showing expected output: console.log(func(input)); // Expected: output
+- ${programmingLanguage === 'typescript' ? 'CRITICAL: Use CORRECT TypeScript types - verify syntax! Return types must be specific: number[], string, () => void, etc.' : ''}
+- STRICT JSON format - NO template literals, only double quotes with \\n for newlines
+
+JSON FORMAT WARNING:
+- NEVER use backticks \` in JSON
+- Use "string with \\n" format for multiline code
+- Example: "initialCode": "function name() {\\n    // code\\n}"
+
+EXAMPLE FORMAT (as JSON string):
+"function processArray(arr: number[]): number[] {\\n    // your code here\\n}\\n\\nconsole.log(processArray([1, 2, 3])); // Expected: [2, 4, 6]\\nconsole.log(processArray([4, 5])); // Expected: [8, 10]"
+
+Generate the challenge now.`;
 
   return [
     {

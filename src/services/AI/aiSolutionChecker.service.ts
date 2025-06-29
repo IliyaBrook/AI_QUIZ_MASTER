@@ -1,5 +1,5 @@
 import { LANGUAGE_NAMES } from '@/data';
-import { generateResponse } from '@/services';
+import { executeCode, generateResponse } from '@/services';
 import type { IAIMessage, ICodingChallenge, TLang } from '@/types';
 
 export interface ISolutionCheckResult {
@@ -16,85 +16,258 @@ export interface ISolutionCheckWithWrapper {
   result: ISolutionCheckResult;
 }
 
-function createSolutionCheckPrompt(
-  userCode: string,
+function extractFunctionFromCode(code: string): string {
+  const lines = code.split('\n');
+  const functionStartIndex = lines.findIndex(
+    (line) =>
+      line.trim().startsWith('function ') ||
+      line.trim().includes('function ') ||
+      line.trim().includes('=>') ||
+      (line.trim().includes('const ') && line.trim().includes('='))
+  );
+
+  if (functionStartIndex === -1) {
+    return code;
+  }
+
+  let braceCount = 0;
+  let functionEndIndex = functionStartIndex;
+  let insideFunction = false;
+
+  for (let i = functionStartIndex; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line) continue;
+
+    if (line.includes('{')) {
+      braceCount += (line.match(/\{/g) || []).length;
+      insideFunction = true;
+    }
+
+    if (line.includes('}')) {
+      braceCount -= (line.match(/\}/g) || []).length;
+    }
+
+    if (insideFunction && braceCount === 0) {
+      functionEndIndex = i;
+      break;
+    }
+
+    if (!insideFunction && line.trim() && !line.trim().startsWith('//')) {
+      functionEndIndex = i;
+      break;
+    }
+  }
+
+  return lines.slice(functionStartIndex, functionEndIndex + 1).join('\n');
+}
+
+function extractFunctionName(code: string): string {
+  const functionMatch = code.match(/function\s+(\w+)\s*\(/);
+  if (functionMatch && functionMatch[1]) {
+    return functionMatch[1];
+  }
+
+  const constMatch = code.match(/const\s+(\w+)\s*=/);
+  if (constMatch && constMatch[1]) {
+    return constMatch[1];
+  }
+
+  return 'func';
+}
+
+function createTestCodeGenerationPrompt(
+  functionCode: string,
+  testCases: any[],
+  programmingLanguage: string,
+  languageKey: TLang
+): IAIMessage[] {
+  const languageName = LANGUAGE_NAMES[languageKey];
+
+  const systemPrompt = `Generate test code for a ${programmingLanguage} function. Language: ${languageName}. Return ONLY the complete executable code.
+
+TASK:
+1. Analyze the provided function code
+2. Generate test calls that properly invoke the function with given test cases
+3. Each test call should output the result using console.log(JSON.stringify(result))
+4. Handle ALL function types: regular functions, closures, arrow functions, etc.
+
+REQUIREMENTS:
+- Include the original function code at the top
+- Add test calls that match the function's calling pattern
+- For closures: use pattern like functionName()(args)
+- For regular functions: use pattern like functionName(args)
+- For arrow functions: analyze the pattern and call accordingly
+- Output results with console.log(JSON.stringify(result))
+- NO explanations, ONLY executable code
+
+Example patterns:
+- Regular: myFunc(1, 2)
+- Closure: createClosure()(1, 2)  
+- Higher order: processArray([1,2,3])
+
+Generate complete test code now.`;
+
+  const testCasesDescription = testCases
+    .map(
+      (tc, i) =>
+        `Test ${i + 1}: input="${tc.input}", expected="${tc.expectedOutput}"`
+    )
+    .join('\n');
+
+  const userMessage = `Function Code:
+${functionCode}
+
+Test Cases:
+${testCasesDescription}
+
+Programming Language: ${programmingLanguage}
+
+ANALYSIS TASK:
+1. Look at the function signature and understand how it should be called
+2. Generate test code that properly invokes this function with the test cases
+3. Each test should output: console.log(JSON.stringify(functionCall))
+
+Generate ONLY the complete executable ${programmingLanguage} code. No explanations.`;
+
+  return [
+    {
+      role: 'system',
+      content: systemPrompt,
+    },
+    {
+      role: 'user',
+      content: userMessage,
+    },
+  ];
+}
+
+async function generateTestCode(
+  functionCode: string,
+  testCases: any[],
+  programmingLanguage: string,
+  languageKey: TLang
+): Promise<string> {
+  const messages = createTestCodeGenerationPrompt(
+    functionCode,
+    testCases,
+    programmingLanguage,
+    languageKey
+  );
+
+  try {
+    const response = await generateResponse<{ code: string }>(messages, {});
+
+    if (!response || !response.rawResponseText) {
+      throw new Error('Empty response from AI');
+    }
+
+    // AI should return just the code, not wrapped in JSON
+    if (response.rawResponseText.includes('```')) {
+      // Extract code from markdown blocks
+      const codeMatch = response.rawResponseText.match(
+        /```(?:typescript|javascript|ts|js)?\n([\s\S]*?)\n```/
+      );
+      if (codeMatch && codeMatch[1]) {
+        return codeMatch[1].trim();
+      }
+    }
+
+    // If no code blocks, treat entire response as code
+    return response.rawResponseText.trim();
+  } catch (error) {
+    console.error(
+      'Failed to generate test code with AI, falling back to simple approach:',
+      error
+    );
+
+    // Fallback to basic approach
+    const functionName = extractFunctionName(functionCode);
+    let testCode = functionCode + '\n\n';
+
+    testCases.forEach((testCase) => {
+      if (programmingLanguage === 'typescript') {
+        testCode += `console.log(JSON.stringify(${functionName}(${testCase.input})));\n`;
+      } else {
+        testCode += `print(json.dumps(${functionName}(${testCase.input})))\n`;
+      }
+    });
+
+    return testCode;
+  }
+}
+
+async function runCodeWithTests(
+  functionCode: string,
+  testCases: any[],
+  programmingLanguage: string,
+  languageKey: TLang
+): Promise<string[]> {
+  const testCode = await generateTestCode(
+    functionCode,
+    testCases,
+    programmingLanguage,
+    languageKey
+  );
+
+  console.log('🧪 Running test code:', testCode);
+
+  const result = await executeCode(testCode, programmingLanguage as any);
+
+  if (!result.success) {
+    throw new Error(`Code execution failed: ${result.error}`);
+  }
+
+  return result.output.split('\n').filter((line) => line.trim());
+}
+
+function createAIComparisonPrompt(
+  userOutput: string[],
+  expectedOutput: string[],
   challenge: ICodingChallenge,
   languageKey: TLang
 ): IAIMessage[] {
   const languageName = LANGUAGE_NAMES[languageKey];
 
-  const systemPrompt = `Check if user's code solution fulfills the task requirements. Language: ${languageName}. Programming language: ${challenge.programmingLanguage}. Format:
+  const systemPrompt = `Compare execution results and determine if user's solution is correct. Language: ${languageName}. Format:
 {
   "isCorrect": true/false,
-  "message": "Success message or explanation of what's wrong",
+  "message": "Success message or explanation of differences",
   "details": {
-    "expectedOutput": "what would be expected based on description",
-    "actualOutput": "what user's code would output",
-    "testCase": "context of the requirement"
+    "expectedOutput": "expected results",
+    "actualOutput": "user's results", 
+    "testCase": "context information"
   }
 }
 
-CRITICAL EVALUATION RULES:
-1. NEVER compare implementation methods (for vs forEach vs while) - only results matter
-2. Focus ONLY on whether the code achieves the described outcome
-3. Different implementation approaches are equally valid if they produce the same result
-4. IGNORE the official solution completely - it's just one possible approach
+COMPARISON RULES:
+1. If outputs are identical or functionally equivalent - mark as CORRECT
+2. Ignore minor formatting differences (spaces, brackets, etc.)
+3. Focus on actual values and their correctness
+4. Consider different valid representations of same data as correct
+5. If outputs match the expected logic - mark as CORRECT
 
-TASK OUTCOME EVALUATION:
-- If task says "перебирает массив и выводит каждый элемент" → ANY iteration method + console.log(each element) = CORRECT
-- If task says "вычисляет сумму" → ANY method that calculates sum = CORRECT  
-- If task says "находит максимум" → ANY method that finds maximum = CORRECT
+JSON arrays [1,2,3] and [1, 2, 3] are equivalent.
+"123" and [1,2,3] can be equivalent if task expects concatenation vs array.
 
-IMPLEMENTATION FLEXIBILITY:
-✅ CORRECT approaches for "print each element":
-- for loop + console.log(arr[i])
-- forEach + console.log(elem)
-- for..of + console.log(elem)
-- while loop + console.log
-- map + console.log (if used for side effect)
-
-❌ INCORRECT only if:
-- Doesn't iterate through array at all
-- Doesn't print each element individually
-- Prints something different (like sum instead of each element)
-
-ALGORITHM vs IMPLEMENTATION:
-- Algorithm: WHAT the code does (iterate + print each)
-- Implementation: HOW the code does it (for vs forEach)
-- Evaluate ALGORITHM, ignore IMPLEMENTATION differences
-
-If user's code produces the same outcome as described in task - mark as CORRECT regardless of implementation method.
-
-If correct - congratulate user enthusiastically. If incorrect - explain why the outcome doesn't match requirements.`;
+If correct - provide encouraging message in ${languageName}.
+If incorrect - explain specific differences and what was expected.`;
 
   const userMessage = `Challenge: "${challenge.title}"
 Description: "${challenge.description}"
 
-User's Code:
-${userCode}
+Expected Output (from official solution):
+${expectedOutput.join('\n')}
 
-ANALYSIS TASK:
-1. Read the task description: "${challenge.description}"
-2. Understand WHAT outcome the task requires (not HOW to implement it)
-3. Evaluate if user's code achieves the same outcome
-4. Ignore implementation differences (for vs forEach vs while etc.)
+User's Output:
+${userOutput.join('\n')}
 
-EVALUATION FOCUS:
-- Task: "перебирает массив и выводит каждый элемент" 
-- Question: Does user's code iterate through array AND output each element?
-- Methods: for, forEach, for..of, while - ALL are valid if they achieve the outcome
+ANALYSIS:
+1. Compare the actual outputs line by line
+2. Determine if they represent the same logical result
+3. Consider the task requirements from description
+4. Account for different valid data representations
 
-- Task: "вычисляет сумму элементов"
-- Question: Does user's code calculate sum of elements?
-- Methods: reduce, for loop, forEach - ALL are valid if they calculate sum
-
-DECISION LOGIC:
-✅ CORRECT if: User's code achieves the described outcome (regardless of method)
-❌ INCORRECT if: User's code does NOT achieve the described outcome
-
-Do NOT compare implementation style with any reference solution - only evaluate if the outcome matches the task description.
-
-Analyze user's code against the task description. Return JSON format. Message in ${languageName} language.`;
+Are these outputs equivalent for this task? Respond in JSON format. Message in ${languageName} language.`;
 
   return [
     {
@@ -117,56 +290,108 @@ export async function checkSolution(
   checkData: ISolutionCheckWithWrapper;
   rawResponseText: string;
 }> {
-  console.log('🔍 AI Solution Checker - User Code:', userCode);
-  console.log('📝 AI Solution Checker - Challenge:', challenge.title);
-  console.log('📄 AI Solution Checker - Description:', challenge.description);
+  console.log('🔍 AI Solution Checker - Starting execution-based check');
+  console.log('👤 User Code:', userCode);
+  console.log('🏆 Official Solution:', challenge.solution);
 
-  const messages = createSolutionCheckPrompt(userCode, challenge, language);
+  try {
+    onProgress?.(20);
 
-  const maxRetries = 2;
-  let lastError: Error | null = null;
+    const userFunctionCode = extractFunctionFromCode(userCode);
+    const officialFunctionCode = extractFunctionFromCode(challenge.solution);
 
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      if (onProgress && attempt > 0) {
-        onProgress(10 * attempt);
-      }
+    console.log('📝 Extracted User Function:', userFunctionCode);
+    console.log('📝 Extracted Official Function:', officialFunctionCode);
 
-      const response = await generateResponse<ISolutionCheckResult>(
-        messages,
-        {},
-        onProgress
-      );
+    onProgress?.(40);
 
-      if (response.data && typeof response.data.isCorrect === 'boolean') {
-        const checkData: ISolutionCheckWithWrapper = {
-          result: response.data,
-        };
-        return {
-          checkData,
-          rawResponseText: response.rawResponseText,
-        };
-      } else {
-        throw new Error(
-          'Generated solution check data is not in the expected format.'
-        );
-      }
-    } catch (error) {
-      lastError = error instanceof Error ? error : new Error(String(error));
+    console.log('🧪 Running user code...');
+    const userResults = await runCodeWithTests(
+      userFunctionCode,
+      challenge.testCases,
+      challenge.programmingLanguage,
+      language
+    );
 
-      if (attempt < maxRetries) {
-        console.warn(
-          `Attempt ${attempt + 1} failed, retrying:`,
-          lastError.message
-        );
-        await new Promise((resolve) =>
-          setTimeout(resolve, 1000 * (attempt + 1))
-        );
-      }
+    onProgress?.(60);
+
+    console.log('🧪 Running official solution...');
+    const officialResults = await runCodeWithTests(
+      officialFunctionCode,
+      challenge.testCases,
+      challenge.programmingLanguage,
+      language
+    );
+
+    onProgress?.(80);
+
+    console.log('📊 User Results:', userResults);
+    console.log('📊 Official Results:', officialResults);
+
+    const resultsMatch =
+      JSON.stringify(userResults) === JSON.stringify(officialResults);
+
+    if (resultsMatch) {
+      console.log('✅ Results match - solution is correct!');
+
+      const result: ISolutionCheckResult = {
+        isCorrect: true,
+        message:
+          'Отлично! Ваше решение работает правильно и дает корректные результаты.',
+        details: {
+          expectedOutput: officialResults.join(', '),
+          actualOutput: userResults.join(', '),
+          testCase: `Все тесты пройдены успешно для задачи: ${challenge.title}`,
+        },
+      };
+
+      return {
+        checkData: { result },
+        rawResponseText: JSON.stringify(result),
+      };
     }
-  }
 
-  throw new Error(
-    `Failed to check solution after ${maxRetries + 1} attempts. Last error: ${lastError?.message}`
-  );
+    console.log('❌ Results differ - using AI for detailed comparison...');
+
+    const messages = createAIComparisonPrompt(
+      userResults,
+      officialResults,
+      challenge,
+      language
+    );
+
+    const response = await generateResponse<ISolutionCheckResult>(
+      messages,
+      {},
+      onProgress
+    );
+
+    if (response.data && typeof response.data.isCorrect === 'boolean') {
+      return {
+        checkData: { result: response.data },
+        rawResponseText: response.rawResponseText,
+      };
+    } else {
+      throw new Error(
+        'Generated solution check data is not in the expected format.'
+      );
+    }
+  } catch (error) {
+    console.error('❌ Solution check failed:', error);
+
+    const errorResult: ISolutionCheckResult = {
+      isCorrect: false,
+      message: `Ошибка при выполнении кода: ${error instanceof Error ? error.message : String(error)}`,
+      details: {
+        expectedOutput: 'Не удалось выполнить',
+        actualOutput: 'Ошибка выполнения',
+        testCase: challenge.title,
+      },
+    };
+
+    return {
+      checkData: { result: errorResult },
+      rawResponseText: JSON.stringify(errorResult),
+    };
+  }
 }
