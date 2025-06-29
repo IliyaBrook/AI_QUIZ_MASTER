@@ -33,6 +33,31 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
     onChange(value);
   };
 
+  const handleBeforeMount = (monaco: any) => {
+    // Configure JavaScript/TypeScript language service for better IntelliSense
+    monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+      target: monaco.languages.typescript.ScriptTarget.ES2020,
+      allowNonTsExtensions: true,
+      moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+      module: monaco.languages.typescript.ModuleKind.CommonJS,
+      noEmit: true,
+      esModuleInterop: true,
+      jsx: monaco.languages.typescript.JsxEmit.React,
+      reactNamespace: 'React',
+      allowJs: true,
+      typeRoots: ['node_modules/@types'],
+    });
+
+    // Configure diagnostics
+    monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+      noSemanticValidation: false,
+      noSyntaxValidation: false,
+    });
+
+    // Enable IntelliSense suggestions
+    monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
+  };
+
   const getMonacoLanguage = (lang: TProgrammingLanguage): string => {
     return PROGRAMMING_LANGUAGE_NAMES_LOWER_CASE[lang] || 'node';
   };
@@ -46,6 +71,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
         value={value}
         onChange={handleEditorChange}
         onMount={handleEditorDidMount}
+        beforeMount={handleBeforeMount}
         theme={theme}
         options={{
           readOnly,
@@ -63,6 +89,45 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
           lineNumbersMinChars: 3,
           glyphMargin: false,
           fixedOverflowWidgets: true,
+          // Enhanced IntelliSense options
+          quickSuggestions: {
+            other: true,
+            comments: false,
+            strings: false,
+          },
+          parameterHints: {
+            enabled: true,
+          },
+          suggestOnTriggerCharacters: true,
+          acceptSuggestionOnEnter: 'on',
+          tabCompletion: 'on',
+          suggest: {
+            showKeywords: true,
+            showSnippets: true,
+            showColor: false,
+            showFile: false,
+            showReference: false,
+            showFolder: false,
+            showTypeParameter: true,
+            showUnit: false,
+            showValue: true,
+            showModule: false,
+            showProperty: true,
+            showEvent: false,
+            showOperator: false,
+            showVariable: true,
+            showClass: true,
+            showInterface: true,
+            showStruct: false,
+            showEnum: false,
+            showEnumMember: false,
+            showFunction: true,
+            showField: true,
+            showConstant: true,
+            showConstructor: true,
+            showUser: false,
+            showIssue: false,
+          },
         }}
       />
     </div>
