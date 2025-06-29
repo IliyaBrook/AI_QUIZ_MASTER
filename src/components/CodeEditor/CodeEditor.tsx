@@ -25,7 +25,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
   path,
 }) => {
   const editorRef = useRef(null);
-  const uniqueId = useRef(Math.random().toString(36).substr(2, 9));
 
   const handleEditorDidMount = (editor: any) => {
     editorRef.current = editor;
@@ -50,13 +49,20 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
       typeRoots: ['node_modules/@types'],
       strict: false,
       noImplicitAny: false,
+      // Isolate modules to prevent global scope conflicts
+      isolatedModules: true,
+      skipLibCheck: true,
     };
 
     const diagnosticsOptions = {
       noSemanticValidation: false,
       noSyntaxValidation: false,
       // Don't show TypeScript-specific errors for pure language features
-      diagnosticCodesToIgnore: [],
+      diagnosticCodesToIgnore: [
+        2393, // Duplicate function implementation
+        2300, // Duplicate identifier
+        2304, // Cannot find name (for isolated scope)
+      ],
     };
 
     // Configure TypeScript defaults
@@ -106,10 +112,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
         onMount={handleEditorDidMount}
         beforeMount={handleBeforeMount}
         theme={theme}
-        path={
-          path ||
-          `${readOnly ? 'solution' : 'user'}-${uniqueId.current}.${language === 'typescript' ? 'ts' : 'py'}`
-        }
+        {...(path && { path })}
         options={{
           readOnly,
           minimap: { enabled: false },

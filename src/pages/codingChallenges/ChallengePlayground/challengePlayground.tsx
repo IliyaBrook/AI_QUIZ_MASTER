@@ -118,6 +118,7 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
             onChange={handleCodeChange}
             language={challenge.programmingLanguage}
             height='400px'
+            key='user-code'
             path={`user-code.${challenge.programmingLanguage === 'typescript' ? 'ts' : 'py'}`}
           />
 
@@ -219,6 +220,7 @@ const ChallengePlayground: React.FC<ChallengePlaygroundProps> = ({
             <div className={styles.solution}>
               <h4>Solution</h4>
               <CodeEditor
+                key='solution-code'
                 value={challenge.solution}
                 onChange={() => {}}
                 language={challenge.programmingLanguage}
